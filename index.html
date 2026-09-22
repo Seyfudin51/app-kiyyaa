@@ -3,194 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LMS & Exam Portal</title>
+    <title>Mootummaa Barnootaa - Login</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Supabase CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- FontAwesome Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="bg-slate-50 font-sans text-slate-800">
+<body class="bg-[#112240] min-h-screen flex items-center justify-center px-4 font-sans">
 
-    <!-- 1. LOGIN & REGISTER CONTAINER -->
-    <div id="auth-container" class="min-h-screen flex items-center justify-center px-4">
-        <div class="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
-            <div class="text-center mb-8">
-                <div class="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 text-white text-2xl shadow-lg shadow-indigo-200">
-                    <i class="fa-solid fa-graduation-cap"></i>
-                </div>
-                <h2 class="text-2xl font-bold text-slate-900">Baga Nagaan Dhuftan!</h2>
-                <p class="text-slate-500 mt-2">Maaloo seenuuf galmee keessan galchaa</p>
-            </div>
+    <!-- LOGIN CARD CONTAINER -->
+    <div class="max-w-md w-full bg-white rounded-[32px] shadow-2xl p-8 border border-slate-100 text-center">
+        
+        <!-- Header Text -->
+        <h2 class="text-2xl font-bold text-slate-900 mb-1">Seensa / Login</h2>
+        <p class="text-slate-500 text-sm mb-8 font-medium">Mootummaa barnootaatti seenuuf filadhaa</p>
 
-            <!-- Login Form -->
-            <form id="login-form" class="space-y-5">
-                <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Email Teessoo</label>
-                    <input type="email" id="login-email" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="fkn: barataa@gmail.com">
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Password</label>
-                    <input type="password" id="login-password" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="••••••••">
-                </div>
-                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-indigo-100 transition duration-200">Seeni (Login)</button>
-            </form>
+        <!-- BUTTONS LIST -->
+        <div class="space-y-4">
+            
+            <!-- 1. Google Login Button -->
+            <button id="btn-google" class="w-full py-4 px-6 border-2 border-slate-200 rounded-[20px] flex items-center justify-center gap-3 hover:bg-slate-50 transition duration-200 active:scale-95">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_\"G\"_Logo.svg" class="w-5 h-5" alt="Google">
+                <span class="font-bold text-slate-700 text-base">Log in with Google</span>
+            </button>
 
-            <!-- Toggle Register -->
-            <p class="text-center text-sm text-slate-500 mt-6">
-                Account hin qabduu? <button id="to-register" class="text-indigo-600 font-bold hover:underline">Ammuma Galmaa'i</button>
-            </p>
+            <!-- 2. Telegram Login Button -->
+            <button id="btn-telegram" class="w-full py-4 px-6 bg-[#2fa3d8] hover:bg-[#2892c2] text-white rounded-[20px] flex items-center justify-center gap-3 transition duration-200 active:scale-95 shadow-md shadow-blue-100">
+                <i class="fa-brands fa-telegram text-xl"></i>
+                <span class="font-bold text-white text-base">Login with Telegram</span>
+            </button>
+
         </div>
+
     </div>
 
-    <!-- 2. STUDENT PORTAL (Dashboard) -->
-    <div id="app-container" class="hidden min-h-screen flex flex-col">
-        <!-- Header -->
-        <header class="bg-white border-b border-slate-100 sticky top-0 z-50">
-            <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white text-lg font-bold">
-                        <i class="fa-solid fa-book-open"></i>
-                    </div>
-                    <span class="font-bold text-slate-900 text-lg">LMS Portal</span>
-                </div>
-                <div class="flex items-center gap-4">
-                    <span id="user-display" class="text-sm font-semibold text-slate-600">...</span>
-                    <button id="btn-admin-portal" class="hidden bg-slate-900 text-white text-xs font-bold px-3 py-2 rounded-lg hover:bg-slate-800"><i class="fa-solid fa-lock-open mr-1"></i> Admin Panel</button>
-                    <button id="btn-logout" class="text-rose-600 hover:bg-rose-50 p-2 rounded-lg transition"><i class="fa-solid fa-right-from-bracket"></i></button>
-                </div>
-            </div>
-        </header>
-
-        <!-- Main Content -->
-        <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-8">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Lessons List -->
-                <div class="lg:col-span-2 space-y-6">
-                    <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2"><i class="fa-solid fa-graduation-cap text-indigo-600"></i> Barnoota jiran</h3>
-                    <div id="lessons-list" class="grid grid-cols-1 gap-4">
-                        <!-- Lessons dynamically load here -->
-                    </div>
-                </div>
-
-                <!-- Exams List -->
-                <div class="space-y-6">
-                    <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2"><i class="fa-solid fa-file-signature text-emerald-600"></i> Qormaata</h3>
-                    <div id="exams-list" class="space-y-4">
-                        <!-- Exams dynamically load here -->
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <!-- SUPABASE CLIENT CONFIG -->
+    <!-- SUPABASE AUTHENTICATION JS -->
     <script>
         const SUPABASE_URL = "https://zxljzdhuilhzcdbgrxol.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_WKWwxJeXUi0bbgN4NsD3nQ_w1Xwdjhs";
         const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        const authContainer = document.getElementById('auth-container');
-        const appContainer = document.getElementById('app-container');
-        const loginForm = document.getElementById('login-form');
-        const userDisplay = document.getElementById('user-display');
-        const btnAdminPortal = document.getElementById('btn-admin-portal');
-        const btnLogout = document.getElementById('btn-logout');
+        // Google Authentication
+        document.getElementById('btn-google').addEventListener('click', async () => {
+            const { error } = await supabase.auth.signInWithOAuth({
+                provider: 'google',
+                options: {
+                    redirectTo: window.location.origin // Vercel URL keetti deebisa
+                }
+            });
+            if (error) alert("Error: " + error.message);
+        });
 
-        // Check Auth on Load
-        window.addEventListener('DOMContentLoaded', async () => {
-            const { data: { session } } = await supabase.auth.getSession();
+        // Telegram Authentication (Supabase dhuunfaan OAuth Telegram deeggara)
+        document.getElementById('btn-telegram').addEventListener('click', async () => {
+            const { error } = await supabase.auth.signInWithOAuth({
+                provider: 'telegram',
+                options: {
+                    redirectTo: window.location.origin
+                }
+            });
+            if (error) alert("Error: " + error.message);
+        });
+
+        // Seensa Booda Check gochuu
+        supabase.auth.onAuthStateChange((event, session) => {
             if (session) {
-                showApp(session.user);
+                // Yoo milkaa'inaan seene gara fuula barnootaatti (lessons/exams) qajeela
+                window.location.href = "/dashboard.html"; // ykn index.html keessatti dashboard agarsiisi
             }
         });
-
-        // Login Handler
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-
-            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-            if (error) {
-                alert("Error Login: " + error.message);
-            } else {
-                showApp(data.user);
-            }
-        });
-
-        // Logout Handler
-        btnLogout.addEventListener('click', async () => {
-            await supabase.auth.signOut();
-            authContainer.classList.remove('hidden');
-            appContainer.classList.add('hidden');
-        });
-
-        async function showApp(user) {
-            authContainer.classList.add('hidden');
-            appContainer.classList.remove('hidden');
-            userDisplay.textContent = user.email;
-
-            // Role Check
-            const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
-            if (profile && (profile.role === 'admin' || profile.role === 'owner')) {
-                btnAdminPortal.classList.remove('hidden');
-                btnAdminPortal.addEventListener('click', () => {
-                    window.location.href = '/admin';
-                });
-            }
-
-            loadLessons();
-            loadExams();
-        }
-
-        async function loadLessons() {
-            const list = document.getElementById('lessons-list');
-            list.innerHTML = `<div class="text-slate-500">Loading lessons...</div>`;
-
-            const { data: lessons, error } = await supabase.from('lessons').select('*').eq('is_published', true);
-            if (error) {
-                list.innerHTML = `<div class="text-rose-500">Error: ${error.message}</div>`;
-                return;
-            }
-
-            if (lessons.length === 0) {
-                list.innerHTML = `<div class="text-slate-500">Barnoonni haaraan ammaaf hin jiru.</div>`;
-                return;
-            }
-
-            list.innerHTML = lessons.map(l => `
-                <div class="bg-white rounded-xl p-5 border border-slate-100 shadow-sm hover:shadow-md transition">
-                    <h4 class="text-lg font-bold text-slate-900">${l.title}</h4>
-                    <p class="text-slate-500 text-sm mt-1">${l.description || 'Ibsa hin qabu'}</p>
-                    <button class="mt-4 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 px-4 py-2 rounded-lg text-sm font-bold transition">Barnoota Bani</button>
-                </div>
-            `).join('');
-        }
-
-        async function loadExams() {
-            const list = document.getElementById('exams-list');
-            list.innerHTML = `<div class="text-slate-500">Loading exams...</div>`;
-
-            const { data: exams, error } = await supabase.from('exams').select('*').eq('is_published', true);
-            if (error) {
-                list.innerHTML = `<div class="text-rose-500">Error: ${error.message}</div>`;
-                return;
-            }
-
-            if (exams.length === 0) {
-                list.innerHTML = `<div class="text-slate-500">Qormaanni haaraan ammaaf hin jiru.</div>`;
-                return;
-            }
-
-            list.innerHTML = exams.map(e => `
-                <div class="bg-white rounded-xl p-5 border border-slate-100 shadow-sm">
-                    <h4 class="font-bold text-slate-900">${e.title}</h4>
-                    <p class="text-xs text-slate-400 mt-1"><i class="fa-solid fa-clock"></i> ${e.duration_minutes} Mins</p>
-                    <button class="w-full mt-4 bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-lg text-sm font-bold transition">Qormaata Jalqabi</button>
-                </div>
-            `).join('');
-        }
     </script>
 </body>
 </html>
