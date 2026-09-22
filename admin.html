@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="om">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="bg-slate-900 text-white h-16 flex items-center justify-between px-6 shadow-md">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-toolbox text-indigo-400 text-xl"></i>
+                <span class="font-bold text-lg">Admin Panel Dashboard</span>
+            </div>
+            <button onclick="window.location.href='/'" class="bg-slate-800 hover:bg-slate-700 text-xs font-bold px-4 py-2 rounded-lg transition">Gara Appii Deebi'i</button>
+        </header>
+
+        <!-- Main Body -->
+        <div class="flex-1 max-w-7xl w-full mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Left: Add Lesson Form -->
+            <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm space-y-6">
+                <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2"><i class="fa-solid fa-plus text-indigo-600"></i> Barnoota Haaraa Dabali</h3>
+                <form id="add-lesson-form" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">Mata-duree Barnootaa</label>
+                        <input type="text" id="lesson-title" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">Ibsa Gabaabaa</label>
+                        <textarea id="lesson-desc" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl shadow-md transition">Dabali (Save)</button>
+                </form>
+            </div>
+
+            <!-- Right: Lessons List for Management -->
+            <div class="lg:col-span-2 bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+                <h3 class="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2"><i class="fa-solid fa-list-check text-indigo-600"></i> Barnoota Jiran Bulchi</h3>
+                <div id="admin-lessons-list" class="space-y-4">
+                    <!-- Lessons list -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = "https://zxljzdhuilhzcdbgrxol.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_WKWwxJeXUi0bbgN4NsD3nQ_w1Xwdjhs";
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const form = document.getElementById('add-lesson-form');
+
+        // Check if Admin
+        window.addEventListener('DOMContentLoaded', async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                window.location.href = '/';
+                return;
+            }
+            const { data: profile } = await supabase.from('profiles').select('role').eq('id', session.user.id).single();
+            if (!profile || (profile.role !== 'admin' && profile.role !== 'owner')) {
+                alert("Aangoo hin qabdu!");
+                window.location.href = '/';
+                return;
+            }
+            loadAdminLessons();
+        });
+
+        // Add Lesson
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('lesson-title').value;
+            const description = document.getElementById('lesson-desc').value;
+
+            const { error } = await supabase.from('lessons').insert([{ title, description }]);
+            if (error) {
+                alert("Error: " + error.message);
+            } else {
+                alert("Barnoonni milkaa'inaan dabalameera!");
+                form.reset();
+                loadAdminLessons();
+            }
+        });
+
+        async function loadAdminLessons() {
+            const list = document.getElementById('admin-lessons-list');
+            list.innerHTML = 'Loading...';
+
+            const { data: lessons } = await supabase.from('lessons').select('*');
+            if (lessons) {
+                list.innerHTML = lessons.map(l => `
+                    <div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                        <div>
+                            <h4 class="font-bold text-slate-900">${l.title}</h4>
+                            <p class="text-xs text-slate-500">${l.description || ''}</p>
+                        </div>
+                        <button onclick="deleteLesson('${l.id}')" class="text-rose-600 hover:bg-rose-50 p-2 rounded-lg transition"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `).join('');
+            }
+        }
+
+        async function deleteLesson(id) {
+            if (confirm("Barnoota kana haquu barbaadduu?")) {
+                await supabase.from('lessons').delete().eq('id', id);
+                loadAdminLessons();
+            }
+        }
+    </script>
+</body>
+</html>
