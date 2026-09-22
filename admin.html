@@ -3,49 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Admin & Owner Panel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-slate-50 text-slate-800">
+<body class="bg-slate-100 text-slate-800 font-sans">
 
     <div class="min-h-screen flex flex-col">
-        <!-- Header -->
         <header class="bg-slate-900 text-white h-16 flex items-center justify-between px-6 shadow-md">
             <div class="flex items-center gap-3">
-                <i class="fa-solid fa-toolbox text-indigo-400 text-xl"></i>
-                <span class="font-bold text-lg">Admin Panel Dashboard</span>
+                <i class="fa-solid fa-crown text-amber-400 text-xl"></i>
+                <span class="font-bold text-lg">Admin & Owner Dashboard</span>
             </div>
             <button onclick="window.location.href='/'" class="bg-slate-800 hover:bg-slate-700 text-xs font-bold px-4 py-2 rounded-lg transition">Gara Appii Deebi'i</button>
         </header>
 
-        <!-- Main Body -->
         <div class="flex-1 max-w-7xl w-full mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
             
-            <!-- Left: Add Lesson Form -->
-            <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm space-y-6">
-                <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2"><i class="fa-solid fa-plus text-indigo-600"></i> Barnoota Haaraa Dabali</h3>
-                <form id="add-lesson-form" class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-2">Mata-duree Barnootaa</label>
-                        <input type="text" id="lesson-title" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-2">Ibsa Gabaabaa</label>
-                        <textarea id="lesson-desc" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500" rows="3"></textarea>
-                    </div>
-                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl shadow-md transition">Dabali (Save)</button>
-                </form>
-            </div>
+            <!-- LEFT: CREATE FORMS -->
+            <div class="space-y-6">
+                <!-- Add Lesson -->
+                <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+                    <h3 class="text-base font-bold text-slate-900 flex items-center gap-2"><i class="fa-solid fa-plus text-indigo-600"></i> Barnoota Dabali</h3>
+                    <form id="form-lesson" class="space-y-3">
+                        <input type="text" id="lesson-title" placeholder="Mata-duree" required class="w-full px-4 py-2 border rounded-xl text-sm">
+                        <textarea id="lesson-desc" placeholder="Ibsa Gabaabaa" class="w-full px-4 py-2 border rounded-xl text-sm" rows="2"></textarea>
+                        <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-2 rounded-xl text-sm">Save Lesson</button>
+                    </form>
+                </div>
 
-            <!-- Right: Lessons List for Management -->
-            <div class="lg:col-span-2 bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
-                <h3 class="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2"><i class="fa-solid fa-list-check text-indigo-600"></i> Barnoota Jiran Bulchi</h3>
-                <div id="admin-lessons-list" class="space-y-4">
-                    <!-- Lessons list -->
+                <!-- Add Exam -->
+                <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+                    <h3 class="text-base font-bold text-slate-900 flex items-center gap-2"><i class="fa-solid fa-file-circle-plus text-emerald-600"></i> Qormaata Haaraa</h3>
+                    <form id="form-exam" class="space-y-3">
+                        <input type="text" id="exam-title" placeholder="Mata-duree Qormaataa" required class="w-full px-4 py-2 border rounded-xl text-sm">
+                        <input type="number" id="exam-duration" placeholder="Yeroo (Mins)" required class="w-full px-4 py-2 border rounded-xl text-sm">
+                        <button type="submit" class="w-full bg-emerald-600 text-white font-bold py-2 rounded-xl text-sm">Save Exam</button>
+                    </form>
+                </div>
+
+                <!-- Add Question -->
+                <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+                    <h3 class="text-base font-bold text-slate-900 flex items-center gap-2"><i class="fa-solid fa-question text-amber-600"></i> Gaaffii Qormaataa</h3>
+                    <form id="form-question" class="space-y-2">
+                        <select id="select-exam" required class="w-full px-4 py-2 border rounded-xl text-sm bg-white"></select>
+                        <input type="text" id="q-text" placeholder="Gaaffii" required class="w-full px-4 py-2 border rounded-xl text-sm">
+                        <input type="text" id="q-a" placeholder="Option A" required class="w-full px-4 py-2 border rounded-xl text-sm">
+                        <input type="text" id="q-b" placeholder="Option B" required class="w-full px-4 py-2 border rounded-xl text-sm">
+                        <input type="text" id="q-c" placeholder="Option C" required class="w-full px-4 py-2 border rounded-xl text-sm">
+                        <input type="text" id="q-d" placeholder="Option D" required class="w-full px-4 py-2 border rounded-xl text-sm">
+                        <select id="q-correct" class="w-full px-4 py-2 border rounded-xl text-sm bg-white">
+                            <option value="A">Deebii Sirrii: A</option>
+                            <option value="B">Deebii Sirrii: B</option>
+                            <option value="C">Deebii Sirrii: C</option>
+                            <option value="D">Deebii Sirrii: D</option>
+                        </select>
+                        <button type="submit" class="w-full bg-amber-600 text-white font-bold py-2 rounded-xl text-sm">Save Question</button>
+                    </form>
                 </div>
             </div>
+
+            <!-- RIGHT: MANAGEMENT PANELS -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Barattoota fi Roles (Owner Panel) -->
+                <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+                    <h3 class="text-base font-bold text-slate-900 mb-4 flex items-center gap-2"><i class="fa-solid fa-users text-blue-600"></i> Barattoota & Admin Roles</h3>
+                    <div id="users-list" class="space-y-3"></div>
+                </div>
+
+                <!-- Qabxii Barattootaa -->
+                <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+                    <h3 class="text-base font-bold text-slate-900 mb-4 flex items-center gap-2"><i class="fa-solid fa-chart-line text-purple-600"></i> Qabxii Qormaata Barattootaa</h3>
+                    <div id="results-list" class="space-y-3"></div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -54,62 +87,112 @@
         const SUPABASE_ANON_KEY = "sb_publishable_WKWwxJeXUi0bbgN4NsD3nQ_w1Xwdjhs";
         const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        const form = document.getElementById('add-lesson-form');
+        let currentUserRole = 'student';
 
-        // Check if Admin
         window.addEventListener('DOMContentLoaded', async () => {
             const { data: { session } } = await supabase.auth.getSession();
-            if (!session) {
-                window.location.href = '/';
-                return;
-            }
+            if (!session) { window.location.href = '/'; return; }
+            
             const { data: profile } = await supabase.from('profiles').select('role').eq('id', session.user.id).single();
             if (!profile || (profile.role !== 'admin' && profile.role !== 'owner')) {
-                alert("Aangoo hin qabdu!");
+                alert("Aangoo Admin hin qabdu!");
                 window.location.href = '/';
                 return;
             }
-            loadAdminLessons();
+            currentUserRole = profile.role;
+            loadExamsSelect();
+            loadUsers();
+            loadResults();
         });
 
         // Add Lesson
-        form.addEventListener('submit', async (e) => {
+        document.getElementById('form-lesson').addEventListener('submit', async (e) => {
             e.preventDefault();
             const title = document.getElementById('lesson-title').value;
             const description = document.getElementById('lesson-desc').value;
-
-            const { error } = await supabase.from('lessons').insert([{ title, description }]);
-            if (error) {
-                alert("Error: " + error.message);
-            } else {
-                alert("Barnoonni milkaa'inaan dabalameera!");
-                form.reset();
-                loadAdminLessons();
-            }
+            await supabase.from('lessons').insert([{ title, description }]);
+            alert("Barnoonni dabalameera!");
+            e.target.reset();
         });
 
-        async function loadAdminLessons() {
-            const list = document.getElementById('admin-lessons-list');
-            list.innerHTML = 'Loading...';
+        // Add Exam
+        document.getElementById('form-exam').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('exam-title').value;
+            const duration_minutes = document.getElementById('exam-duration').value;
+            await supabase.from('exams').insert([{ title, duration_minutes }]);
+            alert("Qormaanni dabalameera!");
+            e.target.reset();
+            loadExamsSelect();
+        });
 
-            const { data: lessons } = await supabase.from('lessons').select('*');
-            if (lessons) {
-                list.innerHTML = lessons.map(l => `
-                    <div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+        async function loadExamsSelect() {
+            const select = document.getElementById('select-exam');
+            const { data: exams } = await supabase.from('exams').select('*');
+            if (exams) {
+                select.innerHTML = exams.map(ex => `<option value="${ex.id}">${ex.title}</option>`).join('');
+            }
+        }
+
+        // Add Question
+        document.getElementById('form-question').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const exam_id = document.getElementById('select-exam').value;
+            const question_text = document.getElementById('q-text').value;
+            const option_a = document.getElementById('q-a').value;
+            const option_b = document.getElementById('q-b').value;
+            const option_c = document.getElementById('q-c').value;
+            const option_d = document.getElementById('q-d').value;
+            const correct_option = document.getElementById('q-correct').value;
+
+            await supabase.from('questions').insert([{ exam_id, question_text, option_a, option_b, option_c, option_d, correct_option }]);
+            alert("Gaaffiin dabalameera!");
+            e.target.reset();
+        });
+
+        async function loadUsers() {
+            const list = document.getElementById('users-list');
+            const { data: users } = await supabase.from('profiles').select('*');
+            if (users) {
+                list.innerHTML = users.map(u => `
+                    <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border text-sm">
                         <div>
-                            <h4 class="font-bold text-slate-900">${l.title}</h4>
-                            <p class="text-xs text-slate-500">${l.description || ''}</p>
+                            <p class="font-bold text-slate-900">${u.email || u.full_name || 'User'}</p>
+                            <span class="text-xs text-slate-500 font-semibold uppercase">Role: ${u.role}</span>
                         </div>
-                        <button onclick="deleteLesson('${l.id}')" class="text-rose-600 hover:bg-rose-50 p-2 rounded-lg transition"><i class="fa-solid fa-trash"></i></button>
+                        ${currentUserRole === 'owner' ? `
+                            <select onchange="updateRole('${u.id}', this.value)" class="text-xs p-1 border rounded bg-white">
+                                <option value="student" ${u.role==='student'?'selected':''}>Student</option>
+                                <option value="admin" ${u.role==='admin'?'selected':''}>Admin</option>
+                                <option value="owner" ${u.role==='owner'?'selected':''}>Owner</option>
+                            </select>
+                        ` : ''}
                     </div>
                 `).join('');
             }
         }
 
-        async function deleteLesson(id) {
-            if (confirm("Barnoota kana haquu barbaadduu?")) {
-                await supabase.from('lessons').delete().eq('id', id);
-                loadAdminLessons();
+        async function updateRole(userId, newRole) {
+            await supabase.from('profiles').update({ role: newRole }).eq('id', userId);
+            alert("Role-iin jijjiirameera!");
+            loadUsers();
+        }
+
+        async function loadResults() {
+            const list = document.getElementById('results-list');
+            const { data: results } = await supabase.from('results').select('*, profiles(email), exams(title)');
+            if (results && results.length > 0) {
+                list.innerHTML = results.map(r => `
+                    <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border text-sm">
+                        <div>
+                            <p class="font-bold text-slate-900">${r.profiles?.email || 'Student'}</p>
+                            <p class="text-xs text-slate-500">${r.exams?.title || 'Exam'}</p>
+                        </div>
+                        <span class="font-bold text-emerald-600">${r.score.toFixed(1)}%</span>
+                    </div>
+                `).join('');
+            } else {
+                list.innerHTML = '<div class="text-slate-400 text-xs">Qabxiin barattootaa hin argamne.</div>';
             }
         }
     </script>
