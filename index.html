@@ -3,77 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mootummaa Barnootaa - Login</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Mootummaa Barnootaa</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-[#112240] min-h-screen flex items-center justify-center px-4 font-sans">
+<body class="bg-[#112240] min-h-screen text-slate-800 font-sans">
 
-    <!-- LOGIN CARD CONTAINER -->
-    <div class="max-w-md w-full bg-white rounded-[32px] shadow-2xl p-8 border border-slate-100 text-center">
-        
-        <!-- Header Text -->
-        <h2 class="text-2xl font-bold text-slate-900 mb-1">Seensa / Login</h2>
-        <p class="text-slate-500 text-sm mb-8 font-medium">Mootummaa barnootaatti seenuuf filadhaa</p>
+    <!-- 1. LOGIN SCREEN -->
+    <div id="login-container" class="min-h-screen flex items-center justify-center px-4">
+        <div class="max-w-md w-full bg-white rounded-[32px] shadow-2xl p-8 border border-slate-100 text-center">
+            <h2 class="text-2xl font-bold text-slate-900 mb-1">Seensa / Login</h2>
+            <p class="text-slate-500 text-sm mb-8 font-medium">Mootummaa barnootaatti seenuuf filadhaa</p>
 
-        <!-- BUTTONS LIST -->
-        <div class="space-y-4">
-            
-            <!-- 1. Google Login Button -->
-            <button id="btn-google" class="w-full py-4 px-6 border-2 border-slate-200 rounded-[20px] flex items-center justify-center gap-3 hover:bg-slate-50 transition duration-200 active:scale-95">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_\"G\"_Logo.svg" class="w-5 h-5" alt="Google">
-                <span class="font-bold text-slate-700 text-base">Log in with Google</span>
-            </button>
+            <div class="space-y-4">
+                <button id="btn-google" class="w-full py-4 px-6 border-2 border-slate-200 rounded-[20px] flex items-center justify-center gap-3 hover:bg-slate-50 transition active:scale-95">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_Logo.svg" class="w-5 h-5" alt="Google">
+                    <span class="font-bold text-slate-700 text-base">Log in with Google</span>
+                </button>
 
-            <!-- 2. Telegram Login Button -->
-            <button id="btn-telegram" class="w-full py-4 px-6 bg-[#2fa3d8] hover:bg-[#2892c2] text-white rounded-[20px] flex items-center justify-center gap-3 transition duration-200 active:scale-95 shadow-md shadow-blue-100">
-                <i class="fa-brands fa-telegram text-xl"></i>
-                <span class="font-bold text-white text-base">Login with Telegram</span>
-            </button>
-
+                <button id="btn-telegram" class="w-full py-4 px-6 bg-[#2fa3d8] hover:bg-[#2892c2] text-white rounded-[20px] flex items-center justify-center gap-3 transition active:scale-95 shadow-md shadow-blue-100">
+                    <i class="fa-brands fa-telegram text-xl"></i>
+                    <span class="font-bold text-white text-base">Login with Telegram</span>
+                </button>
+            </div>
         </div>
-
     </div>
 
-    <!-- SUPABASE AUTHENTICATION JS -->
+    <!-- 2. STUDENT DASHBOARD -->
+    <div id="student-portal" class="hidden min-h-screen bg-slate-50 flex flex-col">
+        <header class="bg-slate-900 text-white h-16 flex items-center justify-between px-6 shadow-md">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-graduation-cap text-indigo-400 text-2xl"></i>
+                <span class="font-bold text-lg">Mootummaa Barnootaa</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <span id="user-email" class="text-xs text-slate-300 font-semibold">...</span>
+                <button id="btn-admin-portal" class="hidden bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3 py-2 rounded-lg transition"><i class="fa-solid fa-lock-open mr-1"></i> Admin Panel</button>
+                <button id="btn-logout" class="text-rose-400 hover:bg-rose-950 p-2 rounded-lg transition"><i class="fa-solid fa-right-from-bracket"></i></button>
+            </div>
+        </header>
+
+        <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 space-y-6">
+                <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2"><i class="fa-solid fa-book text-indigo-600"></i> Barnoota Jiran</h3>
+                <div id="lessons-list" class="grid grid-cols-1 gap-4"></div>
+            </div>
+
+            <div class="space-y-6">
+                <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2"><i class="fa-solid fa-file-invoice text-emerald-600"></i> Qormaata</h3>
+                <div id="exams-list" class="space-y-4"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 3. EXAM ACTIVE SCREEN -->
+    <div id="exam-active-container" class="hidden min-h-screen bg-slate-100 flex items-center justify-center p-4">
+        <div class="max-w-2xl w-full bg-white rounded-2xl shadow-xl p-8 border border-slate-200">
+            <div class="flex justify-between items-center border-b pb-4 mb-6">
+                <h2 id="active-exam-title" class="text-xl font-bold text-slate-900">...</h2>
+                <div class="bg-rose-50 text-rose-600 font-bold px-4 py-2 rounded-xl text-sm border border-rose-100">
+                    <i class="fa-solid fa-clock mr-1"></i> <span id="exam-timer">00:00</span>
+                </div>
+            </div>
+            <div id="quiz-question-box" class="space-y-6"></div>
+            <div class="flex justify-end mt-8 border-t pt-4">
+                <button id="btn-submit-exam" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-3 rounded-xl text-sm transition">Qormaata Xumuri (Submit)</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const SUPABASE_URL = "https://zxljzdhuilhzcdbgrxol.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_WKWwxJeXUi0bbgN4NsD3nQ_w1Xwdjhs";
         const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Google Authentication
-        document.getElementById('btn-google').addEventListener('click', async () => {
-            const { error } = await supabase.auth.signInWithOAuth({
-                provider: 'google',
-                options: {
-                    redirectTo: window.location.origin // Vercel URL keetti deebisa
-                }
-            });
-            if (error) alert("Error: " + error.message);
+        const loginContainer = document.getElementById('login-container');
+        const studentPortal = document.getElementById('student-portal');
+        const examActiveContainer = document.getElementById('exam-active-container');
+        const userEmail = document.getElementById('user-email');
+        const btnAdminPortal = document.getElementById('btn-admin-portal');
+
+        let currentExamId = null;
+        let examQuestions = [];
+        let userAnswers = {};
+        let examTimerInterval;
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) setupUser(session.user);
         });
 
-        // Telegram Authentication (Supabase dhuunfaan OAuth Telegram deeggara)
-        document.getElementById('btn-telegram').addEventListener('click', async () => {
-            const { error } = await supabase.auth.signInWithOAuth({
-                provider: 'telegram',
-                options: {
-                    redirectTo: window.location.origin
-                }
-            });
-            if (error) alert("Error: " + error.message);
+        document.getElementById('btn-google').addEventListener('click', () => {
+            supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin } });
         });
 
-        // Seensa Booda Check gochuu
-        supabase.auth.onAuthStateChange((event, session) => {
-            if (session) {
-                // Yoo milkaa'inaan seene gara fuula barnootaatti (lessons/exams) qajeela
-                window.location.href = "/dashboard.html"; // ykn index.html keessatti dashboard agarsiisi
+        document.getElementById('btn-telegram').addEventListener('click', () => {
+            supabase.auth.signInWithOAuth({ provider: 'telegram', options: { redirectTo: window.location.origin } });
+        });
+
+        document.getElementById('btn-logout').addEventListener('click', async () => {
+            await supabase.auth.signOut();
+            window.location.reload();
+        });
+
+        async function setupUser(user) {
+            loginContainer.classList.add('hidden');
+            studentPortal.classList.remove('hidden');
+            userEmail.textContent = user.email || user.user_metadata?.full_name || 'Student';
+
+            const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
+            if (profile && (profile.role === 'admin' || profile.role === 'owner')) {
+                btnAdminPortal.classList.remove('hidden');
+                btnAdminPortal.addEventListener('click', () => { window.location.href = '/admin'; });
             }
-        });
+
+            loadLessons();
+            loadExams();
+        }
+
+        async function loadLessons() {
+            const list = document.getElementById('lessons-list');
+            const { data: lessons } = await supabase.from('lessons').select('*').eq('is_published', true);
+            if (lessons && lessons.length > 0) {
+                list.innerHTML = lessons.map(l => `
+                    <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+                        <h4 class="text-lg font-bold text-slate-900">${l.title}</h4>
+                        <p class="text-slate-500 text-sm mt-2">${l.description || ''}</p>
+                    </div>
+                `).join('');
+            } else {
+                list.innerHTML = '<div class="text-slate-400 text-center">Barnoonni haaraan ammaaf hin jiru.</div>';
+            }
+        }
+
+        async function loadExams() {
+            const list = document.getElementById('exams-list');
+            const { data: exams } = await supabase.from('exams').select('*').eq('is_published', true);
+            if (exams && exams.length > 0) {
+                list.innerHTML = exams.map(e => `
+                    <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col">
+                        <h4 class="font-bold text-slate-900">${e.title}</h4>
+                        <span class="text-xs text-slate-400 mt-1"><i class="fa-solid fa-clock"></i> ${e.duration_minutes} Mins</span>
+                        <button onclick="startExam('${e.id}', '${e.title}', ${e.duration_minutes})" class="w-full mt-4 bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-xl text-sm font-bold transition">Jalqabi (Start)</button>
+                    </div>
+                `).join('');
+            } else {
+                list.innerHTML = '<div class="text-slate-400 text-center">Qormaanni haaraan ammaaf hin jiru.</div>';
+            }
+        }
+
+        async function startExam(examId, title, duration) {
+            currentExamId = examId;
+            studentPortal.classList.add('hidden');
+            examActiveContainer.classList.remove('hidden');
+            document.getElementById('active-exam-title').textContent = title;
+
+            let secondsLeft = duration * 60;
+            examTimerInterval = setInterval(() => {
+                let mins = Math.floor(secondsLeft / 60);
+                let secs = secondsLeft % 60;
+                document.getElementById('exam-timer').textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                if (secondsLeft <= 0) {
+                    clearInterval(examTimerInterval);
+                    alert("Yeroon dhumateera!");
+                    finishExam();
+                }
+                secondsLeft--;
+            }, 1000);
+
+            const { data: questions } = await supabase.from('questions').select('*').eq('exam_id', examId);
+            examQuestions = questions || [];
+            
+            const box = document.getElementById('quiz-question-box');
+            if (examQuestions.length > 0) {
+                box.innerHTML = examQuestions.map((q, idx) => `
+                    <div class="space-y-3 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                        <p class="font-bold text-slate-900">${idx+1}. ${q.question_text}</p>
+                        <div class="grid grid-cols-1 gap-2">
+                            <label class="p-3 border bg-white rounded-xl flex items-center gap-3 cursor-pointer"><input type="radio" name="q-${q.id}" value="A" onchange="userAnswers['${q.id}']='A'"> A) ${q.option_a}</label>
+                            <label class="p-3 border bg-white rounded-xl flex items-center gap-3 cursor-pointer"><input type="radio" name="q-${q.id}" value="B" onchange="userAnswers['${q.id}']='B'"> B) ${q.option_b}</label>
+                            <label class="p-3 border bg-white rounded-xl flex items-center gap-3 cursor-pointer"><input type="radio" name="q-${q.id}" value="C" onchange="userAnswers['${q.id}']='C'"> C) ${q.option_c}</label>
+                            <label class="p-3 border bg-white rounded-xl flex items-center gap-3 cursor-pointer"><input type="radio" name="q-${q.id}" value="D" onchange="userAnswers['${q.id}']='D'"> D) ${q.option_d}</label>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                box.innerHTML = '<div class="text-slate-400">Gaaffiin qormaata kanaa hin argamne.</div>';
+            }
+        }
+
+        document.getElementById('btn-submit-exam').addEventListener('click', finishExam);
+
+        async function finishExam() {
+            clearInterval(examTimerInterval);
+            let score = 0;
+            examQuestions.forEach(q => {
+                if (userAnswers[q.id] === q.correct_option) score++;
+            });
+
+            const percentage = examQuestions.length > 0 ? (score / examQuestions.length) * 100 : 0;
+            const { data: { session } } = await supabase.auth.getSession();
+
+            if (session) {
+                await supabase.from('results').insert([{
+                    user_id: session.user.id,
+                    exam_id: currentExamId,
+                    score: percentage
+                }]);
+            }
+
+            alert(`Qormaata Xumurtiinta! Qabxii kee: ${percentage.toFixed(1)}% (${score}/${examQuestions.length})`);
+            window.location.reload();
+        }
     </script>
 </body>
 </html>
