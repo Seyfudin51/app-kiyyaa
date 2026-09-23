@@ -27,7 +27,7 @@
                     <label class="block text-xs font-bold text-slate-700 mb-1">Student ID Kee Galchi</label>
                     <input type="text" id="input-student-id" placeholder="fkn: STU-1234" class="w-full px-4 py-3 uppercase font-mono font-bold border-2 border-slate-200 rounded-xl focus:border-indigo-600 outline-none">
                 </div>
-                <button type="button" onclick="loginWithID()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl shadow-lg shadow-indigo-100 transition cursor-pointer">Seeni (Login)</button>
+                <button type="button" onclick="loginWithID()" class="w-full bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-bold py-3 rounded-xl shadow-lg shadow-indigo-100 transition cursor-pointer">Seeni (Login)</button>
                 <div class="text-center pt-2">
                     <button type="button" onclick="toggleAuth(true)" class="text-xs text-indigo-600 font-bold hover:underline cursor-pointer">ID Hin Qabduu? Har'a Galmaa'i</button>
                 </div>
@@ -40,13 +40,14 @@
                     <input type="text" id="reg-name" placeholder="Maqaa kee" class="w-full px-4 py-3 border rounded-xl outline-none text-sm">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Lakk. Bilbilaa Addunyaa</label>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Lakk. Bilbilaa Addunyaa (International)</label>
                     <div class="flex gap-2">
                         <input type="text" id="reg-code" placeholder="+251" value="+251" class="w-24 px-3 py-3 border rounded-xl outline-none font-bold text-sm text-center bg-slate-50">
                         <input type="tel" id="reg-phone" placeholder="912345678" class="flex-1 px-4 py-3 border rounded-xl outline-none text-sm">
                     </div>
+                    <p class="text-[10px] text-slate-400 mt-1">Koodii biyya keetii (fkn: +251, +1, +44, +966...) galchi.</p>
                 </div>
-                <button type="button" onclick="registerStudent()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-lg shadow-emerald-100 transition cursor-pointer">Galmaa'i & ID Fudhadhu</button>
+                <button type="button" onclick="registerStudent()" class="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-3 rounded-xl shadow-lg shadow-emerald-100 transition cursor-pointer">Galmaa'i & ID Fudhadhu</button>
                 <div class="text-center pt-2">
                     <button type="button" onclick="toggleAuth(false)" class="text-xs text-slate-500 font-bold hover:underline cursor-pointer">Duraanuu Galmoofteetta? Seeni</button>
                 </div>
@@ -97,7 +98,7 @@
             <div id="questions-container" class="space-y-6 max-h-[60vh] overflow-y-auto pr-2"></div>
 
             <div class="flex justify-end border-t pt-4">
-                <button type="button" onclick="submitExam()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-8 py-3 rounded-xl transition shadow-lg shadow-emerald-100 cursor-pointer">Qormaata Xumuri</button>
+                <button type="button" onclick="submitExam()" class="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold px-8 py-3 rounded-xl transition shadow-lg shadow-emerald-100 cursor-pointer">Qormaata Xumuri</button>
             </div>
         </div>
     </div>
@@ -180,16 +181,29 @@
         async function loadExams() {
             const list = document.getElementById('exams-list');
             const { data: exams } = await db.from('exam_tests').select('*').eq('is_active', true);
+            const now = new Date();
+
             if (exams && exams.length > 0) {
-                list.innerHTML = exams.map(e => `
-                    <div class="flex items-center justify-between p-4 border rounded-2xl hover:border-indigo-200 bg-slate-50 transition">
-                        <div>
-                            <h4 class="font-bold text-slate-900">${e.title}</h4>
-                            <p class="text-xs text-slate-500 mt-1"><i class="fa-solid fa-clock"></i> ${e.duration_minutes} Mins</p>
+                // Filter exams by active start and end date
+                const activeExams = exams.filter(e => {
+                    if (e.start_time && new Date(e.start_time) > now) return false;
+                    if (e.end_time && new Date(e.end_time) < now) return false;
+                    return true;
+                });
+
+                if (activeExams.length > 0) {
+                    list.innerHTML = activeExams.map(e => `
+                        <div class="flex items-center justify-between p-4 border rounded-2xl hover:border-indigo-200 bg-slate-50 transition">
+                            <div>
+                                <h4 class="font-bold text-slate-900">${e.title}</h4>
+                                <p class="text-xs text-slate-500 mt-1"><i class="fa-solid fa-clock"></i> ${e.duration_minutes} Mins</p>
+                            </div>
+                            <button onclick="startExam('${e.id}', '${encodeURIComponent(e.title)}', ${e.duration_minutes})" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2 rounded-xl text-sm transition cursor-pointer">Qormaata Fudhadhu</button>
                         </div>
-                        <button onclick="startExam('${e.id}', '${encodeURIComponent(e.title)}', ${e.duration_minutes})" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2 rounded-xl text-sm transition cursor-pointer">Qormaata Fudhadhu</button>
-                    </div>
-                `).join('');
+                    `).join('');
+                } else {
+                    list.innerHTML = `<p class="text-slate-400 text-sm">Qormaanni yeroo ammaa banaa ta'e hin jiru.</p>`;
+                }
             } else {
                 list.innerHTML = `<p class="text-slate-400 text-sm">Qormaanni yeroo ammaa banaa ta'e hin jiru.</p>`;
             }
@@ -235,7 +249,7 @@
                 sec--;
             }, 1000);
 
-            // Fetch questions using examId strictly
+            // Fetch questions properly
             const { data: qList, error } = await db.from('exam_questions').select('*').eq('exam_id', examId);
             activeQuestions = qList || [];
             
@@ -253,7 +267,7 @@
                     </div>
                 `).join('');
             } else {
-                cont.innerHTML = '<p class="text-rose-500 font-bold p-4">Gaaffiin qormaata kanaa hin argamne! (Admin-ni gaaffii galchuu isaa mirkaneessi).</p>';
+                cont.innerHTML = '<p class="text-rose-500 font-bold p-4">Gaaffiin qormaata kanaa hin argamne! Admin-ni gaaffii akka galchu eegi.</p>';
             }
         };
 
