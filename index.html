@@ -97,7 +97,7 @@
             <div id="questions-container" class="space-y-6 max-h-[60vh] overflow-y-auto pr-2"></div>
 
             <div class="flex justify-end border-t pt-4">
-                <button type="button" onclick="submitExam()" class="bg-emerald-600 hover:bg-emerald-750 text-white font-bold px-8 py-3 rounded-xl transition shadow-lg shadow-emerald-100 cursor-pointer">Qormaata Xumuri</button>
+                <button type="button" onclick="submitExam()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-8 py-3 rounded-xl transition shadow-lg shadow-emerald-100 cursor-pointer">Qormaata Xumuri</button>
             </div>
         </div>
     </div>
@@ -235,7 +235,8 @@
                 sec--;
             }, 1000);
 
-            const { data: qList } = await db.from('exam_questions').select('*').eq('exam_id', examId);
+            // Fetch questions using examId strictly
+            const { data: qList, error } = await db.from('exam_questions').select('*').eq('exam_id', examId);
             activeQuestions = qList || [];
             
             const cont = document.getElementById('questions-container');
@@ -252,7 +253,7 @@
                     </div>
                 `).join('');
             } else {
-                cont.innerHTML = '<p class="text-slate-400">Gaaffiin qormaata kanaa hin argamne.</p>';
+                cont.innerHTML = '<p class="text-rose-500 font-bold p-4">Gaaffiin qormaata kanaa hin argamne! (Admin-ni gaaffii galchuu isaa mirkaneessi).</p>';
             }
         };
 
@@ -265,7 +266,6 @@
 
             const score = activeQuestions.length > 0 ? (correct / activeQuestions.length) * 100 : 0;
             
-            // Upsert result so single student exam attempt updates properly without duplicate spam
             await db.from('exam_results').upsert([{
                 student_id: currentStudent.id,
                 exam_id: activeExamId,
