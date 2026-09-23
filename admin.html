@@ -106,8 +106,8 @@ Deebii: B" class="w-full p-3 border rounded-xl text-xs font-mono"></textarea>
             const duration = document.getElementById('new-exam-duration').value;
             if (!title || !duration) return alert("Maaloo mata-duree fi yeroo guuti!");
             const { error } = await db.from('exam_tests').insert([{ title, duration_minutes: parseInt(duration) }]);
-            if (error) return alert("Error: " + error.message);
-            alert("Qormaanni uumameera!");
+            if (error) return alert("Error Database: " + error.message);
+            alert("🎉 Qormaanni milkaa'inaan uumameera!");
             document.getElementById('new-exam-title').value = '';
             document.getElementById('new-exam-duration').value = '';
             loadExamsForSelect();
