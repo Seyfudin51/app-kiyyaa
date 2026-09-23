@@ -8,9 +8,9 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-[#0f172a] text-slate-800 font-sans min-h-screen">
+<body class="bg-[#0f172a] text-slate-800 font-sans min-h-screen flex flex-col justify-between">
 
-    <!-- 1. STUDENT LOGIN & REGISTER BOX -->
+    <!-- 1. STUDENT LOGIN / REGISTER CONTAINER -->
     <div id="auth-box" class="min-h-screen flex items-center justify-center px-4 py-8">
         <div class="max-w-md w-full bg-white rounded-3xl p-8 shadow-2xl border border-slate-100">
             <div class="text-center mb-6">
@@ -27,9 +27,9 @@
                     <label class="block text-xs font-bold text-slate-700 mb-1">Student ID Kee Galchi</label>
                     <input type="text" id="input-student-id" placeholder="fkn: STU-1234" class="w-full px-4 py-3 uppercase font-mono font-bold border-2 border-slate-200 rounded-xl focus:border-indigo-600 outline-none">
                 </div>
-                <button type="button" id="btn-login" class="w-full bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-bold py-3 rounded-xl shadow-lg shadow-indigo-100 transition cursor-pointer">Seeni (Login)</button>
+                <button type="button" onclick="loginWithID()" class="w-full bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-bold py-3 rounded-xl shadow-lg shadow-indigo-100 transition cursor-pointer">Seeni (Login)</button>
                 <div class="text-center pt-2">
-                    <button type="button" id="btn-to-register" class="text-xs text-indigo-600 font-bold hover:underline cursor-pointer">ID Hin Qabduu? Har'a Galmaa'i</button>
+                    <button type="button" onclick="toggleAuth(true)" class="text-xs text-indigo-600 font-bold hover:underline cursor-pointer">ID Hin Qabduu? Har'a Galmaa'i</button>
                 </div>
             </div>
 
@@ -37,15 +37,24 @@
             <div id="register-section" class="hidden space-y-4">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Maqaa Guutuu</label>
-                    <input type="text" id="reg-name" placeholder="Maqaa kee" class="w-full px-4 py-3 border rounded-xl outline-none">
+                    <input type="text" id="reg-name" placeholder="Maqaa kee" class="w-full px-4 py-3 border rounded-xl outline-none text-sm">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Lakk. Bilbilaa</label>
-                    <input type="tel" id="reg-phone" placeholder="09..." class="w-full px-4 py-3 border rounded-xl outline-none">
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Lakk. Bilbilaa fi Biyya</label>
+                    <select id="reg-country" class="w-full mb-2 px-3 py-2 border rounded-xl text-sm bg-white">
+                        <option value="+251">Ethiopia (+251)</option>
+                        <option value="+1">USA/Canada (+1)</option>
+                        <option value="+44">UK (+44)</option>
+                        <option value="+20">Egypt (+20)</option>
+                        <option value="+254">Kenya (+254)</option>
+                        <option value="+966">Saudi Arabia (+966)</option>
+                        <option value="+971">UAE (+971)</option>
+                    </select>
+                    <input type="tel" id="reg-phone" placeholder="912345678 (Osoo 0 hin dabaliin)" class="w-full px-4 py-3 border rounded-xl outline-none text-sm">
                 </div>
-                <button type="button" id="btn-register" class="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-3 rounded-xl shadow-lg shadow-emerald-100 transition cursor-pointer">Galmaa'i & ID Fudhadhu</button>
+                <button type="button" onclick="registerStudent()" class="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-3 rounded-xl shadow-lg shadow-emerald-100 transition cursor-pointer">Galmaa'i & ID Fudhadhu</button>
                 <div class="text-center pt-2">
-                    <button type="button" id="btn-to-login" class="text-xs text-slate-500 font-bold hover:underline cursor-pointer">Duraanuu Galmoofteetta? Seeni</button>
+                    <button type="button" onclick="toggleAuth(false)" class="text-xs text-slate-500 font-bold hover:underline cursor-pointer">Duraanuu Galmoofteetta? Seeni</button>
                 </div>
             </div>
             
@@ -65,7 +74,7 @@
                     <p id="dash-student-id" class="text-[10px] text-indigo-300 font-mono">...</p>
                 </div>
             </div>
-            <button type="button" id="btn-logout-student" class="text-rose-400 hover:text-rose-300 text-sm font-bold cursor-pointer"><i class="fa-solid fa-right-from-bracket"></i> Ba'i</button>
+            <button type="button" onclick="logoutStudent()" class="text-rose-400 hover:text-rose-300 text-sm font-bold cursor-pointer"><i class="fa-solid fa-right-from-bracket"></i> Ba'i</button>
         </header>
 
         <main class="max-w-4xl w-full mx-auto p-6 space-y-6 flex-1">
@@ -94,7 +103,7 @@
             <div id="questions-container" class="space-y-6 max-h-[60vh] overflow-y-auto pr-2"></div>
 
             <div class="flex justify-end border-t pt-4">
-                <button type="button" id="btn-submit-exam" class="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold px-8 py-3 rounded-xl transition shadow-lg shadow-emerald-100 cursor-pointer">Qormaata Xumuri</button>
+                <button type="button" onclick="submitExam()" class="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold px-8 py-3 rounded-xl transition shadow-lg shadow-emerald-100 cursor-pointer">Qormaata Xumuri</button>
             </div>
         </div>
     </div>
@@ -110,34 +119,38 @@
         let answers = {};
         let examTimer = null;
 
-        document.getElementById('btn-to-register').addEventListener('click', () => {
-            document.getElementById('login-section').classList.add('hidden');
-            document.getElementById('register-section').classList.remove('hidden');
-        });
+        function toggleAuth(showReg) {
+            document.getElementById('login-section').classList.toggle('hidden', showReg);
+            document.getElementById('register-section').classList.toggle('hidden', !showReg);
+        }
 
-        document.getElementById('btn-to-login').addEventListener('click', () => {
-            document.getElementById('register-section').classList.add('hidden');
-            document.getElementById('login-section').classList.remove('hidden');
-        });
-
-        document.getElementById('btn-register').addEventListener('click', async () => {
+        async function registerStudent() {
             const name = document.getElementById('reg-name').value.trim();
-            const phone = document.getElementById('reg-phone').value.trim();
-            if (!name || !phone) return alert("Maaloo maqaa fi lakk. bilbilaa galchi!");
+            const phoneNum = document.getElementById('reg-phone').value.trim();
+            const countryCode = document.getElementById('reg-country').value;
+            
+            if (!name || !phoneNum) return alert("Maaloo maqaa fi lakk. bilbilaa guuti!");
 
+            const fullPhone = countryCode + phoneNum.replace(/^0+/, '');
             const newId = "STU-" + Math.floor(1000 + Math.random() * 9000);
-            const { error } = await db.from('exam_students').insert([{ id: newId, full_name: name, phone: phone }]);
-            if (error) return alert("Error: " + error.message);
+
+            const { error } = await db.from('exam_students').insert([{ 
+                id: newId, 
+                full_name: name, 
+                phone: fullPhone, 
+                is_allowed: true 
+            }]);
+
+            if (error) return alert("Error Database: " + error.message);
 
             alert("🎉 Galmeen milkaa'eera!\n\nSTUDENT ID KEE: " + newId + "\n(ID kana bakka gaariitti qabadhu!)");
             document.getElementById('input-student-id').value = newId;
-            document.getElementById('register-section').classList.add('hidden');
-            document.getElementById('login-section').classList.remove('hidden');
-        });
+            toggleAuth(false);
+        }
 
-        document.getElementById('btn-login').addEventListener('click', async () => {
+        async function loginWithID() {
             const id = document.getElementById('input-student-id').value.trim().toUpperCase();
-            if (!id) return alert("Maaloo Student ID galchi!");
+            if (!id) return alert("Maaloo Student ID kee galchi!");
 
             const { data: student, error } = await db.from('exam_students').select('*').eq('id', id).single();
             if (error || !student) return alert("Student ID kun hin argamne! Maaloo dura galmaa'aa.");
@@ -146,13 +159,13 @@
             currentStudent = student;
             localStorage.setItem('student_id', student.id);
             openDashboard();
-        });
+        }
 
         window.addEventListener('DOMContentLoaded', () => {
             const savedId = localStorage.getItem('student_id');
             if (savedId) {
                 document.getElementById('input-student-id').value = savedId;
-                document.getElementById('btn-login').click();
+                loginWithID();
             }
         });
 
@@ -165,10 +178,10 @@
             loadMyResults();
         }
 
-        document.getElementById('btn-logout-student').addEventListener('click', () => {
+        function logoutStudent() {
             localStorage.removeItem('student_id');
             window.location.reload();
-        });
+        }
 
         async function loadExams() {
             const list = document.getElementById('exams-list');
@@ -223,7 +236,7 @@
                 if (sec <= 0) {
                     clearInterval(examTimer);
                     alert("Yeroon dhumateera!");
-                    finishExamSubmit();
+                    submitExam();
                 }
                 sec--;
             }, 1000);
@@ -249,9 +262,7 @@
             }
         };
 
-        document.getElementById('btn-submit-exam').addEventListener('click', finishExamSubmit);
-
-        async function finishExamSubmit() {
+        async function submitExam() {
             if (examTimer) clearInterval(examTimer);
             let correct = 0;
             activeQuestions.forEach(q => {
