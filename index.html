@@ -27,27 +27,26 @@
                     <label class="block text-xs font-bold text-slate-700 mb-1">Student ID Kee Galchi</label>
                     <input type="text" id="input-student-id" placeholder="fkn: STU-1234" class="w-full px-4 py-3 uppercase font-mono font-bold border-2 border-slate-200 rounded-xl focus:border-indigo-600 outline-none">
                 </div>
-                <button type="button" onclick="loginWithID()" class="w-full bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-bold py-3 rounded-xl shadow-lg shadow-indigo-100 transition cursor-pointer">Seeni (Login)</button>
+                <button type="button" onclick="loginWithID()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl shadow-lg shadow-indigo-100 transition cursor-pointer">Seeni (Login)</button>
                 <div class="text-center pt-2">
                     <button type="button" onclick="toggleAuth(true)" class="text-xs text-indigo-600 font-bold hover:underline cursor-pointer">ID Hin Qabduu? Har'a Galmaa'i</button>
                 </div>
             </div>
 
-            <!-- Register New Student (International All Countries Phone Support) -->
+            <!-- Register New Student -->
             <div id="register-section" class="hidden space-y-4">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Maqaa Guutuu</label>
                     <input type="text" id="reg-name" placeholder="Maqaa kee" class="w-full px-4 py-3 border rounded-xl outline-none text-sm">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Lakk. Bilbilaa Addunyaa (International Phone)</label>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Lakk. Bilbilaa Addunyaa</label>
                     <div class="flex gap-2">
                         <input type="text" id="reg-code" placeholder="+251" value="+251" class="w-24 px-3 py-3 border rounded-xl outline-none font-bold text-sm text-center bg-slate-50">
                         <input type="tel" id="reg-phone" placeholder="912345678" class="flex-1 px-4 py-3 border rounded-xl outline-none text-sm">
                     </div>
-                    <p class="text-[11px] text-slate-400 mt-1">Koodii biyya keetii (fkn: +251, +1, +44, +971...) galchi.</p>
                 </div>
-                <button type="button" onclick="registerStudent()" class="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-3 rounded-xl shadow-lg shadow-emerald-100 transition cursor-pointer">Galmaa'i & ID Fudhadhu</button>
+                <button type="button" onclick="registerStudent()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-lg shadow-emerald-100 transition cursor-pointer">Galmaa'i & ID Fudhadhu</button>
                 <div class="text-center pt-2">
                     <button type="button" onclick="toggleAuth(false)" class="text-xs text-slate-500 font-bold hover:underline cursor-pointer">Duraanuu Galmoofteetta? Seeni</button>
                 </div>
@@ -98,7 +97,7 @@
             <div id="questions-container" class="space-y-6 max-h-[60vh] overflow-y-auto pr-2"></div>
 
             <div class="flex justify-end border-t pt-4">
-                <button type="button" onclick="submitExam()" class="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold px-8 py-3 rounded-xl transition shadow-lg shadow-emerald-100 cursor-pointer">Qormaata Xumuri</button>
+                <button type="button" onclick="submitExam()" class="bg-emerald-600 hover:bg-emerald-750 text-white font-bold px-8 py-3 rounded-xl transition shadow-lg shadow-emerald-100 cursor-pointer">Qormaata Xumuri</button>
             </div>
         </div>
     </div>
@@ -265,14 +264,16 @@
             });
 
             const score = activeQuestions.length > 0 ? (correct / activeQuestions.length) * 100 : 0;
-            await db.from('exam_results').insert([{
+            
+            // Upsert result so single student exam attempt updates properly without duplicate spam
+            await db.from('exam_results').upsert([{
                 student_id: currentStudent.id,
                 exam_id: activeExamId,
                 student_name: currentStudent.full_name,
                 score: score,
                 total_questions: activeQuestions.length,
                 correct_answers: correct
-            }]);
+            }], { onConflict: 'student_id,exam_id' });
 
             alert("🎉 QORMAATA XUMURTEETTA!\n\nQabxii Kee: " + score.toFixed(1) + "%\nDeebii Sirrii: " + correct + " / " + activeQuestions.length);
             window.location.reload();
