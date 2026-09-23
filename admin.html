@@ -3,83 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin & Owner Panel</title>
+    <title>Admin Exam Control Panel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-slate-100 text-slate-800 font-sans">
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen">
 
-    <div class="min-h-screen flex flex-col">
-        <header class="bg-slate-900 text-white h-16 flex items-center justify-between px-6 shadow-md">
+    <!-- ADMIN PIN LOGIN -->
+    <div id="admin-auth" class="min-h-screen flex items-center justify-center px-4">
+        <div class="max-w-sm w-full bg-white p-8 rounded-3xl shadow-xl border text-center space-y-4">
+            <div class="w-14 h-14 bg-slate-900 text-white rounded-2xl flex items-center justify-center mx-auto text-xl"><i class="fa-solid fa-lock"></i></div>
+            <h2 class="text-xl font-bold text-slate-900">Seensa Admin</h2>
+            <input type="password" id="admin-pin" placeholder="Admin PIN (Default: 1234)" class="w-full px-4 py-3 border-2 rounded-xl text-center font-bold tracking-widest outline-none">
+            <button onclick="checkAdmin()" class="w-full bg-slate-900 text-white font-bold py-3 rounded-xl transition">Bani (Enter)</button>
+        </div>
+    </div>
+
+    <!-- MAIN ADMIN DASHBOARD -->
+    <div id="admin-main" class="hidden min-h-screen flex flex-col">
+        <header class="bg-slate-900 text-white h-16 flex items-center justify-between px-6">
             <div class="flex items-center gap-3">
-                <i class="fa-solid fa-crown text-amber-400 text-xl"></i>
-                <span class="font-bold text-lg">Admin & Owner Dashboard</span>
+                <i class="fa-solid fa-shield-halved text-amber-400 text-xl"></i>
+                <span class="font-bold">Admin Exam Portal</span>
             </div>
-            <button onclick="window.location.href='/'" class="bg-slate-800 hover:bg-slate-700 text-xs font-bold px-4 py-2 rounded-lg transition">Gara Appii Deebi'i</button>
+            <a href="/" class="text-xs bg-slate-800 px-3 py-2 rounded-lg font-bold">Gara Fuula Barataatti</a>
         </header>
 
-        <div class="flex-1 max-w-7xl w-full mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <main class="max-w-7xl w-full mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
             
-            <!-- LEFT: CREATE FORMS -->
+            <!-- LEFT: CREATE EXAM & BULK QUESTIONS -->
             <div class="space-y-6">
-                <!-- Add Lesson -->
-                <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
-                    <h3 class="text-base font-bold text-slate-900 flex items-center gap-2"><i class="fa-solid fa-plus text-indigo-600"></i> Barnoota Dabali</h3>
-                    <form id="form-lesson" class="space-y-3">
-                        <input type="text" id="lesson-title" placeholder="Mata-duree" required class="w-full px-4 py-2 border rounded-xl text-sm">
-                        <textarea id="lesson-desc" placeholder="Ibsa Gabaabaa" class="w-full px-4 py-2 border rounded-xl text-sm" rows="2"></textarea>
-                        <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-2 rounded-xl text-sm">Save Lesson</button>
-                    </form>
+                <!-- Create Exam -->
+                <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-3">
+                    <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2"><i class="fa-solid fa-folder-plus text-indigo-600"></i> Qormaata Haaraa Uumi</h3>
+                    <input type="text" id="new-exam-title" placeholder="Mata-duree (fkn: Qormaata Kutaa 4ffaa)" class="w-full px-3 py-2 border rounded-xl text-sm">
+                    <input type="number" id="new-exam-duration" placeholder="Yeroo (Daqiiqaa - fkn: 30)" class="w-full px-3 py-2 border rounded-xl text-sm">
+                    <button onclick="createExam()" class="w-full bg-indigo-600 text-white font-bold py-2 rounded-xl text-sm">Uumi (Create)</button>
                 </div>
 
-                <!-- Add Exam -->
-                <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
-                    <h3 class="text-base font-bold text-slate-900 flex items-center gap-2"><i class="fa-solid fa-file-circle-plus text-emerald-600"></i> Qormaata Haaraa</h3>
-                    <form id="form-exam" class="space-y-3">
-                        <input type="text" id="exam-title" placeholder="Mata-duree Qormaataa" required class="w-full px-4 py-2 border rounded-xl text-sm">
-                        <input type="number" id="exam-duration" placeholder="Yeroo (Mins)" required class="w-full px-4 py-2 border rounded-xl text-sm">
-                        <button type="submit" class="w-full bg-emerald-600 text-white font-bold py-2 rounded-xl text-sm">Save Exam</button>
-                    </form>
-                </div>
+                <!-- 🔥 BULK QUESTIONS PARSER (Paste 50 questions at once!) -->
+                <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-3">
+                    <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2"><i class="fa-solid fa-paste text-emerald-600"></i> Gaaffilee 50 Al-tokkotti Galchi (Bulk Paste)</h3>
+                    <select id="bulk-exam-select" class="w-full px-3 py-2 border rounded-xl text-sm bg-white font-bold"></select>
+                    <p class="text-[11px] text-slate-400">Format: Gaaffii, A), B), C), D), fi Deebii: A/B/C/D saanduuqa kanaan paste godhi.</p>
+                    <textarea id="bulk-text" rows="8" placeholder="Fakkeenya:
+1. AI jechuun maali?
+A) Artificial Intelligence
+B) Apple Internet
+C) Android Info
+D) Auto Image
+Deebii: A
 
-                <!-- Add Question -->
-                <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
-                    <h3 class="text-base font-bold text-slate-900 flex items-center gap-2"><i class="fa-solid fa-question text-amber-600"></i> Gaaffii Qormaataa</h3>
-                    <form id="form-question" class="space-y-2">
-                        <select id="select-exam" required class="w-full px-4 py-2 border rounded-xl text-sm bg-white"></select>
-                        <input type="text" id="q-text" placeholder="Gaaffii" required class="w-full px-4 py-2 border rounded-xl text-sm">
-                        <input type="text" id="q-a" placeholder="Option A" required class="w-full px-4 py-2 border rounded-xl text-sm">
-                        <input type="text" id="q-b" placeholder="Option B" required class="w-full px-4 py-2 border rounded-xl text-sm">
-                        <input type="text" id="q-c" placeholder="Option C" required class="w-full px-4 py-2 border rounded-xl text-sm">
-                        <input type="text" id="q-d" placeholder="Option D" required class="w-full px-4 py-2 border rounded-xl text-sm">
-                        <select id="q-correct" class="w-full px-4 py-2 border rounded-xl text-sm bg-white">
-                            <option value="A">Deebii Sirrii: A</option>
-                            <option value="B">Deebii Sirrii: B</option>
-                            <option value="C">Deebii Sirrii: C</option>
-                            <option value="D">Deebii Sirrii: D</option>
-                        </select>
-                        <button type="submit" class="w-full bg-amber-600 text-white font-bold py-2 rounded-xl text-sm">Save Question</button>
-                    </form>
+2. Gaaffii lammaffaa...
+A) ...
+B) ...
+C) ...
+D) ...
+Deebii: B" class="w-full p-3 border rounded-xl text-xs font-mono"></textarea>
+                    <button onclick="parseAndSaveBulkQuestions()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-sm transition">Parse & Save Hundaa</button>
                 </div>
             </div>
 
-            <!-- RIGHT: MANAGEMENT PANELS -->
+            <!-- RIGHT: RESULTS, RANKINGS & STUDENTS -->
             <div class="lg:col-span-2 space-y-6">
-                <!-- Barattoota fi Roles (Owner Panel) -->
-                <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
-                    <h3 class="text-base font-bold text-slate-900 mb-4 flex items-center gap-2"><i class="fa-solid fa-users text-blue-600"></i> Barattoota & Admin Roles</h3>
-                    <div id="users-list" class="space-y-3"></div>
+                <!-- Leaderboard & Results -->
+                <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-4">
+                    <h3 class="font-bold text-slate-900 text-base flex items-center gap-2"><i class="fa-solid fa-trophy text-amber-500"></i> Qabxii & Sadarkaa Barattootaa (Rankings)</h3>
+                    <div id="results-table" class="space-y-2 max-h-72 overflow-y-auto"></div>
                 </div>
 
-                <!-- Qabxii Barattootaa -->
-                <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
-                    <h3 class="text-base font-bold text-slate-900 mb-4 flex items-center gap-2"><i class="fa-solid fa-chart-line text-purple-600"></i> Qabxii Qormaata Barattootaa</h3>
-                    <div id="results-list" class="space-y-3"></div>
+                <!-- Manage Students (Permission) -->
+                <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-4">
+                    <h3 class="font-bold text-slate-900 text-base flex items-center gap-2"><i class="fa-solid fa-users text-blue-600"></i> Barattoota Bulchuu (Allow / Block)</h3>
+                    <div id="students-table" class="space-y-2 max-h-72 overflow-y-auto"></div>
                 </div>
             </div>
 
-        </div>
+        </main>
     </div>
 
     <script>
@@ -87,113 +88,132 @@
         const SUPABASE_ANON_KEY = "sb_publishable_WKWwxJeXUi0bbgN4NsD3nQ_w1Xwdjhs";
         const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        let currentUserRole = 'student';
-
-        window.addEventListener('DOMContentLoaded', async () => {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (!session) { window.location.href = '/'; return; }
-            
-            const { data: profile } = await supabase.from('profiles').select('role').eq('id', session.user.id).single();
-            if (!profile || (profile.role !== 'admin' && profile.role !== 'owner')) {
-                alert("Aangoo Admin hin qabdu!");
-                window.location.href = '/';
-                return;
+        function checkAdmin() {
+            const pin = document.getElementById('admin-pin').value;
+            if (pin === "1234") { // PIN Admin keetii
+                document.getElementById('admin-auth').classList.add('hidden');
+                document.getElementById('admin-main').classList.remove('hidden');
+                loadExamsForSelect();
+                loadAdminResults();
+                loadAdminStudents();
+            } else {
+                alert("PIN Dogoggora!");
             }
-            currentUserRole = profile.role;
-            loadExamsSelect();
-            loadUsers();
-            loadResults();
-        });
+        }
 
-        // Add Lesson
-        document.getElementById('form-lesson').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const title = document.getElementById('lesson-title').value;
-            const description = document.getElementById('lesson-desc').value;
-            await supabase.from('lessons').insert([{ title, description }]);
-            alert("Barnoonni dabalameera!");
-            e.target.reset();
-        });
+        async function createExam() {
+            const title = document.getElementById('new-exam-title').value.trim();
+            const duration = document.getElementById('new-exam-duration').value;
+            if (!title || !duration) return alert("Guuti!");
+            await supabase.from('exam_tests').insert([{ title, duration_minutes: duration }]);
+            alert("Qormaanni uumameera!");
+            document.getElementById('new-exam-title').value = '';
+            loadExamsForSelect();
+        }
 
-        // Add Exam
-        document.getElementById('form-exam').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const title = document.getElementById('exam-title').value;
-            const duration_minutes = document.getElementById('exam-duration').value;
-            await supabase.from('exams').insert([{ title, duration_minutes }]);
-            alert("Qormaanni dabalameera!");
-            e.target.reset();
-            loadExamsSelect();
-        });
-
-        async function loadExamsSelect() {
-            const select = document.getElementById('select-exam');
-            const { data: exams } = await supabase.from('exams').select('*');
+        async function loadExamsForSelect() {
+            const sel = document.getElementById('bulk-exam-select');
+            const { data: exams } = await supabase.from('exam_tests').select('*');
             if (exams) {
-                select.innerHTML = exams.map(ex => `<option value="${ex.id}">${ex.title}</option>`).join('');
+                sel.innerHTML = exams.map(e => `<option value="${e.id}">${e.title}</option>`).join('');
             }
         }
 
-        // Add Question
-        document.getElementById('form-question').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const exam_id = document.getElementById('select-exam').value;
-            const question_text = document.getElementById('q-text').value;
-            const option_a = document.getElementById('q-a').value;
-            const option_b = document.getElementById('q-b').value;
-            const option_c = document.getElementById('q-c').value;
-            const option_d = document.getElementById('q-d').value;
-            const correct_option = document.getElementById('q-correct').value;
+        // 🔥 BULK QUESTION PARSER (Parses text format automatically)
+        async function parseAndSaveBulkQuestions() {
+            const examId = document.getElementById('bulk-exam-select').value;
+            const raw = document.getElementById('bulk-text').value.trim();
+            if (!examId || !raw) return alert("Q
+ormaata filadhuuti text gaaffilee galchi!");
 
-            await supabase.from('questions').insert([{ exam_id, question_text, option_a, option_b, option_c, option_d, correct_option }]);
-            alert("Gaaffiin dabalameera!");
-            e.target.reset();
-        });
+            const blocks = raw.split(/\n\s*\n/); // Splits by empty lines
+            const parsedQuestions = [];
 
-        async function loadUsers() {
-            const list = document.getElementById('users-list');
-            const { data: users } = await supabase.from('profiles').select('*');
-            if (users) {
-                list.innerHTML = users.map(u => `
-                    <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border text-sm">
-                        <div>
-                            <p class="font-bold text-slate-900">${u.email || u.full_name || 'User'}</p>
-                            <span class="text-xs text-slate-500 font-semibold uppercase">Role: ${u.role}</span>
-                        </div>
-                        ${currentUserRole === 'owner' ? `
-                            <select onchange="updateRole('${u.id}', this.value)" class="text-xs p-1 border rounded bg-white">
-                                <option value="student" ${u.role==='student'?'selected':''}>Student</option>
-                                <option value="admin" ${u.role==='admin'?'selected':''}>Admin</option>
-                                <option value="owner" ${u.role==='owner'?'selected':''}>Owner</option>
-                            </select>
-                        ` : ''}
-                    </div>
-                `).join('');
+            for (const block of blocks) {
+                const lines = block.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+                if (lines.length >= 5) {
+                    let qText = lines[0].replace(/^\d+[\.\)]\s*/, ''); // Remove numbering (e.g., 1. or 1))
+                    let optA = '', optB = '', optC = '', optD = '', ans = 'A';
+
+                    for (const line of lines.slice(1)) {
+                        if (/^[Aa][\.\)]\s*/.test(line)) optA = line.replace(/^[Aa][\.\)]\s*/, '');
+                        else if (/^[Bb][\.\)]\s*/.test(line)) optB = line.replace(/^[Bb][\.\)]\s*/, '');
+                        else if (/^[Cc][\.\)]\s*/.test(line)) optC = line.replace(/^[Cc][\.\)]\s*/, '');
+                        else if (/^[Dd][\.\)]\s*/.test(line)) optD = line.replace(/^[Dd][\.\)]\s*/, '');
+                        else if (/^(Deebii|Answer|Ans):\s*/i.test(line)) {
+                            ans = line.replace(/^(Deebii|Answer|Ans):\s*/i, '').trim().toUpperCase().charAt(0);
+                        }
+                    }
+
+                    if (qText && optA && optB) {
+                        parsedQuestions.push({
+                            exam_id: examId,
+                            question_text: qText,
+                            option_a: optA || '-',
+                            option_b: optB || '-',
+                            option_c: optC || '-',
+                            option_d: optD || '-',
+                            correct_option: ans
+                        });
+                    }
+                }
             }
+
+            if (parsedQuestions.length === 0) {
+                return alert("Gaaffileen format sirriin adda ba'uu hin dandeenye. Maaloo format fakkeenyaa hordofi.");
+            }
+
+            const { error } = await supabase.from('exam_questions').insert(parsedQuestions);
+            if (error) return alert("Error: " + error.message);
+
+            alert(`🎉 Gaaffileen ${parsedQuestions.length} milkaa'inaan kuufamaniiru!`);
+            document.getElementById('bulk-text').value = '';
         }
 
-        async function updateRole(userId, newRole) {
-            await supabase.from('profiles').update({ role: newRole }).eq('id', userId);
-            alert("Role-iin jijjiirameera!");
-            loadUsers();
-        }
-
-        async function loadResults() {
-            const list = document.getElementById('results-list');
-            const { data: results } = await supabase.from('results').select('*, profiles(email), exams(title)');
-            if (results && results.length > 0) {
-                list.innerHTML = results.map(r => `
-                    <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border text-sm">
-                        <div>
-                            <p class="font-bold text-slate-900">${r.profiles?.email || 'Student'}</p>
-                            <p class="text-xs text-slate-500">${r.exams?.title || 'Exam'}</p>
+        async function loadAdminResults() {
+            const cont = document.getElementById('results-table');
+            const { data: res } = await supabase.from('exam_results').select('*, exam_tests(title)').order('score', { ascending: false });
+            if (res && res.length > 0) {
+                cont.innerHTML = res.map((r, i) => `
+                    <div class="flex items-center justify-between p-3 border rounded-xl bg-slate-50 text-sm">
+                        <div class="flex items-center gap-3">
+                            <span class="w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs ${i === 0 ? 'bg-amber-400 text-slate-900' : (i === 1 ? 'bg-slate-300 text-slate-900' : 'bg-slate-200 text-slate-600')}">${i+1}</span>
+                            <div>
+                                <p class="font-bold text-slate-900">${r.student_name} <span class="text-[10px] text-slate-400 font-mono">(${r.student_id})</span></p>
+                                <span class="text-[11px] text-slate-500">${r.exam_tests?.title || 'Exam'}</span>
+                            </div>
                         </div>
-                        <span class="font-bold text-emerald-600">${r.score.toFixed(1)}%</span>
+                        <span class="font-bold text-emerald-600">${r.score.toFixed(1)}% (${r.correct_answers}/${r.total_questions})</span>
                     </div>
                 `).join('');
             } else {
-                list.innerHTML = '<div class="text-slate-400 text-xs">Qabxiin barattootaa hin argamne.</div>';
+                cont.innerHTML = `<p class="text-slate-400 text-xs">Qabxiin hin jiru.</p>`;
             }
+        }
+
+        async function loadAdminStudents() {
+            const cont = document.getElementById('students-table');
+            const { data: students } = await supabase.from('exam_students').select('*').order('created_at', { ascending: false });
+            if (students && students.length > 0) {
+                cont.innerHTML = students.map(s => `
+                    <div class="flex items-center justify-between p-3 border rounded-xl bg-slate-50 text-sm">
+                        <div>
+                            <p class="font-bold text-slate-900">${s.full_name} <span class="text-indigo-600 font-mono text-xs">(${s.id})</span></p>
+                            <span class="text-xs text-slate-500"><i class="fa-solid fa-phone text-[10px]"></i> ${s.phone}</span>
+                        </div>
+                        <button onclick="toggleStudentPermission('${s.id}', ${!s.is_allowed})" class="px-3 py-1 rounded-lg text-xs font-bold ${s.is_allowed ? 'bg-rose-50 text-rose-600 border border-rose-200' : 'bg-emerald-50 text-emerald-600 border border-emerald-200'}">
+                            ${s.is_allowed ? 'Dhowwi (Block)' : 'Hayyami (Allow)'}
+                        </button>
+                    </div>
+                `).join('');
+            } else {
+                cont.innerHTML = `<p class="text-slate-400 text-xs">Barataan hin galmoofne.</p>`;
+            }
+        }
+
+        async function toggleStudentPermission(id, newStatus) {
+            await supabase.from('exam_students').update({ is_allowed: newStatus }).eq('id', id);
+            loadAdminStudents();
         }
     </script>
 </body>
