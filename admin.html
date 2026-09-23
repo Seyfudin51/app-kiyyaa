@@ -34,11 +34,23 @@
             
             <!-- LEFT: CREATE EXAM & BULK QUESTIONS -->
             <div class="space-y-6">
-                <!-- Create Exam -->
+                <!-- Create Exam with Start/End Dates -->
                 <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-3">
                     <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2"><i class="fa-solid fa-folder-plus text-indigo-600"></i> Qormaata Haaraa Uumi</h3>
                     <input type="text" id="new-exam-title" placeholder="Mata-duree (fkn: Qormaata Kutaa 4ffaa)" class="w-full px-3 py-2 border rounded-xl text-sm">
                     <input type="number" id="new-exam-duration" placeholder="Yeroo (Daqiiqaa - fkn: 30)" class="w-full px-3 py-2 border rounded-xl text-sm">
+                    
+                    <div class="grid grid-cols-2 gap-2 pt-1">
+                        <div>
+                            <label class="text-[10px] font-bold text-slate-500">Ka'umsa (Start)</label>
+                            <input type="datetime-local" id="new-exam-start" class="w-full px-2 py-1.5 border rounded-xl text-xs">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold text-slate-500">Dhuma (End)</label>
+                            <input type="datetime-local" id="new-exam-end" class="w-full px-2 py-1.5 border rounded-xl text-xs">
+                        </div>
+                    </div>
+
                     <button type="button" onclick="createExam()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded-xl text-sm transition cursor-pointer">Uumi (Create)</button>
                 </div>
 
@@ -46,37 +58,35 @@
                 <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-3">
                     <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2"><i class="fa-solid fa-paste text-emerald-600"></i> Gaaffilee 50 Al-tokkotti Galchi (Bulk Paste)</h3>
                     <select id="bulk-exam-select" class="w-full px-3 py-2 border rounded-xl text-sm bg-white font-bold"></select>
-                    <p class="text-[11px] text-slate-400">Format: Gaaffii, A), B), C), D), fi Deebii: A/B/C/D saanduuqa kanaan paste godhi.</p>
-                    <textarea id="bulk-text" rows="8" placeholder="Fakkeenya:
+                    <textarea id="bulk-text" rows="6" placeholder="Fakkeenya:
 1. AI jechuun maali?
 A) Artificial Intelligence
 B) Apple Internet
 C) Android Info
 D) Auto Image
-Deebii: A
-
-2. Gaaffii lammaffaa...
-A) ...
-B) ...
-C) ...
-D) ...
-Deebii: B" class="w-full p-3 border rounded-xl text-xs font-mono"></textarea>
-                    <button type="button" onclick="parseAndSaveBulkQuestions()" class="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2.5 rounded-xl text-sm transition cursor-pointer">Parse & Save Hundaa</button>
+Deebii: A" class="w-full p-3 border rounded-xl text-xs font-mono"></textarea>
+                    <button type="button" onclick="parseAndSaveBulkQuestions()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-xl text-sm transition cursor-pointer">Parse & Save Hundaa</button>
                 </div>
             </div>
 
-            <!-- RIGHT: RESULTS, RANKINGS & STUDENTS -->
+            <!-- RIGHT: EXAM LIST WITH DELETE, RESULTS & STUDENTS -->
             <div class="lg:col-span-2 space-y-6">
+                <!-- Manage Exams (Delete / View) -->
+                <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-4">
+                    <h3 class="font-bold text-slate-900 text-base flex items-center gap-2"><i class="fa-solid fa-list-check text-indigo-600"></i> Qormaata Jiran (Manage Exams)</h3>
+                    <div id="exams-admin-list" class="space-y-2 max-h-60 overflow-y-auto"></div>
+                </div>
+
                 <!-- Leaderboard & Results -->
                 <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-4">
                     <h3 class="font-bold text-slate-900 text-base flex items-center gap-2"><i class="fa-solid fa-trophy text-amber-500"></i> Qabxii & Sadarkaa Barattootaa (Rankings)</h3>
-                    <div id="results-table" class="space-y-2 max-h-72 overflow-y-auto"></div>
+                    <div id="results-table" class="space-y-2 max-h-60 overflow-y-auto"></div>
                 </div>
 
-                <!-- Manage Students (Permission) -->
+                <!-- Manage Students -->
                 <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-4">
                     <h3 class="font-bold text-slate-900 text-base flex items-center gap-2"><i class="fa-solid fa-users text-blue-600"></i> Barattoota Bulchuu (Allow / Block)</h3>
-                    <div id="students-table" class="space-y-2 max-h-72 overflow-y-auto"></div>
+                    <div id="students-table" class="space-y-2 max-h-60 overflow-y-auto"></div>
                 </div>
             </div>
 
@@ -94,6 +104,7 @@ Deebii: B" class="w-full p-3 border rounded-xl text-xs font-mono"></textarea>
                 document.getElementById('admin-auth').classList.add('hidden');
                 document.getElementById('admin-main').classList.remove('hidden');
                 loadExamsForSelect();
+                loadAdminExamsList();
                 loadAdminResults();
                 loadAdminStudents();
             } else {
@@ -104,13 +115,24 @@ Deebii: B" class="w-full p-3 border rounded-xl text-xs font-mono"></textarea>
         async function createExam() {
             const title = document.getElementById('new-exam-title').value.trim();
             const duration = document.getElementById('new-exam-duration').value;
-            if (!title || !duration) return alert("Maaloo mata-duree fi yeroo guuti!");
-            const { error } = await db.from('exam_tests').insert([{ title, duration_minutes: parseInt(duration) }]);
+            const startTime = document.getElementById('new-exam-start').value;
+            const endTime = document.getElementById('new-exam-end').value;
+
+            if (!title || !duration) return alert("Maaloo mata-duree fi yeroo (minutes) guuti!");
+
+            const { error } = await db.from('exam_tests').insert([{ 
+                title, 
+                duration_minutes: parseInt(duration),
+                start_time: startTime ? new Date(startTime).toISOString() : null,
+                end_time: endTime ? new Date(endTime).toISOString() : null
+            }]);
+
             if (error) return alert("Error Database: " + error.message);
             alert("🎉 Qormaanni milkaa'inaan uumameera!");
             document.getElementById('new-exam-title').value = '';
             document.getElementById('new-exam-duration').value = '';
             loadExamsForSelect();
+            loadAdminExamsList();
         }
 
         async function loadExamsForSelect() {
@@ -122,6 +144,33 @@ Deebii: B" class="w-full p-3 border rounded-xl text-xs font-mono"></textarea>
                 sel.innerHTML = '<option value="">Dura qormaata uumi</option>';
             }
         }
+
+        async function loadAdminExamsList() {
+            const cont = document.getElementById('exams-admin-list');
+            const { data: exams } = await db.from('exam_tests').select('*').order('created_at', { ascending: false });
+            if (exams && exams.length > 0) {
+                cont.innerHTML = exams.map(e => `
+                    <div class="flex items-center justify-between p-3 border rounded-xl bg-slate-50 text-sm">
+                        <div>
+                            <p class="font-bold text-slate-900">${e.title}</p>
+                            <span class="text-xs text-slate-500"><i class="fa-solid fa-clock"></i> ${e.duration_minutes} Mins</span>
+                        </div>
+                        <button type="button" onclick="deleteExam('${e.id}')" class="bg-rose-50 hover:bg-rose-100 text-rose-600 px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer"><i class="fa-solid fa-trash"></i> Haqi</button>
+                    </div>
+                `).join('');
+            } else {
+                cont.innerHTML = `<p class="text-slate-400 text-xs">Qormaanni hin uumamne.</p>`;
+            }
+        }
+
+        window.deleteExam = async function(id) {
+            if (confirm("Qormaata kana haquu feetaa? Gaaffileen isaa hundi ni haqamu!")) {
+                await db.from('exam_tests').delete().eq('id', id);
+                loadExamsForSelect();
+                loadAdminExamsList();
+                loadAdminResults();
+            }
+        };
 
         async function parseAndSaveBulkQuestions() {
             const examId = document.getElementById('bulk-exam-select').value;
