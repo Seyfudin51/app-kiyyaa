@@ -39,6 +39,18 @@
                     <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2"><i class="fa-solid fa-folder-plus text-indigo-600"></i> Qormaata Haaraa Uumi</h3>
                     <input type="text" id="new-exam-title" placeholder="Mata-duree (fkn: Qormaata Kutaa 4ffaa)" class="w-full px-3 py-2 border rounded-xl text-sm">
                     <input type="number" id="new-exam-duration" placeholder="Yeroo (Daqiiqaa - fkn: 30)" class="w-full px-3 py-2 border rounded-xl text-sm">
+                    
+                    <div class="grid grid-cols-2 gap-2 pt-1">
+                        <div>
+                            <label class="text-[10px] font-bold text-slate-500">Ka'umsa (Start)</label>
+                            <input type="datetime-local" id="new-exam-start" class="w-full px-2 py-1.5 border rounded-xl text-xs">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold text-slate-500">Dhuma (End)</label>
+                            <input type="datetime-local" id="new-exam-end" class="w-full px-2 py-1.5 border rounded-xl text-xs">
+                        </div>
+                    </div>
+
                     <button type="button" onclick="createExam()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded-xl text-sm transition cursor-pointer">Uumi (Create)</button>
                 </div>
 
@@ -115,13 +127,24 @@ Deebii: A" class="w-full p-3 border rounded-xl text-xs font-mono"></textarea>
         async function createExam() {
             const title = document.getElementById('new-exam-title').value.trim();
             const duration = document.getElementById('new-exam-duration').value;
+            const startTime = document.getElementById('new-exam-start').value;
+            const endTime = document.getElementById('new-exam-end').value;
+
             if (!title || !duration) return alert("Maaloo mata-duree fi yeroo guuti!");
 
-            const { error } = await db.from('exam_tests').insert([{ title, duration_minutes: parseInt(duration) }]);
+            const { error } = await db.from('exam_tests').insert([{ 
+                title, 
+                duration_minutes: parseInt(duration),
+                start_time: startTime ? new Date(startTime).toISOString() : null,
+                end_time: endTime ? new Date(endTime).toISOString() : null
+            }]);
+
             if (error) return alert("Error Database: " + error.message);
             alert("🎉 Qormaanni milkaa'inaan uumameera!");
             document.getElementById('new-exam-title').value = '';
             document.getElementById('new-exam-duration').value = '';
+            document.getElementById('new-exam-start').value = '';
+            document.getElementById('new-exam-end').value = '';
             loadExamsForSelect();
             loadAdminExamsList();
         }
@@ -216,12 +239,15 @@ Deebii: A" class="w-full p-3 border rounded-xl text-xs font-mono"></textarea>
                     let optA = '', optB = '', optC = '', optD = '', ans = 'A';
 
                     for (const line of lines.slice(1)) {
-                        if (/^[Aa][\.\)]\s*/.test(line)) optA = line.replace(/^[Aa][\.\)]\s*/, '');
-                        else if (/^[Bb][\.\)]\s*/.test(line)) optB = line.replace(/^[Bb][\.\)]\s*/, '');
-                        else if (/^[Cc][\.\)]\s*/.test(line)) optC = line.replace(/^[Cc][\.\)]\s*/, '');
-                        else if (/^[Dd][\.\)]\s*/.test(line)) optD = line.replace(/^[Dd][\.\)]\s*/, '');
-                        else if (/^(Deebii|Answer|Ans):\s*/i.test(line)) {
-                            ans = line.replace(/^(Deebii|Answer|Ans):\s*/i, '').trim().toUpperCase().charAt(0);
+                        if (/^[Aa][\.\)]\s*/.test(line) || /^A\s*[\-\)]/i.test(line)) optA = line.replace(/^[Aa][\.\)]\s*/, '').replace(/^A\s*[\-\)]/i, '').trim();
+                        else if (/^[Bb][\.\)]\s*/.test(line) || /^B\s*[\-\)]/i.test(line)) optB = line.replace(/^[Bb][\.\)]\s*/, '').replace(/^B\s*[\-\)]/i, '').trim();
+                        else if (/^[Cc][\.\)]\s*/.test(line) || /^C\s*[\-\)]/i.test(line)) optC = line.replace(/^[Cc][\.\)]\s*/, '').replace(/^C\s*[\-\)]/i, '').trim();
+                        else if (/^[Dd][\.\)]\s*/.test(line) || /^D\s*[\-\)]/i.test(line)) optD = line.replace(/^[Dd][\.\)]\s*/, '').replace(/^D\s*[\-\)]/i, '').trim();
+                        
+                        // Extremely robust answer detector (handles emojis, checkmarks, and whitespace)
+                        if (line.includes('Deebii') || line.includes('Ans') || line.includes('Correct') || line.includes('✅')) {
+                            const match = line.match(/[A-D]/i);
+                            if (match) ans = match[0].toUpperCase();
                         }
                     }
 
@@ -229,8 +255,8 @@ Deebii: A" class="w-full p-3 border rounded-xl text-xs font-mono"></textarea>
                         parsedQuestions.push({
                             exam_id: examId,
                             question_text: qText,
-                            option_a: optA || '-',
-                            option_b: optB || '-',
+                            option_a: optA,
+                            option_b: optB,
                             option_c: optC || '-',
                             option_d: optD || '-',
                             correct_option: ans
