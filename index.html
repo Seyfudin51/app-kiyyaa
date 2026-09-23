@@ -8,10 +8,10 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-[#0f172a] text-slate-800 font-sans min-h-screen flex flex-col justify-between">
+<body class="bg-[#0f172a] text-slate-800 font-sans min-h-screen">
 
-    <!-- 1. STUDENT LOGIN / REGISTER CONTAINER -->
-    <div id="auth-box" class="min-h-screen flex items-center justify-center px-4">
+    <!-- 1. STUDENT LOGIN & REGISTER BOX -->
+    <div id="auth-box" class="min-h-screen flex items-center justify-center px-4 py-8">
         <div class="max-w-md w-full bg-white rounded-3xl p-8 shadow-2xl border border-slate-100">
             <div class="text-center mb-6">
                 <div class="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-3 text-white text-2xl shadow-lg shadow-indigo-200">
@@ -27,9 +27,9 @@
                     <label class="block text-xs font-bold text-slate-700 mb-1">Student ID Kee Galchi</label>
                     <input type="text" id="input-student-id" placeholder="fkn: STU-1234" class="w-full px-4 py-3 uppercase font-mono font-bold border-2 border-slate-200 rounded-xl focus:border-indigo-600 outline-none">
                 </div>
-                <button onclick="loginWithID()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl shadow-lg shadow-indigo-100 transition">Seeni (Login)</button>
+                <button type="button" id="btn-login" class="w-full bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-bold py-3 rounded-xl shadow-lg shadow-indigo-100 transition cursor-pointer">Seeni (Login)</button>
                 <div class="text-center pt-2">
-                    <button onclick="toggleAuth(true)" class="text-xs text-indigo-600 font-bold hover:underline">ID Hin Qabduu? Har'a Galmaa'i</button>
+                    <button type="button" id="btn-to-register" class="text-xs text-indigo-600 font-bold hover:underline cursor-pointer">ID Hin Qabduu? Har'a Galmaa'i</button>
                 </div>
             </div>
 
@@ -43,14 +43,14 @@
                     <label class="block text-xs font-bold text-slate-700 mb-1">Lakk. Bilbilaa</label>
                     <input type="tel" id="reg-phone" placeholder="09..." class="w-full px-4 py-3 border rounded-xl outline-none">
                 </div>
-                <button onclick="registerStudent()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-lg shadow-emerald-100 transition">Galmaa'i & ID Fudhadhu</button>
+                <button type="button" id="btn-register" class="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-3 rounded-xl shadow-lg shadow-emerald-100 transition cursor-pointer">Galmaa'i & ID Fudhadhu</button>
                 <div class="text-center pt-2">
-                    <button onclick="toggleAuth(false)" class="text-xs text-slate-500 font-bold hover:underline">Duraanuu Galmoofteetta? Seeni</button>
+                    <button type="button" id="btn-to-login" class="text-xs text-slate-500 font-bold hover:underline cursor-pointer">Duraanuu Galmoofteetta? Seeni</button>
                 </div>
             </div>
             
             <div class="text-center mt-6 border-t pt-4">
-                <a href="/admin" class="text-xs text-slate-400 hover:text-slate-600 font-semibold"><i class="fa-solid fa-lock"></i> Seensa Admin</a>
+                <a href="/admin" class="text-xs text-slate-400 hover:text-slate-600 font-semibold"><i class="fa-solid fa-lock mr-1"></i> Seensa Admin</a>
             </div>
         </div>
     </div>
@@ -65,17 +65,15 @@
                     <p id="dash-student-id" class="text-[10px] text-indigo-300 font-mono">...</p>
                 </div>
             </div>
-            <button onclick="logoutStudent()" class="text-rose-400 hover:text-rose-300 text-sm font-bold"><i class="fa-solid fa-right-from-bracket"></i> Ba'i</button>
+            <button type="button" id="btn-logout-student" class="text-rose-400 hover:text-rose-300 text-sm font-bold cursor-pointer"><i class="fa-solid fa-right-from-bracket"></i> Ba'i</button>
         </header>
 
         <main class="max-w-4xl w-full mx-auto p-6 space-y-6 flex-1">
-            <!-- Available Exams -->
             <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-4">
                 <h3 class="font-bold text-slate-900 text-lg flex items-center gap-2"><i class="fa-solid fa-clipboard-list text-indigo-600"></i> Qormaata Jiran</h3>
                 <div id="exams-list" class="space-y-3"></div>
             </div>
 
-            <!-- My Previous Results -->
             <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-4">
                 <h3 class="font-bold text-slate-900 text-lg flex items-center gap-2"><i class="fa-solid fa-chart-simple text-emerald-600"></i> Seenaa Qabxii Koo</h3>
                 <div id="my-results-list" class="space-y-2"></div>
@@ -83,9 +81,9 @@
         </main>
     </div>
 
-    <!-- 3. ACTIVE EXAM TAKING SCREEN -->
+    <!-- 3. ACTIVE EXAM SCREEN -->
     <div id="exam-screen" class="hidden min-h-screen bg-slate-100 flex items-center justify-center p-4">
-        <div class="max-w-3xl w-full bg-white rounded-3xl p-8 shadow-xl border space-y-6">
+        <div class="max-w-3xl w-full bg-white rounded-3xl p-6 sm:p-8 shadow-xl border space-y-6">
             <div class="flex justify-between items-center border-b pb-4">
                 <h2 id="exam-title-display" class="font-bold text-lg text-slate-900">...</h2>
                 <div class="bg-rose-50 border border-rose-200 text-rose-600 px-4 py-2 rounded-xl font-bold font-mono text-sm">
@@ -96,7 +94,7 @@
             <div id="questions-container" class="space-y-6 max-h-[60vh] overflow-y-auto pr-2"></div>
 
             <div class="flex justify-end border-t pt-4">
-                <button onclick="submitExam()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-8 py-3 rounded-xl transition shadow-lg shadow-emerald-100">Qormaata Xumuri</button>
+                <button type="button" id="btn-submit-exam" class="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold px-8 py-3 rounded-xl transition shadow-lg shadow-emerald-100 cursor-pointer">Qormaata Xumuri</button>
             </div>
         </div>
     </div>
@@ -104,51 +102,57 @@
     <script>
         const SUPABASE_URL = "https://zxljzdhuilhzcdbgrxol.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_WKWwxJeXUi0bbgN4NsD3nQ_w1Xwdjhs";
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let currentStudent = null;
         let activeExamId = null;
         let activeQuestions = [];
         let answers = {};
-        let examTimer;
+        let examTimer = null;
 
-        function toggleAuth(showReg) {
-            document.getElementById('login-section').classList.toggle('hidden', showReg);
-            document.getElementById('register-section').classList.toggle('hidden', !showReg);
-        }
+        document.getElementById('btn-to-register').addEventListener('click', () => {
+            document.getElementById('login-section').classList.add('hidden');
+            document.getElementById('register-section').classList.remove('hidden');
+        });
 
-        async function registerStudent() {
+        document.getElementById('btn-to-login').addEventListener('click', () => {
+            document.getElementById('register-section').classList.add('hidden');
+            document.getElementById('login-section').classList.remove('hidden');
+        });
+
+        document.getElementById('btn-register').addEventListener('click', async () => {
             const name = document.getElementById('reg-name').value.trim();
             const phone = document.getElementById('reg-phone').value.trim();
-            if (!name || !phone) return alert("Maaloo maqaa fi bilbila galchi!");
+            if (!name || !phone) return alert("Maaloo maqaa fi lakk. bilbilaa galchi!");
 
             const newId = "STU-" + Math.floor(1000 + Math.random() * 9000);
-            const { error } = await supabase.from('exam_students').insert([{ id: newId, full_name: name, phone: phone }]);
+            const { error } = await db.from('exam_students').insert([{ id: newId, full_name: name, phone: phone }]);
             if (error) return alert("Error: " + error.message);
 
-            alert(`🎉 Galmeen milkaa'eera!\n\nSTUDENT ID KEE: ${newId}\n(ID kana bakka gaariitti qabadhu!)`);
+            alert("🎉 Galmeen milkaa'eera!\n\nSTUDENT ID KEE: " + newId + "\n(ID kana bakka gaariitti qabadhu!)");
             document.getElementById('input-student-id').value = newId;
-            toggleAuth(false);
-        }
+            document.getElementById('register-section').classList.add('hidden');
+            document.getElementById('login-section').classList.remove('hidden');
+        });
 
-        async function loginWithID() {
+        document.getElementById('btn-login').addEventListener('click', async () => {
             const id = document.getElementById('input-student-id').value.trim().toUpperCase();
             if (!id) return alert("Maaloo Student ID galchi!");
 
-            const { data: student, error } = await supabase.from('exam_students').select('*').eq('id', id).single();
+            const { data: student, error } = await db.from('exam_students').select('*').eq('id', id).single();
             if (error || !student) return alert("Student ID kun hin argamne! Maaloo dura galmaa'aa.");
             if (!student.is_allowed) return alert("Dhiifama, Admin-ni seensa kee dhowweera (Blocked)!");
 
             currentStudent = student;
             localStorage.setItem('student_id', student.id);
             openDashboard();
-        }
+        });
 
         window.addEventListener('DOMContentLoaded', () => {
             const savedId = localStorage.getItem('student_id');
             if (savedId) {
                 document.getElementById('input-student-id').value = savedId;
-                loginWithID();
+                document.getElementById('btn-login').click();
             }
         });
 
@@ -161,14 +165,14 @@
             loadMyResults();
         }
 
-        function logoutStudent() {
+        document.getElementById('btn-logout-student').addEventListener('click', () => {
             localStorage.removeItem('student_id');
             window.location.reload();
-        }
+        });
 
         async function loadExams() {
             const list = document.getElementById('exams-list');
-            const { data: exams } = await supabase.from('exam_tests').select('*').eq('is_active', true);
+            const { data: exams } = await db.from('exam_tests').select('*').eq('is_active', true);
             if (exams && exams.length > 0) {
                 list.innerHTML = exams.map(e => `
                     <div class="flex items-center justify-between p-4 border rounded-2xl hover:border-indigo-200 bg-slate-50 transition">
@@ -176,7 +180,7 @@
                             <h4 class="font-bold text-slate-900">${e.title}</h4>
                             <p class="text-xs text-slate-500 mt-1"><i class="fa-solid fa-clock"></i> ${e.duration_minutes} Mins</p>
                         </div>
-                        <button onclick="startExam('${e.id}', '${e.title}', ${e.duration_minutes})" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2 rounded-xl text-sm transition">Qormaata Fudhadhu</button>
+                        <button onclick="startExam('${e.id}', '${encodeURIComponent(e.title)}', ${e.duration_minutes})" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2 rounded-xl text-sm transition cursor-pointer">Qormaata Fudhadhu</button>
                     </div>
                 `).join('');
             } else {
@@ -186,7 +190,7 @@
 
         async function loadMyResults() {
             const list = document.getElementById('my-results-list');
-            const { data: res } = await supabase.from('exam_results').select('*, exam_tests(title)').eq('student_id', currentStudent.id).order('completed_at', { ascending: false });
+            const { data: res } = await db.from('exam_results').select('*, exam_tests(title)').eq('student_id', currentStudent.id).order('completed_at', { ascending: false });
             if (res && res.length > 0) {
                 list.innerHTML = res.map(r => `
                     <div class="flex justify-between items-center p-3 border rounded-xl text-sm bg-slate-50">
@@ -202,14 +206,16 @@
             }
         }
 
-        async function startExam(examId, title, duration) {
+        window.startExam = async function(examId, titleEncoded, duration) {
             activeExamId = examId;
             answers = {};
+            const title = decodeURIComponent(titleEncoded);
             document.getElementById('student-dashboard').classList.add('hidden');
             document.getElementById('exam-screen').classList.remove('hidden');
             document.getElementById('exam-title-display').textContent = title;
 
             let sec = duration * 60;
+            if (examTimer) clearInterval(examTimer);
             examTimer = setInterval(() => {
                 let m = Math.floor(sec / 60);
                 let s = sec % 60;
@@ -217,37 +223,43 @@
                 if (sec <= 0) {
                     clearInterval(examTimer);
                     alert("Yeroon dhumateera!");
-                    submitExam();
+                    finishExamSubmit();
                 }
                 sec--;
             }, 1000);
 
-            const { data: qList } = await supabase.from('exam_questions').select('*').eq('exam_id', examId);
+            const { data: qList } = await db.from('exam_questions').select('*').eq('exam_id', examId);
             activeQuestions = qList || [];
             
             const cont = document.getElementById('questions-container');
-            cont.innerHTML = activeQuestions.map((q, i) => `
-                <div class="p-5 border rounded-2xl bg-slate-50 space-y-3">
-                    <p class="font-bold text-slate-900">${i+1}. ${q.question_text}</p>
-                    <div class="grid grid-cols-1 gap-2">
-                        <label class="p-3 bg-white border rounded-xl flex items-center gap-3 cursor-pointer"><input type="radio" name="q-${q.id}" value="A" onchange="answers['${q.id}']='A'"> A) ${q.option_a}</label>
-                        <label class="p-3 bg-white border rounded-xl flex items-center gap-3 cursor-pointer"><input type="radio" name="q-${q.id}" value="B" onchange="answers['${q.id}']='B'"> B) ${q.option_b}</label>
-                        <label class="p-3 bg-white border rounded-xl flex items-center gap-3 cursor-pointer"><input type="radio" name="q-${q.id}" value="C" onchange="answers['${q.id}']='C'"> C) ${q.option_c}</label>
-                        <label class="p-3 bg-white border rounded-xl flex items-center gap-3 cursor-pointer"><input type="radio" name="q-${q.id}" value="D" onchange="answers['${q.id}']='D'"> D) ${q.option_d}</label>
+            if (activeQuestions.length > 0) {
+                cont.innerHTML = activeQuestions.map((q, i) => `
+                    <div class="p-5 border rounded-2xl bg-slate-50 space-y-3">
+                        <p class="font-bold text-slate-900">${i+1}. ${q.question_text}</p>
+                        <div class="grid grid-cols-1 gap-2 text-sm">
+                            <label class="p-3 bg-white border rounded-xl flex items-center gap-3 cursor-pointer"><input type="radio" name="q-${q.id}" value="A" onchange="answers['${q.id}']='A'"> <span>A) ${q.option_a}</span></label>
+                            <label class="p-3 bg-white border rounded-xl flex items-center gap-3 cursor-pointer"><input type="radio" name="q-${q.id}" value="B" onchange="answers['${q.id}']='B'"> <span>B) ${q.option_b}</span></label>
+                            <label class="p-3 bg-white border rounded-xl flex items-center gap-3 cursor-pointer"><input type="radio" name="q-${q.id}" value="C" onchange="answers['${q.id}']='C'"> <span>C) ${q.option_c}</span></label>
+                            <label class="p-3 bg-white border rounded-xl flex items-center gap-3 cursor-pointer"><input type="radio" name="q-${q.id}" value="D" onchange="answers['${q.id}']='D'"> <span>D) ${q.option_d}</span></label>
+                        </div>
                     </div>
-                </div>
-            `).join('');
-        }
+                `).join('');
+            } else {
+                cont.innerHTML = '<p class="text-slate-400">Gaaffiin qormaata kanaa hin argamne.</p>';
+            }
+        };
 
-        async function submitExam() {
-            clearInterval(examTimer);
+        document.getElementById('btn-submit-exam').addEventListener('click', finishExamSubmit);
+
+        async function finishExamSubmit() {
+            if (examTimer) clearInterval(examTimer);
             let correct = 0;
             activeQuestions.forEach(q => {
                 if (answers[q.id] === q.correct_option) correct++;
             });
 
             const score = activeQuestions.length > 0 ? (correct / activeQuestions.length) * 100 : 0;
-            await supabase.from('exam_results').insert([{
+            await db.from('exam_results').insert([{
                 student_id: currentStudent.id,
                 exam_id: activeExamId,
                 student_name: currentStudent.full_name,
@@ -256,7 +268,7 @@
                 correct_answers: correct
             }]);
 
-            alert(`🎉 QORMAATA XUMURTEETTA!\n\nQabxii Kee: ${score.toFixed(1)}%\nDeebii Sirrii: ${correct} / ${activeQuestions.length}`);
+            alert("🎉 QORMAATA XUMURTEETTA!\n\nQabxii Kee: " + score.toFixed(1) + "%\nDeebii Sirrii: " + correct + " / " + activeQuestions.length);
             window.location.reload();
         }
     </script>
