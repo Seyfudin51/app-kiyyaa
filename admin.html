@@ -10,13 +10,13 @@
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans min-h-screen">
 
-    <!-- ADMIN PIN LOGIN -->
+    <!-- ADMIN PIN LOGIN (PIN: 974585) -->
     <div id="admin-auth" class="min-h-screen flex items-center justify-center px-4">
         <div class="max-w-sm w-full bg-white p-8 rounded-3xl shadow-xl border text-center space-y-4">
             <div class="w-14 h-14 bg-slate-900 text-white rounded-2xl flex items-center justify-center mx-auto text-xl"><i class="fa-solid fa-lock"></i></div>
             <h2 class="text-xl font-bold text-slate-900">Seensa Admin</h2>
-            <input type="password" id="admin-pin" placeholder="Admin PIN (1234)" class="w-full px-4 py-3 border-2 rounded-xl text-center font-bold tracking-widest outline-none">
-            <button type="button" id="btn-admin-enter" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl transition cursor-pointer">Bani (Enter)</button>
+            <input type="password" id="admin-pin" placeholder="Admin PIN" class="w-full px-4 py-3 border-2 rounded-xl text-center font-bold tracking-widest outline-none text-lg">
+            <button type="button" onclick="checkAdmin()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl transition cursor-pointer">Bani (Enter)</button>
         </div>
     </div>
 
@@ -39,7 +39,7 @@
                     <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2"><i class="fa-solid fa-folder-plus text-indigo-600"></i> Qormaata Haaraa Uumi</h3>
                     <input type="text" id="new-exam-title" placeholder="Mata-duree (fkn: Qormaata Kutaa 4ffaa)" class="w-full px-3 py-2 border rounded-xl text-sm">
                     <input type="number" id="new-exam-duration" placeholder="Yeroo (Daqiiqaa - fkn: 30)" class="w-full px-3 py-2 border rounded-xl text-sm">
-                    <button type="button" id="btn-create-exam" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded-xl text-sm transition cursor-pointer">Uumi (Create)</button>
+                    <button type="button" onclick="createExam()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded-xl text-sm transition cursor-pointer">Uumi (Create)</button>
                 </div>
 
                 <!-- BULK QUESTIONS PARSER -->
@@ -61,7 +61,7 @@ B) ...
 C) ...
 D) ...
 Deebii: B" class="w-full p-3 border rounded-xl text-xs font-mono"></textarea>
-                    <button type="button" id="btn-save-bulk" class="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2.5 rounded-xl text-sm transition cursor-pointer">Parse & Save Hundaa</button>
+                    <button type="button" onclick="parseAndSaveBulkQuestions()" class="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2.5 rounded-xl text-sm transition cursor-pointer">Parse & Save Hundaa</button>
                 </div>
             </div>
 
@@ -88,20 +88,20 @@ Deebii: B" class="w-full p-3 border rounded-xl text-xs font-mono"></textarea>
         const SUPABASE_ANON_KEY = "sb_publishable_WKWwxJeXUi0bbgN4NsD3nQ_w1Xwdjhs";
         const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        document.getElementById('btn-admin-enter').addEventListener('click', () => {
+        function checkAdmin() {
             const pin = document.getElementById('admin-pin').value.trim();
-            if (pin === "1234") {
+            if (pin === "974585") {
                 document.getElementById('admin-auth').classList.add('hidden');
                 document.getElementById('admin-main').classList.remove('hidden');
                 loadExamsForSelect();
                 loadAdminResults();
                 loadAdminStudents();
             } else {
-                alert("PIN Dogoggora! (PIN sirriin 1234)");
+                alert("PIN Dogoggora! PIN sirriin 974585 dha.");
             }
-        });
+        }
 
-        document.getElementById('btn-create-exam').addEventListener('click', async () => {
+        async function createExam() {
             const title = document.getElementById('new-exam-title').value.trim();
             const duration = document.getElementById('new-exam-duration').value;
             if (!title || !duration) return alert("Maaloo mata-duree fi yeroo guuti!");
@@ -111,7 +111,7 @@ Deebii: B" class="w-full p-3 border rounded-xl text-xs font-mono"></textarea>
             document.getElementById('new-exam-title').value = '';
             document.getElementById('new-exam-duration').value = '';
             loadExamsForSelect();
-        });
+        }
 
         async function loadExamsForSelect() {
             const sel = document.getElementById('bulk-exam-select');
@@ -123,7 +123,7 @@ Deebii: B" class="w-full p-3 border rounded-xl text-xs font-mono"></textarea>
             }
         }
 
-        document.getElementById('btn-save-bulk').addEventListener('click', async () => {
+        async function parseAndSaveBulkQuestions() {
             const examId = document.getElementById('bulk-exam-select').value;
             const raw = document.getElementById('bulk-text').value.trim();
             if (!examId || !raw) return alert("Maaloo qormaata filadhuuti text gaaffilee galchi!");
@@ -170,7 +170,7 @@ Deebii: B" class="w-full p-3 border rounded-xl text-xs font-mono"></textarea>
 
             alert("🎉 Gaaffileen " + parsedQuestions.length + " milkaa'inaan kuufamaniiru!");
             document.getElementById('bulk-text').value = '';
-        });
+        }
 
         async function loadAdminResults() {
             const cont = document.getElementById('results-table');
@@ -203,7 +203,7 @@ Deebii: B" class="w-full p-3 border rounded-xl text-xs font-mono"></textarea>
                             <p class="font-bold text-slate-900">${s.full_name} <span class="text-indigo-600 font-mono text-xs">(${s.id})</span></p>
                             <span class="text-xs text-slate-500"><i class="fa-solid fa-phone text-[10px]"></i> ${s.phone}</span>
                         </div>
-                        <button onclick="toggleStudentPermission('${s.id}', ${!s.is_allowed})" class="px-3 py-1 rounded-lg text-xs font-bold cursor-pointer ${s.is_allowed ? 'bg-rose-50 text-rose-600 border border-rose-200' : 'bg-emerald-50 text-emerald-600 border border-emerald-200'}">
+                        <button type="button" onclick="toggleStudentPermission('${s.id}', ${!s.is_allowed})" class="px-3 py-1 rounded-lg text-xs font-bold cursor-pointer ${s.is_allowed ? 'bg-rose-50 text-rose-600 border border-rose-200' : 'bg-emerald-50 text-emerald-600 border border-emerald-200'}">
                             ${s.is_allowed ? 'Dhowwi (Block)' : 'Hayyami (Allow)'}
                         </button>
                     </div>
