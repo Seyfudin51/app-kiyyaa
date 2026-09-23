@@ -34,23 +34,11 @@
             
             <!-- LEFT: CREATE EXAM & BULK QUESTIONS -->
             <div class="space-y-6">
-                <!-- Create Exam with Start/End Dates -->
+                <!-- Create Exam -->
                 <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-3">
                     <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2"><i class="fa-solid fa-folder-plus text-indigo-600"></i> Qormaata Haaraa Uumi</h3>
                     <input type="text" id="new-exam-title" placeholder="Mata-duree (fkn: Qormaata Kutaa 4ffaa)" class="w-full px-3 py-2 border rounded-xl text-sm">
                     <input type="number" id="new-exam-duration" placeholder="Yeroo (Daqiiqaa - fkn: 30)" class="w-full px-3 py-2 border rounded-xl text-sm">
-                    
-                    <div class="grid grid-cols-2 gap-2 pt-1">
-                        <div>
-                            <label class="text-[10px] font-bold text-slate-500">Ka'umsa (Start)</label>
-                            <input type="datetime-local" id="new-exam-start" class="w-full px-2 py-1.5 border rounded-xl text-xs">
-                        </div>
-                        <div>
-                            <label class="text-[10px] font-bold text-slate-500">Dhuma (End)</label>
-                            <input type="datetime-local" id="new-exam-end" class="w-full px-2 py-1.5 border rounded-xl text-xs">
-                        </div>
-                    </div>
-
                     <button type="button" onclick="createExam()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded-xl text-sm transition cursor-pointer">Uumi (Create)</button>
                 </div>
 
@@ -58,23 +46,24 @@
                 <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-3">
                     <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2"><i class="fa-solid fa-paste text-emerald-600"></i> Gaaffilee 50 Al-tokkotti Galchi (Bulk Paste)</h3>
                     <select id="bulk-exam-select" class="w-full px-3 py-2 border rounded-xl text-sm bg-white font-bold"></select>
-                    <textarea id="bulk-text" rows="6" placeholder="Fakkeenya:
+                    <p class="text-[11px] text-slate-400">Format: Gaaffii, A), B), C), D), fi Deebii: A/B/C/D</p>
+                    <textarea id="bulk-text" rows="8" placeholder="Fakkeenya:
 1. AI jechuun maali?
 A) Artificial Intelligence
 B) Apple Internet
 C) Android Info
 D) Auto Image
 Deebii: A" class="w-full p-3 border rounded-xl text-xs font-mono"></textarea>
-                    <button type="button" onclick="parseAndSaveBulkQuestions()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-xl text-sm transition cursor-pointer">Parse & Save Hundaa</button>
+                    <button type="button" onclick="parseAndSaveBulkQuestions()" class="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2.5 rounded-xl text-sm transition cursor-pointer">Parse & Save Hundaa</button>
                 </div>
             </div>
 
-            <!-- RIGHT: EXAM LIST WITH DELETE, RESULTS & STUDENTS -->
+            <!-- RIGHT: EXAM LIST (WITH VIEW/DELETE) & RESULTS -->
             <div class="lg:col-span-2 space-y-6">
-                <!-- Manage Exams (Delete / View) -->
+                <!-- Manage Exams -->
                 <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-4">
-                    <h3 class="font-bold text-slate-900 text-base flex items-center gap-2"><i class="fa-solid fa-list-check text-indigo-600"></i> Qormaata Jiran (Manage Exams)</h3>
-                    <div id="exams-admin-list" class="space-y-2 max-h-60 overflow-y-auto"></div>
+                    <h3 class="font-bold text-slate-900 text-base flex items-center gap-2"><i class="fa-solid fa-list-check text-indigo-600"></i> Qormaata Jiran & Gaaffilee Ilaaluu/Haquu</h3>
+                    <div id="exams-admin-list" class="space-y-3 max-h-80 overflow-y-auto"></div>
                 </div>
 
                 <!-- Leaderboard & Results -->
@@ -91,6 +80,17 @@ Deebii: A" class="w-full p-3 border rounded-xl text-xs font-mono"></textarea>
             </div>
 
         </main>
+    </div>
+
+    <!-- MODAL TO VIEW QUESTIONS OF AN EXAM -->
+    <div id="questions-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 max-h-[80vh] flex flex-col shadow-2xl">
+            <div class="flex justify-between items-center border-b pb-3 mb-4">
+                <h3 id="modal-exam-title" class="font-bold text-lg text-slate-900">Gaaffilee Qormaataa</h3>
+                <button type="button" onclick="closeModal()" class="text-rose-500 font-bold text-lg cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="modal-questions-list" class="flex-1 overflow-y-auto space-y-3 pr-2"></div>
+        </div>
     </div>
 
     <script>
@@ -115,18 +115,9 @@ Deebii: A" class="w-full p-3 border rounded-xl text-xs font-mono"></textarea>
         async function createExam() {
             const title = document.getElementById('new-exam-title').value.trim();
             const duration = document.getElementById('new-exam-duration').value;
-            const startTime = document.getElementById('new-exam-start').value;
-            const endTime = document.getElementById('new-exam-end').value;
+            if (!title || !duration) return alert("Maaloo mata-duree fi yeroo guuti!");
 
-            if (!title || !duration) return alert("Maaloo mata-duree fi yeroo (minutes) guuti!");
-
-            const { error } = await db.from('exam_tests').insert([{ 
-                title, 
-                duration_minutes: parseInt(duration),
-                start_time: startTime ? new Date(startTime).toISOString() : null,
-                end_time: endTime ? new Date(endTime).toISOString() : null
-            }]);
-
+            const { error } = await db.from('exam_tests').insert([{ title, duration_minutes: parseInt(duration) }]);
             if (error) return alert("Error Database: " + error.message);
             alert("🎉 Qormaanni milkaa'inaan uumameera!");
             document.getElementById('new-exam-title').value = '';
@@ -155,7 +146,10 @@ Deebii: A" class="w-full p-3 border rounded-xl text-xs font-mono"></textarea>
                             <p class="font-bold text-slate-900">${e.title}</p>
                             <span class="text-xs text-slate-500"><i class="fa-solid fa-clock"></i> ${e.duration_minutes} Mins</span>
                         </div>
-                        <button type="button" onclick="deleteExam('${e.id}')" class="bg-rose-50 hover:bg-rose-100 text-rose-600 px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer"><i class="fa-solid fa-trash"></i> Haqi</button>
+                        <div class="flex gap-2">
+                            <button type="button" onclick="viewExamQuestions('${e.id}', '${encodeURIComponent(e.title)}')" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-600 px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer"><i class="fa-solid fa-eye"></i> Ilaali</button>
+                            <button type="button" onclick="deleteExam('${e.id}')" class="bg-rose-50 hover:bg-rose-100 text-rose-600 px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer"><i class="fa-solid fa-trash"></i> Haqi</button>
+                        </div>
                     </div>
                 `).join('');
             } else {
@@ -171,6 +165,41 @@ Deebii: A" class="w-full p-3 border rounded-xl text-xs font-mono"></textarea>
                 loadAdminResults();
             }
         };
+
+        window.viewExamQuestions = async function(examId, titleEncoded) {
+            const title = decodeURIComponent(titleEncoded);
+            document.getElementById('modal-exam-title').textContent = "Gaaffilee: " + title;
+            document.getElementById('questions-modal').classList.remove('hidden');
+
+            const { data: qList } = await db.from('exam_questions').select('*').eq('exam_id', examId);
+            const mList = document.getElementById('modal-questions-list');
+            
+            if (qList && qList.length > 0) {
+                mList.innerHTML = qList.map((q, i) => `
+                    <div class="p-3 border rounded-xl bg-slate-50 text-xs space-y-1">
+                        <div class="flex justify-between items-center font-bold text-slate-900">
+                            <span>${i+1}. ${q.question_text}</span>
+                            <button type="button" onclick="deleteQuestion('${q.id}', '${examId}', '${titleEncoded}')" class="text-rose-500 hover:text-rose-700 cursor-pointer"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                        <p class="text-slate-600">A) ${q.option_a} | B) ${q.option_b} | C) ${q.option_c} | D) ${q.option_d}</p>
+                        <p class="font-bold text-emerald-600">Deebii Sirrii: ${q.correct_option}</p>
+                    </div>
+                `).join('');
+            } else {
+                mList.innerHTML = '<p class="text-slate-400 text-xs text-center py-4">Gaaffiin qormaata kanaaf hin galmoofne.</p>';
+            }
+        };
+
+        window.deleteQuestion = async function(qId, examId, titleEncoded) {
+            if (confirm("Gaaffii kana haquu feetaa?")) {
+                await db.from('exam_questions').delete().eq('id', qId);
+                viewExamQuestions(examId, titleEncoded);
+            }
+        };
+
+        function closeModal() {
+            document.getElementById('questions-modal').classList.add('hidden');
+        }
 
         async function parseAndSaveBulkQuestions() {
             const examId = document.getElementById('bulk-exam-select').value;
@@ -211,7 +240,7 @@ Deebii: A" class="w-full p-3 border rounded-xl text-xs font-mono"></textarea>
             }
 
             if (parsedQuestions.length === 0) {
-                return alert("Gaaffileen format sirriin adda ba'uu hin dandeenye. Maaloo format fakkeenyaa hordofi.");
+                return alert("Gaaffileen format sirriin adda ba'uu hin dandeenye.");
             }
 
             const { error } = await db.from('exam_questions').insert(parsedQuestions);
