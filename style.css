@@ -21,7 +21,6 @@ body {
     -webkit-tap-highlight-color: transparent;
 }
 
-/* Curved Header Fix - No Layout Overlap */
 .header-banner {
     background: linear-gradient(135deg, #1565C0 0%, #0d47a1 100%);
     border-bottom-left-radius: 36px;
@@ -30,31 +29,26 @@ body {
 }
 
 .card-grid-item {
-    border-radius: 22px;
+    border-radius: 24px;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
     cursor: pointer;
 }
 
 .card-grid-item:active {
-    transform: scale(0.96);
+    transform: scale(0.95);
 }
 
 .bottom-nav {
     border-top-left-radius: 28px;
     border-top-right-radius: 28px;
-    box-shadow: 0 -6px 25px rgba(0, 0, 0, 0.06);
-}
-
-.nav-tab.active {
-    color: var(--primary-blue);
-    font-weight: 700;
+    box-shadow: 0 -6px 25px rgba(0, 0, 0, 0.08);
 }
 
 .pill-filter {
     border-radius: 9999px;
     padding: 6px 16px;
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 700;
     white-space: nowrap;
     transition: all 0.2s;
 }
@@ -70,12 +64,11 @@ body {
     color: #64748b;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
+.app-view-container {
+    animation: fadeIn 0.2s ease-in-out;
 }
-::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 4px;
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
 }
