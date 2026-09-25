@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Kiyya - Student Portal</title>
+    <title>App Kiyya - Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -11,7 +11,7 @@
 </head>
 <body class="bg-[#f4f8fb] text-slate-800 font-sans min-h-screen">
 
-    <!-- 1. SPLASH / START SCREEN -->
+    <!-- 1. START / SPLASH SCREEN -->
     <div id="splash-screen" class="fixed inset-0 bg-gradient-to-br from-[#1565C0] to-[#0d47a1] z-[100] flex flex-col items-center justify-between p-8 text-white">
         <div class="my-auto text-center flex flex-col items-center">
             <div class="w-32 h-32 bg-white/10 rounded-3xl p-4 flex items-center justify-center mb-6 backdrop-blur-md border border-white/20 shadow-2xl">
@@ -20,54 +20,42 @@
                 </div>
             </div>
             <h1 class="text-3xl font-black mb-2 tracking-wide">App Kiyya</h1>
-            <p id="splash-sub" class="text-indigo-100 text-sm font-medium">Barnoota • Qormaata • Qabxii</p>
+            <p class="text-indigo-100 text-sm font-medium">Barnoota • Qormaata • Qabxii</p>
             <div class="mt-8 bg-white/10 px-6 py-3 rounded-full border border-white/20 backdrop-blur-md">
-                <p id="splash-motto" class="text-xs font-semibold italic">"Barnootni ijoo milkaa'inaa ti!"</p>
+                <p class="text-xs font-semibold italic">"Barnootni ijoo milkaa'inaa ti!"</p>
             </div>
         </div>
         <button onclick="openAuthScreen()" class="w-full max-w-xs bg-white text-[#1565C0] font-extrabold py-4 rounded-full shadow-2xl flex items-center justify-center gap-3 active:scale-95 transition cursor-pointer">
-            <span id="txt-start">Jalqabi</span> <i class="fa-solid fa-arrow-right"></i>
+            <span>Jalqabi</span> <i class="fa-solid fa-arrow-right"></i>
         </button>
     </div>
 
-    <!-- 2. LOGIN SCREEN -->
-    <div id="auth-screen" class="hidden min-h-screen bg-white flex flex-col items-center justify-between p-6">
-        <div class="w-full max-w-sm flex justify-end pt-2">
-            <select id="lang-select" onchange="changeLanguage(this.value)" class="bg-slate-100 text-xs font-bold text-slate-700 px-3 py-2 rounded-xl outline-none border border-slate-200">
-                <option value="om">Afaan Oromoo</option>
-                <option value="am">አማርኛ</option>
-                <option value="en">English</option>
-            </select>
-        </div>
-
-        <div class="my-auto w-full max-w-sm flex flex-col items-center text-center space-y-6">
+    <!-- 2. LOGIN SCREEN (Google & Telegram - EXACT MATCH) -->
+    <div id="auth-screen" class="hidden min-h-screen bg-white flex flex-col items-center justify-center p-6">
+        <div class="w-full max-w-sm flex flex-col items-center text-center space-y-6">
             <div class="w-24 h-24 bg-gradient-to-br from-[#1565C0] to-[#0d47a1] text-white rounded-3xl flex items-center justify-center shadow-xl shadow-blue-200">
                 <i class="fa-solid fa-graduation-cap text-4xl"></i>
             </div>
             <div>
-                <h2 id="login-welcome" class="text-2xl font-black text-slate-900">Baga nagaan dhuftan!</h2>
-                <p id="login-desc" class="text-slate-400 text-xs mt-1 px-4">App Kiyya keessatti galmaa'uuf Google Account keetiin seeni.</p>
+                <h2 class="text-2xl font-black text-slate-900">Baga nagaan dhuftan!</h2>
+                <p class="text-slate-400 text-xs mt-1 px-4">App Kiyya keessatti galmaa'uuf Google ykn Telegram fayyadamaa.</p>
             </div>
 
             <div class="w-full space-y-3 pt-2">
                 <button id="btn-google-login" onclick="loginWithGoogle()" class="w-full py-4 px-6 border-2 border-slate-200 rounded-2xl flex items-center justify-center gap-3 font-bold text-slate-700 shadow-sm hover:bg-slate-50 active:scale-95 transition cursor-pointer bg-white">
                     <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-6 h-6"> 
-                    <span id="txt-google-login">Login with Google</span>
+                    <span>Login with Google</span>
+                </button>
+                <button onclick="alert('Telegram Login demo qofa. Google-n seenii!')" class="w-full py-4 px-6 bg-[#2fa3d8] text-white rounded-2xl flex items-center justify-center gap-3 font-bold text-sm shadow-md active:scale-95 transition cursor-pointer">
+                    <i class="fa-brands fa-telegram text-xl"></i>
+                    <span>Login with Telegram</span>
                 </button>
             </div>
         </div>
-
-        <div class="pb-4">
-            <a href="/admin.html" class="text-xs text-slate-400 font-semibold flex items-center gap-1.5 hover:text-[#1565C0] transition">
-                <i class="fa-solid fa-lock text-[10px]"></i> <span id="txt-admin-link">Seensa Admin Panel</span>
-            </a>
-        </div>
     </div>
 
-    <!-- 3. MAIN STUDENT DASHBOARD -->
+    <!-- 3. STUDENT DASHBOARD -->
     <div id="student-main" class="hidden min-h-screen pb-28">
-        
-        <!-- Header Banner -->
         <header class="header-banner text-white px-6 pt-8 pb-10">
             <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center gap-3">
@@ -77,92 +65,43 @@
                         <p id="student-email-display" class="text-[11px] text-indigo-200 font-mono">...</p>
                     </div>
                 </div>
-                
-                <div class="flex items-center gap-2">
-                    <select onchange="changeLanguage(this.value)" class="bg-white/10 text-white text-[10px] font-bold px-2 py-1.5 rounded-xl border border-white/20 outline-none backdrop-blur-md">
-                        <option value="om" class="text-slate-800">OM</option>
-                        <option value="am" class="text-slate-800">AM</option>
-                        <option value="en" class="text-slate-800">EN</option>
-                    </select>
-
-                    <button onclick="logoutStudent()" class="w-9 h-9 bg-white/10 rounded-xl flex items-center justify-center text-rose-200 hover:bg-white/20 transition">
-                        <i class="fa-solid fa-right-from-bracket text-sm"></i>
-                    </button>
-                </div>
+                <button onclick="logoutUser()" class="w-9 h-9 bg-white/10 rounded-xl flex items-center justify-center text-rose-200 hover:bg-white/20 transition">
+                    <i class="fa-solid fa-right-from-bracket text-sm"></i>
+                </button>
             </div>
-
-            <div class="bg-white/10 p-3 rounded-2xl border border-white/15 backdrop-blur-md flex items-center justify-between">
-                <p id="motto-display" class="text-xs text-indigo-100 font-medium italic">"Barnootni karea milkaa'inaa ti!"</p>
-                <div id="admin-banner-link" class="hidden">
-                    <a href="/admin.html" class="bg-amber-400 text-slate-900 text-[10px] font-extrabold px-3 py-1 rounded-xl shadow-sm">Gara Admin</a>
-                </div>
+            <div class="bg-white/10 p-3 rounded-2xl border border-white/15 backdrop-blur-md">
+                <p class="text-xs text-indigo-100 font-medium italic">"Barnootni karea milkaa'inaa ti!"</p>
             </div>
         </header>
 
-        <!-- VIEW 1: HOME DASHBOARD (All Action Cards) -->
-        <div id="view-home" class="app-view-container px-6 mt-6 space-y-6">
+        <!-- Student Views -->
+        <div id="view-student-home" class="app-view-container px-6 mt-6 space-y-6">
             <div class="grid grid-cols-2 gap-4">
-                <div onclick="switchStudentView('exams')" class="card-grid-item bg-[#7b1fa2] text-white p-5 shadow-lg shadow-purple-100 flex flex-col items-center text-center">
-                    <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center mb-2">
-                        <i class="fa-solid fa-file-pen text-xl"></i>
-                    </div>
-                    <span id="btn-exams-title" class="font-bold text-sm">Qormaata Seeni</span>
+                <div onclick="switchStudentView('exams')" class="card-grid-item bg-[#7b1fa2] text-white p-5 shadow-lg flex flex-col items-center text-center">
+                    <i class="fa-solid fa-file-pen text-2xl mb-2"></i>
+                    <span class="font-bold text-sm">Qormaata Seeni</span>
                 </div>
-
-                <div onclick="switchStudentView('results')" class="card-grid-item bg-[#2e7d32] text-white p-5 shadow-lg shadow-green-100 flex flex-col items-center text-center">
-                    <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center mb-2">
-                        <i class="fa-solid fa-chart-line text-xl"></i>
-                    </div>
-                    <span id="btn-results-title" class="font-bold text-sm">Qabxii Koo</span>
+                <div onclick="switchStudentView('results')" class="card-grid-item bg-[#2e7d32] text-white p-5 shadow-lg flex flex-col items-center text-center">
+                    <i class="fa-solid fa-chart-line text-2xl mb-2"></i>
+                    <span class="font-bold text-sm">Qabxii Koo</span>
                 </div>
-
-                <div onclick="switchStudentView('notice')" class="card-grid-item bg-[#ef6c00] text-white p-5 shadow-lg shadow-orange-100 flex flex-col items-center text-center">
-                    <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center mb-2">
-                        <i class="fa-solid fa-bullhorn text-xl"></i>
-                    </div>
-                    <span id="btn-notice-title" class="font-bold text-sm">Beeksisaa</span>
+                <div onclick="switchStudentView('notice')" class="card-grid-item bg-[#ef6c00] text-white p-5 shadow-lg flex flex-col items-center text-center">
+                    <i class="fa-solid fa-bullhorn text-2xl mb-2"></i>
+                    <span class="font-bold text-sm">Beeksisaa</span>
                 </div>
-
-                <div onclick="switchStudentView('feedback')" class="card-grid-item bg-[#c2185b] text-white p-5 shadow-lg shadow-pink-100 flex flex-col items-center text-center">
-                    <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center mb-2">
-                        <i class="fa-solid fa-comment-dots text-xl"></i>
-                    </div>
-                    <span id="btn-feedback-title" class="font-bold text-sm">Yaadaa Kenni</span>
+                <div onclick="switchStudentView('feedback')" class="card-grid-item bg-[#c2185b] text-white p-5 shadow-lg flex flex-col items-center text-center">
+                    <i class="fa-solid fa-comment-dots text-2xl mb-2"></i>
+                    <span class="font-bold text-sm">Yaadaa Kenni</span>
                 </div>
-            </div>
-
-            <!-- Recent Exams Section -->
-            <div class="space-y-3">
-                <h4 id="lbl-recent-exams" class="font-black text-slate-800 text-sm flex items-center justify-between">
-                    <span><i class="fa-solid fa-fire text-[#1565C0] mr-1"></i> Qormaata Dhiyeenyaa</span>
-                    <button onclick="switchStudentView('exams')" class="text-xs text-[#1565C0] font-bold">Hunda Ilaali</button>
-                </h4>
-                <div id="recent-exams-list" class="space-y-3"></div>
             </div>
         </div>
 
-        <!-- VIEW 2: EXAMS VIEW ONLY -->
-        <div id="view-exams" class="app-view-container hidden px-6 mt-6 space-y-4">
-            <div class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
-                <button onclick="filterCategory('All')" class="pill-filter active" id="pill-all">Hundaa</button>
-                <button onclick="filterCategory('Grade 9-10')" class="pill-filter inactive">Kutaa 9-10</button>
-                <button onclick="filterCategory('Grade 11-12')" class="pill-filter inactive">Kutaa 11-12</button>
-                <button onclick="filterCategory('Practice')" class="pill-filter inactive">Shaakalaa</button>
-            </div>
-
-            <div class="bg-white p-2.5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3 px-4">
-                <i class="fa-solid fa-magnifying-glass text-slate-400 text-sm"></i>
-                <input type="text" onkeyup="searchExams(this.value)" placeholder="Qormaata barbaadi..." class="w-full text-xs font-semibold bg-transparent outline-none">
-            </div>
-
-            <div class="space-y-3">
-                <h4 id="lbl-active-exams" class="font-black text-slate-800 text-sm flex items-center gap-2"><i class="fa-solid fa-clipboard-list text-[#1565C0]"></i> Qormaata Jiran</h4>
-                <div id="exams-list" class="space-y-3"></div>
-            </div>
+        <div id="view-student-exams" class="app-view-container hidden px-6 mt-6 space-y-4">
+            <h4 class="font-black text-slate-800 text-sm flex items-center gap-2"><i class="fa-solid fa-clipboard-list text-[#1565C0]"></i> Qormaata Jiran</h4>
+            <div id="exams-list" class="space-y-3"></div>
         </div>
 
-        <!-- VIEW 3: RESULTS & RANKING VIEW ONLY -->
-        <div id="view-results" class="app-view-container hidden px-6 mt-6 space-y-4">
+        <div id="view-student-results" class="app-view-container hidden px-6 mt-6 space-y-4">
             <div class="grid grid-cols-2 gap-3">
                 <div class="bg-white p-4 rounded-3xl border border-slate-200 shadow-sm text-center">
                     <p class="text-[10px] font-bold text-slate-400 uppercase">Average Score</p>
@@ -173,63 +112,120 @@
                     <p id="student-rank" class="text-xl font-black text-[#1565C0]">#1</p>
                 </div>
             </div>
-
-            <div class="space-y-3">
-                <h4 id="lbl-my-results" class="font-black text-slate-800 text-sm flex items-center gap-2"><i class="fa-solid fa-trophy text-[#2e7d32]"></i> Seenaa Qabxii Koo</h4>
-                <div id="results-list" class="space-y-3"></div>
-            </div>
+            <div id="results-list" class="space-y-3"></div>
         </div>
 
-        <!-- VIEW 4: NOTICES VIEW ONLY -->
-        <div id="view-notice" class="app-view-container hidden px-6 mt-6 space-y-4">
-            <h4 id="lbl-notices" class="font-black text-slate-800 text-sm flex items-center gap-2"><i class="fa-solid fa-bullhorn text-[#ef6c00]"></i> Beeksisaa</h4>
+        <div id="view-student-notice" class="app-view-container hidden px-6 mt-6 space-y-4">
             <div id="notices-list" class="space-y-3"></div>
         </div>
 
-        <!-- VIEW 5: FEEDBACK VIEW ONLY -->
-        <div id="view-feedback" class="app-view-container hidden px-6 mt-6 space-y-4">
-            <h4 id="lbl-feedback" class="font-black text-slate-800 text-sm flex items-center gap-2"><i class="fa-solid fa-comment-dots text-[#c2185b]"></i> Yaadaa Adminii'f Ergi</h4>
+        <div id="view-student-feedback" class="app-view-container hidden px-6 mt-6 space-y-4">
             <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-3">
-                <textarea id="feedback-msg" rows="4" placeholder="Yaada ykn gaaffii kee asitti barreesse..." class="w-full p-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs outline-none focus:border-[#c2185b]"></textarea>
-                <button onclick="sendFeedback()" class="w-full bg-[#c2185b] text-white font-bold py-3.5 rounded-2xl text-xs cursor-pointer shadow-md active:scale-95 transition">Ergi (Send)</button>
+                <textarea id="feedback-msg" rows="4" placeholder="Yaada ykn gaaffii kee..." class="w-full p-3 bg-slate-50 border rounded-2xl text-xs outline-none"></textarea>
+                <button onclick="sendFeedback()" class="w-full bg-[#c2185b] text-white font-bold py-3.5 rounded-2xl text-xs shadow-md">Ergi</button>
             </div>
         </div>
 
-        <!-- VIEW 6: PROFILE VIEW ONLY -->
-        <div id="view-profile" class="app-view-container hidden px-6 mt-6 space-y-4">
+        <div id="view-student-profile" class="app-view-container hidden px-6 mt-6 space-y-4">
             <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4 text-center">
-                <img id="profile-card-avatar" src="https://ui-avatars.com/api/?name=User" class="w-20 h-20 rounded-full border-4 border-[#1565C0] mx-auto object-cover shadow-md">
-                
-                <div>
-                    <h3 id="profile-card-name" class="font-black text-lg text-slate-900">...</h3>
-                    <p id="profile-card-email" class="text-xs text-slate-400">...</p>
-                </div>
-
-                <div class="grid grid-cols-2 gap-2 text-left bg-slate-50 p-4 rounded-2xl border border-slate-100 font-mono text-xs">
-                    <div>
-                        <span class="text-[10px] text-slate-400 block font-sans font-bold">STUDENT ID</span>
-                        <span id="profile-student-id" class="font-black text-[#1565C0]">...</span>
-                    </div>
-                    <div>
-                        <span class="text-[10px] text-slate-400 block font-sans font-bold">ACTIVATION CODE</span>
-                        <span id="profile-act-code" class="font-black text-emerald-600">...</span>
-                    </div>
-                </div>
-
-                <div class="space-y-2 text-left pt-2">
-                    <label class="text-xs font-bold text-slate-700">Maqaa Gulaali</label>
-                    <input type="text" id="edit-profile-name" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold outline-none">
-                    <button onclick="saveProfileName()" class="w-full bg-[#1565C0] text-white font-bold py-3 rounded-xl text-xs shadow-md">Maqaa Ol-kaayi</button>
+                <img id="profile-card-avatar" src="" class="w-20 h-20 rounded-full border-4 border-[#1565C0] mx-auto object-cover">
+                <h3 id="profile-card-name" class="font-black text-lg">...</h3>
+                <div class="grid grid-cols-2 gap-2 text-left bg-slate-50 p-4 rounded-2xl font-mono text-xs">
+                    <div><span class="text-[10px] text-slate-400 block font-sans">STUDENT ID</span><span id="profile-student-id" class="font-black text-[#1565C0]">...</span></div>
+                    <div><span class="text-[10px] text-slate-400 block font-sans">CODE</span><span id="profile-act-code" class="font-black text-emerald-600">...</span></div>
                 </div>
             </div>
         </div>
 
-        <!-- Bottom Navigation Bar -->
         <nav class="fixed bottom-0 left-0 right-0 bg-white h-20 flex items-center justify-around px-4 bottom-nav border-t z-40">
-            <button onclick="switchStudentView('home')" id="nav-home" class="flex flex-col items-center text-[#1565C0] font-bold"><i class="fa-solid fa-house text-xl"></i><span class="text-[10px] mt-1">Home</span></button>
-            <button onclick="switchStudentView('exams')" id="nav-exams" class="flex flex-col items-center text-slate-400"><i class="fa-solid fa-file-invoice text-xl"></i><span class="text-[10px] mt-1">Qormaata</span></button>
-            <button onclick="switchStudentView('results')" id="nav-results" class="flex flex-col items-center text-slate-400"><i class="fa-solid fa-chart-pie text-xl"></i><span class="text-[10px] mt-1">Qabxii</span></button>
-            <button onclick="switchStudentView('profile')" id="nav-profile" class="flex flex-col items-center text-slate-400"><i class="fa-solid fa-user text-xl"></i><span class="text-[10px] mt-1">Profile</span></button>
+            <button onclick="switchStudentView('home')" id="snav-home" class="flex flex-col items-center text-[#1565C0] font-bold"><i class="fa-solid fa-house text-xl"></i><span class="text-[10px] mt-1">Home</span></button>
+            <button onclick="switchStudentView('exams')" id="snav-exams" class="flex flex-col items-center text-slate-400"><i class="fa-solid fa-file-invoice text-xl"></i><span class="text-[10px] mt-1">Qormaata</span></button>
+            <button onclick="switchStudentView('results')" id="snav-results" class="flex flex-col items-center text-slate-400"><i class="fa-solid fa-chart-pie text-xl"></i><span class="text-[10px] mt-1">Qabxii</span></button>
+            <button onclick="switchStudentView('profile')" id="snav-profile" class="flex flex-col items-center text-slate-400"><i class="fa-solid fa-user text-xl"></i><span class="text-[10px] mt-1">Profile</span></button>
+        </nav>
+    </div>
+
+    <!-- 4. ADMIN DASHBOARD -->
+    <div id="admin-main" class="hidden min-h-screen pb-28">
+        <header class="header-banner text-white px-6 pt-8 pb-10">
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center gap-3">
+                    <img id="admin-avatar" src="" class="w-12 h-12 rounded-2xl border-2 border-white/20 object-cover">
+                    <div>
+                        <h2 id="admin-name" class="font-black text-base">Admin Portal</h2>
+                        <p id="admin-email" class="text-[11px] text-indigo-200 font-mono">...</p>
+                    </div>
+                </div>
+                <button onclick="logoutUser()" class="bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-xl text-xs font-bold transition">
+                    <i class="fa-solid fa-power-off text-rose-300"></i>
+                </button>
+            </div>
+            <div class="grid grid-cols-3 gap-2 mt-4">
+                <div class="bg-white/10 p-3 rounded-2xl text-center"><p class="text-[9px] text-indigo-200 uppercase">Qormaata</p><p id="stat-exams" class="text-lg font-black">0</p></div>
+                <div class="bg-white/10 p-3 rounded-2xl text-center"><p class="text-[9px] text-emerald-300 uppercase">Barattoota</p><p id="stat-students" class="text-lg font-black">0</p></div>
+                <div class="bg-white/10 p-3 rounded-2xl text-center"><p class="text-[9px] text-amber-300 uppercase">Qabxii</p><p id="stat-results" class="text-lg font-black">0</p></div>
+            </div>
+        </header>
+
+        <!-- Admin Views -->
+        <div id="view-admin-home" class="app-view-container px-6 mt-6 max-w-5xl mx-auto space-y-6">
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div onclick="switchAdminView('exams')" class="card-grid-item bg-[#1565C0] text-white p-5 shadow-lg flex flex-col items-center text-center"><i class="fa-solid fa-file-pen text-2xl mb-2"></i><span class="font-bold text-sm">Qormaata</span></div>
+                <div onclick="switchAdminView('results')" class="card-grid-item bg-[#2e7d32] text-white p-5 shadow-lg flex flex-col items-center text-center"><i class="fa-solid fa-chart-line text-2xl mb-2"></i><span class="font-bold text-sm">Qabxii</span></div>
+                <div onclick="switchAdminView('notices')" class="card-grid-item bg-[#ef6c00] text-white p-5 shadow-lg flex flex-col items-center text-center"><i class="fa-solid fa-bullhorn text-2xl mb-2"></i><span class="font-bold text-sm">Beeksisaa</span></div>
+                <div onclick="switchAdminView('feedbacks')" class="card-grid-item bg-[#c2185b] text-white p-5 shadow-lg flex flex-col items-center text-center"><i class="fa-solid fa-comment-dots text-2xl mb-2"></i><span class="font-bold text-sm">Kuusaa Yaadaa</span></div>
+                <div onclick="switchAdminView('students')" class="card-grid-item bg-[#7b1fa2] text-white p-5 shadow-lg flex flex-col items-center text-center col-span-2 md:col-span-1"><i class="fa-solid fa-users text-2xl mb-2"></i><span class="font-bold text-sm">Barattoota</span></div>
+            </div>
+        </div>
+
+        <div id="view-admin-exams" class="app-view-container hidden px-6 mt-6 max-w-5xl mx-auto space-y-6">
+            <div class="bg-white p-6 rounded-3xl border shadow-sm space-y-3">
+                <h3 class="font-bold text-sm">Qormaata Haaraa Uumi</h3>
+                <input type="text" id="new-exam-title" placeholder="Mata-duree" class="w-full px-4 py-3 bg-slate-50 border rounded-xl text-xs outline-none">
+                <select id="new-exam-category" class="w-full px-3 py-3 bg-slate-50 border rounded-xl text-xs outline-none">
+                    <option value="General">Kutaa Filadhu</option><option value="Grade 9-10">Kutaa 9-10</option><option value="Grade 11-12">Kutaa 11-12</option>
+                </select>
+                <input type="number" id="new-exam-duration" placeholder="Yeroo (Mins)" class="w-full px-4 py-3 bg-slate-50 border rounded-xl text-xs outline-none">
+                <button onclick="createExam()" class="w-full bg-[#1565C0] text-white font-bold py-3 rounded-xl text-xs shadow-md">Uumi</button>
+            </div>
+            <div class="bg-white p-6 rounded-3xl border shadow-sm space-y-3">
+                <h3 class="font-bold text-sm">Gaaffilee Hedduu Galchi (1-100+)</h3>
+                <select id="bulk-exam-select" class="w-full px-3 py-3 bg-slate-50 border rounded-xl text-xs font-bold outline-none"></select>
+                <textarea id="bulk-text" rows="6" placeholder="1. Gaaffii...&#10;A) ...&#10;B) ...&#10;C) ...&#10;D) ...&#10;Deebii: A" class="w-full p-3 bg-slate-50 border rounded-xl text-xs font-mono outline-none"></textarea>
+                <button onclick="parseAndSaveBulkQuestions()" class="w-full bg-[#2e7d32] text-white font-bold py-3 rounded-xl text-xs shadow-md">Parse & Save</button>
+            </div>
+            <div class="bg-white p-6 rounded-3xl border shadow-sm space-y-4"><h3 class="font-bold text-sm">Qormaata Jiran</h3><div id="exams-admin-list" class="space-y-3"></div></div>
+        </div>
+
+        <div id="view-admin-results" class="app-view-container hidden px-6 mt-6 max-w-5xl mx-auto space-y-6">
+            <div class="bg-white p-6 rounded-3xl border shadow-sm space-y-4"><h3 class="font-bold text-sm">Qabxii & Sadarkaa</h3><div id="results-table" class="space-y-2"></div></div>
+        </div>
+
+        <div id="view-admin-notices" class="app-view-container hidden px-6 mt-6 max-w-5xl mx-auto space-y-6">
+            <div class="bg-white p-6 rounded-3xl border shadow-sm space-y-3">
+                <h3 class="font-bold text-sm">Beeksisaa Maxxansi</h3>
+                <input type="text" id="notice-title" placeholder="Mata-duree" class="w-full px-4 py-3 bg-slate-50 border rounded-xl text-xs outline-none">
+                <textarea id="notice-msg" rows="3" placeholder="Ergaa..." class="w-full p-3 bg-slate-50 border rounded-xl text-xs outline-none"></textarea>
+                <button onclick="postNotice()" class="w-full bg-[#ef6c00] text-white font-bold py-3 rounded-xl text-xs shadow-md">Maxxansi</button>
+            </div>
+        </div>
+
+        <div id="view-admin-feedbacks" class="app-view-container hidden px-6 mt-6 max-w-5xl mx-auto space-y-6">
+            <div class="bg-white p-6 rounded-3xl border shadow-sm space-y-4"><h3 class="font-bold text-sm">Kuusaa Yaadaa</h3><div id="feedbacks-table" class="space-y-2"></div></div>
+        </div>
+
+        <div id="view-admin-students" class="app-view-container hidden px-6 mt-6 max-w-5xl mx-auto space-y-6">
+            <div class="bg-white p-6 rounded-3xl border shadow-sm space-y-4">
+                <div class="flex justify-between items-center"><h3 class="font-bold text-sm">Barattoota To'achuu</h3></div>
+                <div id="students-table" class="space-y-2"></div>
+            </div>
+        </div>
+
+        <nav class="fixed bottom-0 left-0 right-0 bg-white h-20 flex items-center justify-around px-4 bottom-nav border-t z-40">
+            <button onclick="switchAdminView('home')" id="anav-home" class="flex flex-col items-center text-[#1565C0] font-bold"><i class="fa-solid fa-house text-xl"></i><span class="text-[10px] mt-1">Home</span></button>
+            <button onclick="switchAdminView('exams')" id="anav-exams" class="flex flex-col items-center text-slate-400"><i class="fa-solid fa-file-invoice text-xl"></i><span class="text-[10px] mt-1">Qormaata</span></button>
+            <button onclick="switchAdminView('results')" id="anav-results" class="flex flex-col items-center text-slate-400"><i class="fa-solid fa-chart-pie text-xl"></i><span class="text-[10px] mt-1">Qabxii</span></button>
+            <button onclick="switchAdminView('students')" id="anav-students" class="flex flex-col items-center text-slate-400"><i class="fa-solid fa-users text-xl"></i><span class="text-[10px] mt-1">Barattoota</span></button>
         </nav>
     </div>
 
@@ -242,12 +238,21 @@
                     <i class="fa-solid fa-clock mr-1"></i> <span id="timer-display">00:00</span>
                 </div>
             </div>
-            
             <div id="questions-active-list" class="flex-1 overflow-y-auto space-y-4 pr-1"></div>
-
             <div class="border-t pt-4 mt-4 flex justify-end">
-                <button onclick="submitExam()" class="bg-[#2e7d32] text-white font-bold px-8 py-3.5 rounded-2xl shadow-lg cursor-pointer active:scale-95 transition">Qormaata Xumuri</button>
+                <button onclick="submitExam()" class="bg-[#2e7d32] text-white font-bold px-8 py-3.5 rounded-2xl shadow-lg cursor-pointer">Qormaata Xumuri</button>
             </div>
+        </div>
+    </div>
+
+    <!-- MODAL FOR EXAM QUESTIONS -->
+    <div id="questions-modal" class="hidden fixed inset-0 bg-slate-900/80 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 max-h-[80vh] flex flex-col shadow-2xl">
+            <div class="flex justify-between items-center border-b pb-3 mb-4">
+                <h3 id="modal-exam-title" class="font-bold text-slate-900 text-sm">Gaaffilee</h3>
+                <button onclick="closeModal()" class="text-rose-500 font-bold text-base cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="modal-questions-list" class="flex-1 overflow-y-auto space-y-3 pr-2"></div>
         </div>
     </div>
 
@@ -267,72 +272,6 @@
         let activeQuestions = [];
         let answers = {};
         let examTimer = null;
-        let currentLang = localStorage.getItem('app_lang') || 'om';
-
-        const DICT = {
-            om: {
-                start: "Jalqabi", welcome: "Baga nagaan dhuftan!", google: "Login with Google",
-                adminLink: "Seensa Admin Panel", motto: "Barnootni karea milkaa'inaa ti!",
-                exams: "Qormaata Seeni", results: "Qabxii Koo", notice: "Beeksisaa", feedback: "Yaadaa Kenni",
-                activeExams: "Qormaata Jiran", myResults: "Seenaa Qabxii Koo", send: "Ergi (Send)"
-            },
-            am: {
-                start: "ጀምር", welcome: "እንኳን ደህና መጡ!", google: "በGoogle ይግቡ",
-                adminLink: "የAdmin መግቢያ", motto: "ትምህርት የስኬት ቁልፍ ነው!",
-                exams: "ፈተናዎች", results: "ውጤቶቼ", notice: "ማስታወቂያዎች", feedback: "አስተያየት ይስጡ",
-                activeExams: "ያሉ ፈተናዎች", myResults: "የውጤት ታሪክ", send: "ላክ"
-            },
-            en: {
-                start: "Start", welcome: "Welcome!", google: "Login with Google",
-                adminLink: "Admin Panel Login", motto: "Education is the key to success!",
-                exams: "Take Exam", results: "My Results", notice: "Announcements", feedback: "Give Feedback",
-                activeExams: "Available Exams", myResults: "My Score History", send: "Send"
-            }
-        };
-
-        function changeLanguage(lang) {
-            currentLang = lang;
-            localStorage.setItem('app_lang', lang);
-            const d = DICT[lang] || DICT.om;
-            
-            document.getElementById('txt-start').textContent = d.start;
-            document.getElementById('login-welcome').textContent = d.welcome;
-            document.getElementById('txt-google-login').textContent = d.google;
-            document.getElementById('txt-admin-link').textContent = d.adminLink;
-            document.getElementById('splash-motto').textContent = `"${d.motto}"`;
-            document.getElementById('motto-display').textContent = `"${d.motto}"`;
-            
-            document.getElementById('btn-exams-title').textContent = d.exams;
-            document.getElementById('btn-results-title').textContent = d.results;
-            document.getElementById('btn-notice-title').textContent = d.notice;
-            document.getElementById('btn-feedback-title').textContent = d.feedback;
-        }
-
-        function switchStudentView(view) {
-            const views = ['home', 'exams', 'results', 'notice', 'feedback', 'profile'];
-            views.forEach(v => {
-                const el = document.getElementById('view-' + v);
-                if (el) el.classList.add('hidden');
-            });
-
-            const activeView = document.getElementById('view-' + view);
-            if (activeView) activeView.classList.remove('hidden');
-
-            // Reset bottom nav icons
-            ['home', 'exams', 'results', 'profile'].forEach(n => {
-                const navBtn = document.getElementById('nav-' + n);
-                if (navBtn) {
-                    navBtn.classList.remove('text-[#1565C0]', 'font-bold');
-                    navBtn.classList.add('text-slate-400');
-                }
-            });
-
-            const currentNav = document.getElementById('nav-' + (view === 'notice' || view === 'feedback' ? 'exams' : view));
-            if (currentNav) {
-                currentNav.classList.remove('text-slate-400');
-                currentNav.classList.add('text-[#1565C0]', 'font-bold');
-            }
-        }
 
         function openAuthScreen() {
             document.getElementById('splash-screen').classList.add('hidden');
@@ -348,162 +287,155 @@
                 options: { redirectTo: window.location.origin + '/index.html' }
             });
 
-            if (error) {
-                alert("Google Login Error: " + error.message);
-                btn.innerHTML = `<img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-6 h-6"> <span>Login with Google</span>`;
-            }
+            if (error) alert("Google Login Error: " + error.message);
         }
 
         window.addEventListener('DOMContentLoaded', async () => {
-            changeLanguage(currentLang);
-
             const { data: { user } } = await db.auth.getUser();
             if (user) {
                 const userEmail = user.email.toLowerCase();
-                const studentName = user.user_metadata?.full_name || user.email.split('@')[0];
-                const studentAvatar = user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(studentName)}`;
+                const userName = user.user_metadata?.full_name || user.email.split('@')[0];
+                const userAvatar = user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}`;
 
                 if (ADMIN_EMAILS.includes(userEmail)) {
-                    document.getElementById('admin-banner-link').classList.remove('hidden');
-                }
+                    // ADMIN ROUTING
+                    document.getElementById('splash-screen').classList.add('hidden');
+                    document.getElementById('auth-screen').classList.add('hidden');
+                    document.getElementById('admin-main').classList.remove('hidden');
+                    document.getElementById('admin-name').textContent = userName;
+                    document.getElementById('admin-email').textContent = userEmail;
+                    document.getElementById('admin-avatar').src = userAvatar;
+                    loadAdminData();
+                } else {
+                    // STUDENT ROUTING
+                    let { data: existing } = await db.from('exam_students').select('*').eq('id', user.id).single();
+                    if (!existing) {
+                        const stuId = "STU-" + Math.floor(1000 + Math.random() * 9000);
+                        const actCode = "ACT-" + Math.floor(100000 + Math.random() * 900000);
+                        const { data: created } = await db.from('exam_students').insert([{
+                            id: user.id,
+                            full_name: userName,
+                            email: userEmail,
+                            is_allowed: true,
+                            student_code: stuId,
+                            activation_code: actCode
+                        }]).select().single();
+                        existing = created;
+                    }
 
-                let { data: existing } = await db.from('exam_students').select('*').eq('id', user.id).single();
-                if (!existing) {
-                    const stuId = "STU-" + Math.floor(1000 + Math.random() * 9000);
-                    const actCode = "ACT-" + Math.floor(100000 + Math.random() * 900000);
-                    const { data: created } = await db.from('exam_students').insert([{
-                        id: user.id,
-                        full_name: studentName,
-                        email: userEmail,
-                        is_allowed: true,
-                        student_code: stuId,
-                        activation_code: actCode
-                    }]).select().single();
-                    existing = created;
+                    currentStudent = { 
+                        id: user.id, 
+                        full_name: existing?.full_name || userName, 
+                        email: userEmail, 
+                        avatar: userAvatar,
+                        stuCode: existing?.student_code || ("STU-" + user.id.substring(0,4)),
+                        actCode: existing?.activation_code || "ACT-974585"
+                    };
+                    setupStudentDashboard();
                 }
-
-                currentStudent = { 
-                    id: user.id, 
-                    full_name: existing?.full_name || studentName, 
-                    email: userEmail, 
-                    avatar: studentAvatar,
-                    stuCode: existing?.student_code || ("STU-" + user.id.substring(0,4)),
-                    actCode: existing?.activation_code || "ACT-974585"
-                };
-                setupDashboard();
             }
         });
 
-        function setupDashboard() {
-            document.getElementById('auth-screen').classList.add('hidden');
+        function switchStudentView(view) {
+            ['home', 'exams', 'results', 'notice', 'feedback', 'profile'].forEach(v => {
+                const el = document.getElementById('view-student-' + v);
+                if (el) el.classList.add('hidden');
+            });
+            const active = document.getElementById('view-student-' + view);
+            if (active) active.classList.remove('hidden');
+
+            ['home', 'exams', 'results', 'profile'].forEach(n => {
+                const nav = document.getElementById('snav-' + n);
+                if (nav) nav.classList.remove('text-[#1565C0]', 'font-bold'), nav.classList.add('text-slate-400');
+            });
+            const curr = document.getElementById('snav-' + (['notice','feedback'].includes(view) ? 'exams' : view));
+            if (curr) curr.classList.remove('text-slate-400'), curr.classList.add('text-[#1565C0]', 'font-bold');
+        }
+
+        function switchAdminView(view) {
+            ['home', 'exams', 'results', 'notices', 'feedbacks', 'students'].forEach(v => {
+                const el = document.getElementById('view-admin-' + v);
+                if (el) el.classList.add('hidden');
+            });
+            const active = document.getElementById('view-admin-' + view);
+            if (active) active.classList.remove('hidden');
+
+            ['home', 'exams', 'results', 'students'].forEach(n => {
+                const nav = document.getElementById('anav-' + n);
+                if (nav) nav.classList.remove('text-[#1565C0]', 'font-bold'), nav.classList.add('text-slate-400');
+            });
+            const curr = document.getElementById('anav-' + (['notices','feedbacks'].includes(view) ? 'home' : view));
+            if (curr) curr.classList.remove('text-slate-400'), curr.classList.add('text-[#1565C0]', 'font-bold');
+        }
+
+        function setupStudentDashboard() {
             document.getElementById('splash-screen').classList.add('hidden');
+            document.getElementById('auth-screen').classList.add('hidden');
             document.getElementById('student-main').classList.remove('hidden');
             
             document.getElementById('student-name-display').textContent = currentStudent.full_name;
             document.getElementById('student-email-display').textContent = currentStudent.email;
             document.getElementById('student-avatar').src = currentStudent.avatar;
-            
             document.getElementById('profile-card-name').textContent = currentStudent.full_name;
-            document.getElementById('profile-card-email').textContent = currentStudent.email;
             document.getElementById('profile-card-avatar').src = currentStudent.avatar;
             document.getElementById('profile-student-id').textContent = currentStudent.stuCode;
             document.getElementById('profile-act-code').textContent = currentStudent.actCode;
-            document.getElementById('edit-profile-name').value = currentStudent.full_name;
 
-            loadExams();
-            loadResults();
-            loadNotices();
+            loadStudentExams();
+            loadStudentResults();
+            loadStudentNotices();
         }
 
-        async function saveProfileName() {
-            const newName = document.getElementById('edit-profile-name').value.trim();
-            if (!newName) return alert("Maqaa guutuu galchi!");
-
-            await db.from('exam_students').update({ full_name: newName }).eq('id', currentStudent.id);
-            currentStudent.full_name = newName;
-            document.getElementById('student-name-display').textContent = newName;
-            document.getElementById('profile-card-name').textContent = newName;
-            alert("🎉 Maqaan kee sirriitti ol-kaa'ameera!");
-        }
-
-        async function loadExams() {
+        async function loadStudentExams() {
             const { data: exams } = await db.from('exam_tests').select('*').eq('is_active', true);
             allExams = exams || [];
             renderExams(allExams, 'exams-list');
-            renderExams(allExams.slice(0, 3), 'recent-exams-list');
         }
 
         function renderExams(exams, containerId) {
             const list = document.getElementById(containerId);
             if (!list) return;
-
             if (exams && exams.length > 0) {
                 list.innerHTML = exams.map(e => `
                     <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center justify-between">
                         <div>
-                            <span class="text-[10px] font-bold text-purple-600 bg-purple-50 px-2.5 py-1 rounded-full border border-purple-100 mb-1 inline-block">${e.category || 'General'}</span>
+                            <span class="text-[10px] font-bold text-purple-600 bg-purple-50 px-2.5 py-1 rounded-full border mb-1 inline-block">${e.category || 'General'}</span>
                             <h5 class="font-black text-slate-900 text-sm">${e.title}</h5>
                             <p class="text-xs text-slate-400 mt-1"><i class="fa-solid fa-clock"></i> ${e.duration_minutes} Mins</p>
                         </div>
-                        <button onclick="startExam('${e.id}', '${encodeURIComponent(e.title)}', ${e.duration_minutes})" class="bg-[#1565C0] text-white px-5 py-2.5 rounded-2xl text-xs font-extrabold shadow-md active:scale-95 transition cursor-pointer">Jalqabi</button>
+                        <button onclick="startExam('${e.id}', '${encodeURIComponent(e.title)}', ${e.duration_minutes})" class="bg-[#1565C0] text-white px-5 py-2.5 rounded-2xl text-xs font-extrabold shadow-md cursor-pointer">Jalqabi</button>
                     </div>
                 `).join('');
             } else {
-                list.innerHTML = `<p class="text-slate-400 text-xs text-center py-6">Qormaanni banaa ta'e hin jiru.</p>`;
+                list.innerHTML = `<p class="text-slate-400 text-xs text-center py-6">Qormaanni hin jiru.</p>`;
             }
         }
 
-        function filterCategory(cat) {
-            document.querySelectorAll('.pill-filter').forEach(p => {
-                p.classList.remove('active');
-                p.classList.add('inactive');
-            });
-            event.target.classList.add('active');
-            event.target.classList.remove('inactive');
-
-            if (cat === 'All') renderExams(allExams, 'exams-list');
-            else renderExams(allExams.filter(e => e.category === cat), 'exams-list');
-        }
-
-        function searchExams(query) {
-            const q = query.toLowerCase();
-            renderExams(allExams.filter(e => e.title.toLowerCase().includes(q)), 'exams-list');
-        }
-
-        async function loadResults() {
+        async function loadStudentResults() {
             const list = document.getElementById('results-list');
             const { data: res } = await db.from('exam_results').select('*, exam_tests(title)').eq('student_id', currentStudent.id);
-
             if (res && res.length > 0) {
-                let total = 0;
-                res.forEach(r => total += r.score);
-                const avg = total / res.length;
-                document.getElementById('student-avg-score').textContent = avg.toFixed(1) + "%";
-
+                let total = 0; res.forEach(r => total += r.score);
+                document.getElementById('student-avg-score').textContent = (total / res.length).toFixed(1) + "%";
                 list.innerHTML = res.map(r => `
-                    <div class="bg-white p-4 rounded-2xl border border-slate-200 flex justify-between items-center text-sm shadow-sm">
-                        <div>
-                            <p class="font-black text-slate-900">${r.exam_tests?.title || 'Qormaata'}</p>
-                            <span class="text-[10px] text-slate-400">${new Date(r.completed_at).toLocaleDateString()}</span>
-                        </div>
-                        <span class="font-black text-[#2e7d32] text-base bg-green-50 px-3 py-1 rounded-xl border border-green-200">${r.score.toFixed(1)}%</span>
+                    <div class="bg-white p-4 rounded-2xl border flex justify-between items-center text-sm shadow-sm">
+                        <div><p class="font-black text-slate-900">${r.exam_tests?.title || 'Exam'}</p><span class="text-[10px] text-slate-400">${new Date(r.completed_at).toLocaleDateString()}</span></div>
+                        <span class="font-black text-[#2e7d32] text-base bg-green-50 px-3 py-1 rounded-xl border">${r.score.toFixed(1)}%</span>
                     </div>
                 `).join('');
             } else {
-                list.innerHTML = `<p class="text-slate-400 text-xs text-center py-6">Qabxiin kanaan duraa hin jiru.</p>`;
+                list.innerHTML = `<p class="text-slate-400 text-xs text-center py-6">Qabxiin hin jiru.</p>`;
             }
         }
 
-        async function loadNotices() {
+        async function loadStudentNotices() {
             const list = document.getElementById('notices-list');
             const { data } = await db.from('exam_notices').select('*').order('created_at', { ascending: false });
-
             if (data && data.length > 0) {
                 list.innerHTML = data.map(n => `
-                    <div class="bg-white p-4 rounded-2xl border border-slate-200 space-y-1 text-xs shadow-sm">
+                    <div class="bg-white p-4 rounded-2xl border space-y-1 text-xs shadow-sm">
                         <p class="font-black text-slate-900">${n.title}</p>
                         <p class="text-slate-600">${n.message}</p>
-                        <span class="text-[10px] text-slate-400 block pt-1">${new Date(n.created_at).toLocaleDateString()}</span>
                     </div>
                 `).join('');
             } else {
@@ -514,20 +446,13 @@
         async function sendFeedback() {
             const msg = document.getElementById('feedback-msg').value.trim();
             if (!msg) return alert("Yaada kee barreesse!");
-
-            await db.from('exam_feedbacks').insert([{
-                student_name: currentStudent.full_name,
-                student_id: currentStudent.id,
-                message: msg
-            }]);
-
-            alert("🎉 Yaadni kee Admin-f ergameera!");
+            await db.from('exam_feedbacks').insert([{ student_name: currentStudent.full_name, student_id: currentStudent.id, message: msg }]);
+            alert("🎉 Yaadni kee ergameera!");
             document.getElementById('feedback-msg').value = '';
         }
 
         window.startExam = async function(examId, titleEncoded, duration) {
-            activeExamId = examId;
-            answers = {};
+            activeExamId = examId; answers = {};
             const title = decodeURIComponent(titleEncoded);
             document.getElementById('exam-active-title').textContent = title;
             document.getElementById('exam-screen').classList.remove('hidden');
@@ -535,63 +460,106 @@
             let sec = duration * 60;
             if (examTimer) clearInterval(examTimer);
             examTimer = setInterval(() => {
-                let m = Math.floor(sec / 60);
-                let s = sec % 60;
+                let m = Math.floor(sec / 60), s = sec % 60;
                 document.getElementById('timer-display').textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-                if (sec <= 0) {
-                    clearInterval(examTimer);
-                    submitExam();
-                }
+                if (sec <= 0) { clearInterval(examTimer); submitExam(); }
                 sec--;
             }, 1000);
 
             const { data: qList } = await db.from('exam_questions').select('*').eq('exam_id', examId);
             activeQuestions = qList || [];
-            
             const cont = document.getElementById('questions-active-list');
             if (activeQuestions.length > 0) {
                 cont.innerHTML = activeQuestions.map((q, i) => `
                     <div class="p-4 border rounded-2xl bg-slate-50 space-y-2 text-xs">
                         <p class="font-bold text-slate-900">${i+1}. ${q.question_text}</p>
                         <div class="space-y-1.5 pt-1">
-                            <label class="p-2.5 bg-white border rounded-xl flex items-center gap-2 cursor-pointer hover:bg-slate-100"><input type="radio" name="q-${q.id}" value="A" onchange="answers['${q.id}']='A'"> A) ${q.option_a}</label>
-                            <label class="p-2.5 bg-white border rounded-xl flex items-center gap-2 cursor-pointer hover:bg-slate-100"><input type="radio" name="q-${q.id}" value="B" onchange="answers['${q.id}']='B'"> B) ${q.option_b}</label>
-                            <label class="p-2.5 bg-white border rounded-xl flex items-center gap-2 cursor-pointer hover:bg-slate-100"><input type="radio" name="q-${q.id}" value="C" onchange="answers['${q.id}']='C'"> C) ${q.option_c}</label>
-                            <label class="p-2.5 bg-white border rounded-xl flex items-center gap-2 cursor-pointer hover:bg-slate-100"><input type="radio" name="q-${q.id}" value="D" onchange="answers['${q.id}']='D'"> D) ${q.option_d}</label>
+                            <label class="p-2.5 bg-white border rounded-xl flex items-center gap-2 cursor-pointer"><input type="radio" name="q-${q.id}" value="A" onchange="answers['${q.id}']='A'"> A) ${q.option_a}</label>
+                            <label class="p-2.5 bg-white border rounded-xl flex items-center gap-2 cursor-pointer"><input type="radio" name="q-${q.id}" value="B" onchange="answers['${q.id}']='B'"> B) ${q.option_b}</label>
+                            <label class="p-2.5 bg-white border rounded-xl flex items-center gap-2 cursor-pointer"><input type="radio" name="q-${q.id}" value="C" onchange="answers['${q.id}']='C'"> C) ${q.option_c}</label>
+                            <label class="p-2.5 bg-white border rounded-xl flex items-center gap-2 cursor-pointer"><input type="radio" name="q-${q.id}" value="D" onchange="answers['${q.id}']='D'"> D) ${q.option_d}</label>
                         </div>
                     </div>
                 `).join('');
-            } else {
-                cont.innerHTML = '<p class="text-slate-400 text-xs text-center py-4">Gaaffiin hin argamne.</p>';
             }
         };
 
         async function submitExam() {
             if (examTimer) clearInterval(examTimer);
             let correct = 0;
-            activeQuestions.forEach(q => {
-                if (answers[q.id] === q.correct_option) correct++;
-            });
-
+            activeQuestions.forEach(q => { if (answers[q.id] === q.correct_option) correct++; });
             const score = activeQuestions.length > 0 ? (correct / activeQuestions.length) * 100 : 0;
             
-            await db.from('exam_results').upsert([{
-                student_id: currentStudent.id,
-                exam_id: activeExamId,
-                student_name: currentStudent.full_name,
-                score: score,
-                total_questions: activeQuestions.length,
-                correct_answers: correct
-            }], { onConflict: 'student_id,exam_id' });
-
-            alert("🎉 Qormaata Xumurtaan!\nQabxii: " + score.toFixed(1) + "%");
+            await db.from('exam_results').upsert([{ student_id: currentStudent.id, exam_id: activeExamId, student_name: currentStudent.full_name, score: score, total_questions: activeQuestions.length, correct_answers: correct }], { onConflict: 'student_id,exam_id' });
+            alert("🎉 Qabxii: " + score.toFixed(1) + "%");
             window.location.reload();
         }
 
-        async function logoutStudent() {
-            await db.auth.signOut();
-            window.location.reload();
+        // Admin Functions
+        async function loadAdminData() {
+            loadExamsForSelect(); loadAdminExamsList(); loadAdminResults(); loadAdminStudents(); loadFeedbacks();
         }
+        async function createExam() {
+            const title = document.getElementById('new-exam-title').value.trim();
+            const category = document.getElementById('new-exam-category').value;
+            const duration = document.getElementById('new-exam-duration').value;
+            if (!title || !duration) return alert("Guuti!");
+            await db.from('exam_tests').insert([{ title, category, duration_minutes: parseInt(duration) }]);
+            alert("🎉 Qormaanni Uumameera!"); loadAdminData();
+        }
+        async function loadExamsForSelect() {
+            const sel = document.getElementById('bulk-exam-select');
+            const { data } = await db.from('exam_tests').select('*');
+            if (data) sel.innerHTML = data.map(e => `<option value="${e.id}">${e.title}</option>`).join('');
+        }
+        async function loadAdminExamsList() {
+            const { data } = await db.from('exam_tests').select('*').order('created_at', { ascending: false });
+            document.getElementById('exams-admin-list').innerHTML = data ? data.map(e => `<div class="flex justify-between p-3 border rounded-2xl bg-slate-50 text-xs"><span>${e.title}</span><button onclick="deleteExam('${e.id}')" class="text-rose-600 font-bold">Haqi</button></div>`).join('') : '';
+            document.getElementById('stat-exams').textContent = data ? data.length : 0;
+        }
+        async function deleteExam(id) { await db.from('exam_tests').delete().eq('id', id); loadAdminData(); }
+        async function parseAndSaveBulkQuestions() {
+            const examId = document.getElementById('bulk-exam-select').value;
+            const rawText = document.getElementById('bulk-text').value.trim();
+            if (!examId || !rawText) return alert("Guuti!");
+            const lines = rawText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            let questions = [], currentQ = null;
+            for (let line of lines) {
+                if (/^\d+[\.\)]\s/.test(line)) {
+                    if (currentQ) questions.push(currentQ);
+                    currentQ = { exam_id: examId, question_text: line.replace(/^\d+[\.\)]\s*/, ''), option_a: '', option_b: '', option_c: '', option_d: '', correct_option: 'A' };
+                } else if (currentQ) {
+                    if (/^[Aa][\.\)]/.test(line)) currentQ.option_a = line.replace(/^[Aa][\.\)]\s*/, '');
+                    else if (/^[Bb][\.\)]/.test(line)) currentQ.option_b = line.replace(/^[Bb][\.\)]\s*/, '');
+                    else if (/^[Cc][\.\)]/.test(line)) currentQ.option_c = line.replace(/^[Cc][\.\)]\s*/, '');
+                    else if (/^[Dd][\.\)]/.test(line)) currentQ.option_d = line.replace(/^[Dd][\.\)]\s*/, '');
+                    else if (/deebii|ans/i.test(line)) { const m = line.match(/[A-D]/i); if (m) currentQ.correct_option = m[0].toUpperCase(); }
+                }
+            }
+            if (currentQ) questions.push(currentQ);
+            await db.from('exam_questions').insert(questions);
+            alert("🎉 Gaaffileen galmeeffamaniiru!"); loadAdminData();
+        }
+        async function postNotice() {
+            const title = document.getElementById('notice-title').value.trim(), msg = document.getElementById('notice-msg').value.trim();
+            if (!title || !msg) return alert("Guuti!");
+            await db.from('exam_notices').insert([{ title, message: msg }]); alert("🎉 Maxxanfameera!");
+        }
+        async function loadAdminResults() {
+            const { data } = await db.from('exam_results').select('*, exam_tests(title)').order('score', { ascending: false });
+            document.getElementById('results-table').innerHTML = data ? data.map(r => `<div class="flex justify-between p-3 border rounded-2xl bg-slate-50 text-xs"><span>${r.student_name} (${r.exam_tests?.title})</span><span class="font-bold text-[#2e7d32]">${r.score.toFixed(1)}%</span></div>`).join('') : '';
+            document.getElementById('stat-results').textContent = data ? data.length : 0;
+        }
+        async function loadAdminStudents() {
+            const { data } = await db.from('exam_students').select('*');
+            document.getElementById('students-table').innerHTML = data ? data.map(s => `<div class="flex justify-between p-3 border rounded-2xl bg-slate-50 text-xs"><span>${s.full_name} (${s.student_code})</span></div>`).join('') : '';
+            document.getElementById('stat-students').textContent = data ? data.length : 0;
+        }
+        async function loadFeedbacks() {
+            const { data } = await db.from('exam_feedbacks').select('*');
+            document.getElementById('feedbacks-table').innerHTML = data ? data.map(f => `<div class="p-3 border rounded-2xl bg-slate-50 text-xs"><b>${f.student_name}:</b> ${f.message}</div>`).join('') : '';
+        }
+        async function logoutUser() { await db.auth.signOut(); window.location.reload(); }
     </script>
 </body>
 </html>
