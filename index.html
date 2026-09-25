@@ -7,11 +7,20 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <style>
+        :root { --primary-blue: #1565C0; }
+        body { background-color: #f4f8fb; font-family: system-ui, sans-serif; }
+        .header-banner { background: linear-gradient(135deg, #1565C0 0%, #0d47a1 100%); border-bottom-left-radius: 36px; border-bottom-right-radius: 36px; box-shadow: 0 10px 25px rgba(21,101,192,0.3); }
+        .card-grid-item { border-radius: 24px; transition: transform 0.15s ease; cursor: pointer; }
+        .card-grid-item:active { transform: scale(0.95); }
+        .bottom-nav { border-top-left-radius: 28px; border-top-right-radius: 28px; box-shadow: 0 -6px 25px rgba(0,0,0,0.08); }
+        .app-view-container { animation: fadeIn 0.2s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
 </head>
-<body class="bg-[#f4f8fb] text-slate-800 font-sans min-h-screen">
+<body class="text-slate-800 min-h-screen">
 
-    <!-- 1. START / SPLASH SCREEN -->
+    <!-- 1. SPLASH / START SCREEN -->
     <div id="splash-screen" class="fixed inset-0 bg-gradient-to-br from-[#1565C0] to-[#0d47a1] z-[100] flex flex-col items-center justify-between p-8 text-white">
         <div class="my-auto text-center flex flex-col items-center">
             <div class="w-32 h-32 bg-white/10 rounded-3xl p-4 flex items-center justify-center mb-6 backdrop-blur-md border border-white/20 shadow-2xl">
@@ -19,7 +28,7 @@
                     <i class="fa-solid fa-graduation-cap text-[#1565C0] text-5xl"></i>
                 </div>
             </div>
-            <h1 class="text-3xl font-black mb-2 tracking-wide">App Kiyya</h1>
+            <h1 class="text-3xl font-black mb-2">App Kiyya</h1>
             <p class="text-indigo-100 text-sm font-medium">Barnoota • Qormaata • Qabxii</p>
             <div class="mt-8 bg-white/10 px-6 py-3 rounded-full border border-white/20 backdrop-blur-md">
                 <p class="text-xs font-semibold italic">"Barnootni ijoo milkaa'inaa ti!"</p>
@@ -30,7 +39,7 @@
         </button>
     </div>
 
-    <!-- 2. LOGIN SCREEN (Google & Telegram - EXACT MATCH) -->
+    <!-- 2. LOGIN SCREEN -->
     <div id="auth-screen" class="hidden min-h-screen bg-white flex flex-col items-center justify-center p-6">
         <div class="w-full max-w-sm flex flex-col items-center text-center space-y-6">
             <div class="w-24 h-24 bg-gradient-to-br from-[#1565C0] to-[#0d47a1] text-white rounded-3xl flex items-center justify-center shadow-xl shadow-blue-200">
@@ -40,15 +49,12 @@
                 <h2 class="text-2xl font-black text-slate-900">Baga nagaan dhuftan!</h2>
                 <p class="text-slate-400 text-xs mt-1 px-4">App Kiyya keessatti galmaa'uuf Google ykn Telegram fayyadamaa.</p>
             </div>
-
             <div class="w-full space-y-3 pt-2">
                 <button id="btn-google-login" onclick="loginWithGoogle()" class="w-full py-4 px-6 border-2 border-slate-200 rounded-2xl flex items-center justify-center gap-3 font-bold text-slate-700 shadow-sm hover:bg-slate-50 active:scale-95 transition cursor-pointer bg-white">
-                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-6 h-6"> 
-                    <span>Login with Google</span>
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-6 h-6"> <span>Login with Google</span>
                 </button>
                 <button onclick="alert('Telegram Login demo qofa. Google-n seenii!')" class="w-full py-4 px-6 bg-[#2fa3d8] text-white rounded-2xl flex items-center justify-center gap-3 font-bold text-sm shadow-md active:scale-95 transition cursor-pointer">
-                    <i class="fa-brands fa-telegram text-xl"></i>
-                    <span>Login with Telegram</span>
+                    <i class="fa-brands fa-telegram text-xl"></i> <span>Login with Telegram</span>
                 </button>
             </div>
         </div>
@@ -59,15 +65,13 @@
         <header class="header-banner text-white px-6 pt-8 pb-10">
             <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center gap-3">
-                    <img id="student-avatar" src="https://ui-avatars.com/api/?name=Student" class="w-12 h-12 rounded-2xl border-2 border-white/20 object-cover">
+                    <img id="student-avatar" src="" class="w-12 h-12 rounded-2xl border-2 border-white/20 object-cover">
                     <div>
                         <h3 id="student-name-display" class="font-black text-base leading-tight">...</h3>
                         <p id="student-email-display" class="text-[11px] text-indigo-200 font-mono">...</p>
                     </div>
                 </div>
-                <button onclick="logoutUser()" class="w-9 h-9 bg-white/10 rounded-xl flex items-center justify-center text-rose-200 hover:bg-white/20 transition">
-                    <i class="fa-solid fa-right-from-bracket text-sm"></i>
-                </button>
+                <button onclick="logoutUser()" class="w-9 h-9 bg-white/10 rounded-xl flex items-center justify-center text-rose-200 hover:bg-white/20 transition"><i class="fa-solid fa-right-from-bracket text-sm"></i></button>
             </div>
             <div class="bg-white/10 p-3 rounded-2xl border border-white/15 backdrop-blur-md">
                 <p class="text-xs text-indigo-100 font-medium italic">"Barnootni karea milkaa'inaa ti!"</p>
@@ -77,22 +81,10 @@
         <!-- Student Views -->
         <div id="view-student-home" class="app-view-container px-6 mt-6 space-y-6">
             <div class="grid grid-cols-2 gap-4">
-                <div onclick="switchStudentView('exams')" class="card-grid-item bg-[#7b1fa2] text-white p-5 shadow-lg flex flex-col items-center text-center">
-                    <i class="fa-solid fa-file-pen text-2xl mb-2"></i>
-                    <span class="font-bold text-sm">Qormaata Seeni</span>
-                </div>
-                <div onclick="switchStudentView('results')" class="card-grid-item bg-[#2e7d32] text-white p-5 shadow-lg flex flex-col items-center text-center">
-                    <i class="fa-solid fa-chart-line text-2xl mb-2"></i>
-                    <span class="font-bold text-sm">Qabxii Koo</span>
-                </div>
-                <div onclick="switchStudentView('notice')" class="card-grid-item bg-[#ef6c00] text-white p-5 shadow-lg flex flex-col items-center text-center">
-                    <i class="fa-solid fa-bullhorn text-2xl mb-2"></i>
-                    <span class="font-bold text-sm">Beeksisaa</span>
-                </div>
-                <div onclick="switchStudentView('feedback')" class="card-grid-item bg-[#c2185b] text-white p-5 shadow-lg flex flex-col items-center text-center">
-                    <i class="fa-solid fa-comment-dots text-2xl mb-2"></i>
-                    <span class="font-bold text-sm">Yaadaa Kenni</span>
-                </div>
+                <div onclick="switchStudentView('exams')" class="card-grid-item bg-[#7b1fa2] text-white p-5 shadow-lg flex flex-col items-center text-center"><i class="fa-solid fa-file-pen text-2xl mb-2"></i><span class="font-bold text-sm">Qormaata Seeni</span></div>
+                <div onclick="switchStudentView('results')" class="card-grid-item bg-[#2e7d32] text-white p-5 shadow-lg flex flex-col items-center text-center"><i class="fa-solid fa-chart-line text-2xl mb-2"></i><span class="font-bold text-sm">Qabxii Koo</span></div>
+                <div onclick="switchStudentView('notice')" class="card-grid-item bg-[#ef6c00] text-white p-5 shadow-lg flex flex-col items-center text-center"><i class="fa-solid fa-bullhorn text-2xl mb-2"></i><span class="font-bold text-sm">Beeksisaa</span></div>
+                <div onclick="switchStudentView('feedback')" class="card-grid-item bg-[#c2185b] text-white p-5 shadow-lg flex flex-col items-center text-center"><i class="fa-solid fa-comment-dots text-2xl mb-2"></i><span class="font-bold text-sm">Yaadaa Kenni</span></div>
             </div>
         </div>
 
@@ -103,22 +95,14 @@
 
         <div id="view-student-results" class="app-view-container hidden px-6 mt-6 space-y-4">
             <div class="grid grid-cols-2 gap-3">
-                <div class="bg-white p-4 rounded-3xl border border-slate-200 shadow-sm text-center">
-                    <p class="text-[10px] font-bold text-slate-400 uppercase">Average Score</p>
-                    <p id="student-avg-score" class="text-xl font-black text-[#2e7d32]">0%</p>
-                </div>
-                <div class="bg-white p-4 rounded-3xl border border-slate-200 shadow-sm text-center">
-                    <p class="text-[10px] font-bold text-slate-400 uppercase">Sadarkaa (Rank)</p>
-                    <p id="student-rank" class="text-xl font-black text-[#1565C0]">#1</p>
-                </div>
+                <div class="bg-white p-4 rounded-3xl border border-slate-200 shadow-sm text-center"><p class="text-[10px] font-bold text-slate-400 uppercase">Average Score</p><p id="student-avg-score" class="text-xl font-black text-[#2e7d32]">0%</p></div>
+                <div class="bg-white p-4 rounded-3xl border border-slate-200 shadow-sm text-center"><p class="text-[10px] font-bold text-slate-400 uppercase">Sadarkaa (Rank)</p><p id="student-rank" class="text-xl font-black text-[#1565C0]">#1</p></div>
             </div>
             <div id="results-list" class="space-y-3"></div>
         </div>
 
-        <div id="view-student-notice" class="app-view-container hidden px-6 mt-6 space-y-4">
-            <div id="notices-list" class="space-y-3"></div>
-        </div>
-
+        <div id="view-student-notice" class="app-view-container hidden px-6 mt-6 space-y-4"><div id="notices-list" class="space-y-3"></div></div>
+        
         <div id="view-student-feedback" class="app-view-container hidden px-6 mt-6 space-y-4">
             <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-3">
                 <textarea id="feedback-msg" rows="4" placeholder="Yaada ykn gaaffii kee..." class="w-full p-3 bg-slate-50 border rounded-2xl text-xs outline-none"></textarea>
@@ -129,10 +113,18 @@
         <div id="view-student-profile" class="app-view-container hidden px-6 mt-6 space-y-4">
             <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4 text-center">
                 <img id="profile-card-avatar" src="" class="w-20 h-20 rounded-full border-4 border-[#1565C0] mx-auto object-cover">
-                <h3 id="profile-card-name" class="font-black text-lg">...</h3>
+                <div class="space-y-1">
+                    <label class="text-[10px] font-bold text-slate-400">Maqaa Gulaali</label>
+                    <input type="text" id="edit-profile-name" class="w-full p-2.5 bg-slate-50 border rounded-xl text-center text-sm font-black outline-none">
+                </div>
+                <div class="space-y-1 text-left">
+                    <label class="text-[10px] font-bold text-slate-400">Suuraa Profile URL</label>
+                    <input type="text" id="edit-profile-avatar" placeholder="https://..." class="w-full p-2.5 bg-slate-50 border rounded-xl text-xs outline-none">
+                </div>
+                <button onclick="updateProfile()" class="w-full bg-[#1565C0] text-white font-bold py-3 rounded-xl text-xs shadow-md">Profile Ol-kaayi</button>
                 <div class="grid grid-cols-2 gap-2 text-left bg-slate-50 p-4 rounded-2xl font-mono text-xs">
                     <div><span class="text-[10px] text-slate-400 block font-sans">STUDENT ID</span><span id="profile-student-id" class="font-black text-[#1565C0]">...</span></div>
-                    <div><span class="text-[10px] text-slate-400 block font-sans">CODE</span><span id="profile-act-code" class="font-black text-emerald-600">...</span></div>
+                    <div><span class="text-[10px] text-slate-400 block font-sans">ACTIVATION CODE</span><span id="profile-act-code" class="font-black text-emerald-600">...</span></div>
                 </div>
             </div>
         </div>
@@ -156,9 +148,7 @@
                         <p id="admin-email" class="text-[11px] text-indigo-200 font-mono">...</p>
                     </div>
                 </div>
-                <button onclick="logoutUser()" class="bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-xl text-xs font-bold transition">
-                    <i class="fa-solid fa-power-off text-rose-300"></i>
-                </button>
+                <button onclick="logoutUser()" class="bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-xl text-xs font-bold transition"><i class="fa-solid fa-power-off text-rose-300"></i></button>
             </div>
             <div class="grid grid-cols-3 gap-2 mt-4">
                 <div class="bg-white/10 p-3 rounded-2xl text-center"><p class="text-[9px] text-indigo-200 uppercase">Qormaata</p><p id="stat-exams" class="text-lg font-black">0</p></div>
@@ -185,7 +175,10 @@
                 <select id="new-exam-category" class="w-full px-3 py-3 bg-slate-50 border rounded-xl text-xs outline-none">
                     <option value="General">Kutaa Filadhu</option><option value="Grade 9-10">Kutaa 9-10</option><option value="Grade 11-12">Kutaa 11-12</option>
                 </select>
-                <input type="number" id="new-exam-duration" placeholder="Yeroo (Mins)" class="w-full px-4 py-3 bg-slate-50 border rounded-xl text-xs outline-none">
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="number" id="new-exam-duration" placeholder="Yeroo (Mins)" class="w-full px-4 py-3 bg-slate-50 border rounded-xl text-xs outline-none">
+                    <input type="number" id="new-exam-attempts" value="1" placeholder="Attempts" class="w-full px-4 py-3 bg-slate-50 border rounded-xl text-xs outline-none">
+                </div>
                 <button onclick="createExam()" class="w-full bg-[#1565C0] text-white font-bold py-3 rounded-xl text-xs shadow-md">Uumi</button>
             </div>
             <div class="bg-white p-6 rounded-3xl border shadow-sm space-y-3">
@@ -198,7 +191,7 @@
         </div>
 
         <div id="view-admin-results" class="app-view-container hidden px-6 mt-6 max-w-5xl mx-auto space-y-6">
-            <div class="bg-white p-6 rounded-3xl border shadow-sm space-y-4"><h3 class="font-bold text-sm">Qabxii & Sadarkaa</h3><div id="results-table" class="space-y-2"></div></div>
+            <div class="bg-white p-6 rounded-3xl border shadow-sm space-y-4"><h3 class="font-bold text-sm">Qabxii Barattootaa Guutuu</h3><div id="results-table" class="space-y-2"></div></div>
         </div>
 
         <div id="view-admin-notices" class="app-view-container hidden px-6 mt-6 max-w-5xl mx-auto space-y-6">
@@ -215,10 +208,7 @@
         </div>
 
         <div id="view-admin-students" class="app-view-container hidden px-6 mt-6 max-w-5xl mx-auto space-y-6">
-            <div class="bg-white p-6 rounded-3xl border shadow-sm space-y-4">
-                <div class="flex justify-between items-center"><h3 class="font-bold text-sm">Barattoota To'achuu</h3></div>
-                <div id="students-table" class="space-y-2"></div>
-            </div>
+            <div class="bg-white p-6 rounded-3xl border shadow-sm space-y-4"><h3 class="font-bold text-sm">Barattoota To'achuu</h3><div id="students-table" class="space-y-2"></div></div>
         </div>
 
         <nav class="fixed bottom-0 left-0 right-0 bg-white h-20 flex items-center justify-around px-4 bottom-nav border-t z-40">
@@ -298,7 +288,6 @@
                 const userAvatar = user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}`;
 
                 if (ADMIN_EMAILS.includes(userEmail)) {
-                    // ADMIN ROUTING
                     document.getElementById('splash-screen').classList.add('hidden');
                     document.getElementById('auth-screen').classList.add('hidden');
                     document.getElementById('admin-main').classList.remove('hidden');
@@ -307,7 +296,6 @@
                     document.getElementById('admin-avatar').src = userAvatar;
                     loadAdminData();
                 } else {
-                    // STUDENT ROUTING
                     let { data: existing } = await db.from('exam_students').select('*').eq('id', user.id).single();
                     if (!existing) {
                         const stuId = "STU-" + Math.floor(1000 + Math.random() * 9000);
@@ -316,6 +304,7 @@
                             id: user.id,
                             full_name: userName,
                             email: userEmail,
+                            avatar_url: userAvatar,
                             is_allowed: true,
                             student_code: stuId,
                             activation_code: actCode
@@ -327,7 +316,7 @@
                         id: user.id, 
                         full_name: existing?.full_name || userName, 
                         email: userEmail, 
-                        avatar: userAvatar,
+                        avatar: existing?.avatar_url || userAvatar,
                         stuCode: existing?.student_code || ("STU-" + user.id.substring(0,4)),
                         actCode: existing?.activation_code || "ACT-974585"
                     };
@@ -380,10 +369,22 @@
             document.getElementById('profile-card-avatar').src = currentStudent.avatar;
             document.getElementById('profile-student-id').textContent = currentStudent.stuCode;
             document.getElementById('profile-act-code').textContent = currentStudent.actCode;
+            document.getElementById('edit-profile-name').value = currentStudent.full_name;
+            document.getElementById('edit-profile-avatar').value = currentStudent.avatar;
 
             loadStudentExams();
             loadStudentResults();
             loadStudentNotices();
+        }
+
+        async function updateProfile() {
+            const newName = document.getElementById('edit-profile-name').value.trim();
+            const newAvatar = document.getElementById('edit-profile-avatar').value.trim();
+            if (!newName) return alert("Maqaa guuti!");
+
+            await db.from('exam_students').update({ full_name: newName, avatar_url: newAvatar || currentStudent.avatar }).eq('id', currentStudent.id);
+            alert("🎉 Profile kee jijjiirameera!");
+            window.location.reload();
         }
 
         async function loadStudentExams() {
@@ -403,12 +404,22 @@
                             <h5 class="font-black text-slate-900 text-sm">${e.title}</h5>
                             <p class="text-xs text-slate-400 mt-1"><i class="fa-solid fa-clock"></i> ${e.duration_minutes} Mins</p>
                         </div>
-                        <button onclick="startExam('${e.id}', '${encodeURIComponent(e.title)}', ${e.duration_minutes})" class="bg-[#1565C0] text-white px-5 py-2.5 rounded-2xl text-xs font-extrabold shadow-md cursor-pointer">Jalqabi</button>
+                        <button onclick="checkAndStartExam('${e.id}', '${encodeURIComponent(e.title)}', ${e.duration_minutes})" class="bg-[#1565C0] text-white px-5 py-2.5 rounded-2xl text-xs font-extrabold shadow-md cursor-pointer">Jalqabi</button>
                     </div>
                 `).join('');
             } else {
                 list.innerHTML = `<p class="text-slate-400 text-xs text-center py-6">Qormaanni hin jiru.</p>`;
             }
+        }
+
+        async function checkAndStartExam(examId, titleEncoded, duration) {
+            // Check if already taken
+            const { data: taken } = await db.from('exam_results').select('*').eq('student_id', currentStudent.id).eq('exam_id', examId).single();
+            if (taken) {
+                alert("⚠️ Qormaata kana kanaan dura xumurteetta! Irra deebi'ee qoramuu hin dandeessu.");
+                return;
+            }
+            startExam(examId, titleEncoded, duration);
         }
 
         async function loadStudentResults() {
@@ -419,7 +430,7 @@
                 document.getElementById('student-avg-score').textContent = (total / res.length).toFixed(1) + "%";
                 list.innerHTML = res.map(r => `
                     <div class="bg-white p-4 rounded-2xl border flex justify-between items-center text-sm shadow-sm">
-                        <div><p class="font-black text-slate-900">${r.exam_tests?.title || 'Exam'}</p><span class="text-[10px] text-slate-400">${new Date(r.completed_at).toLocaleDateString()}</span></div>
+                        <div><p class="font-black text-slate-900">${r.exam_tests?.title || 'Exam'}</p><span class="text-[10px] text-slate-400">Argate: ${r.correct_answers} | Dhabe: ${r.wrong_answers}</span></div>
                         <span class="font-black text-[#2e7d32] text-base bg-green-50 px-3 py-1 rounded-xl border">${r.score.toFixed(1)}%</span>
                     </div>
                 `).join('');
@@ -451,7 +462,7 @@
             document.getElementById('feedback-msg').value = '';
         }
 
-        window.startExam = async function(examId, titleEncoded, duration) {
+        function startExam(examId, titleEncoded, duration) {
             activeExamId = examId; answers = {};
             const title = decodeURIComponent(titleEncoded);
             document.getElementById('exam-active-title').textContent = title;
@@ -466,32 +477,43 @@
                 sec--;
             }, 1000);
 
-            const { data: qList } = await db.from('exam_questions').select('*').eq('exam_id', examId);
-            activeQuestions = qList || [];
-            const cont = document.getElementById('questions-active-list');
-            if (activeQuestions.length > 0) {
-                cont.innerHTML = activeQuestions.map((q, i) => `
-                    <div class="p-4 border rounded-2xl bg-slate-50 space-y-2 text-xs">
-                        <p class="font-bold text-slate-900">${i+1}. ${q.question_text}</p>
-                        <div class="space-y-1.5 pt-1">
-                            <label class="p-2.5 bg-white border rounded-xl flex items-center gap-2 cursor-pointer"><input type="radio" name="q-${q.id}" value="A" onchange="answers['${q.id}']='A'"> A) ${q.option_a}</label>
-                            <label class="p-2.5 bg-white border rounded-xl flex items-center gap-2 cursor-pointer"><input type="radio" name="q-${q.id}" value="B" onchange="answers['${q.id}']='B'"> B) ${q.option_b}</label>
-                            <label class="p-2.5 bg-white border rounded-xl flex items-center gap-2 cursor-pointer"><input type="radio" name="q-${q.id}" value="C" onchange="answers['${q.id}']='C'"> C) ${q.option_c}</label>
-                            <label class="p-2.5 bg-white border rounded-xl flex items-center gap-2 cursor-pointer"><input type="radio" name="q-${q.id}" value="D" onchange="answers['${q.id}']='D'"> D) ${q.option_d}</label>
+            db.from('exam_questions').select('*').eq('exam_id', examId).then(({ data: qList }) => {
+                activeQuestions = qList || [];
+                const cont = document.getElementById('questions-active-list');
+                if (activeQuestions.length > 0) {
+                    cont.innerHTML = activeQuestions.map((q, i) => `
+                        <div class="p-4 border rounded-2xl bg-slate-50 space-y-2 text-xs">
+                            <p class="font-bold text-slate-900">${i+1}. ${q.question_text}</p>
+                            <div class="space-y-1.5 pt-1">
+                                <label class="p-2.5 bg-white border rounded-xl flex items-center gap-2 cursor-pointer"><input type="radio" name="q-${q.id}" value="A" onchange="answers['${q.id}']='A'"> A) ${q.option_a}</label>
+                                <label class="p-2.5 bg-white border rounded-xl flex items-center gap-2 cursor-pointer"><input type="radio" name="q-${q.id}" value="B" onchange="answers['${q.id}']='B'"> B) ${q.option_b}</label>
+                                <label class="p-2.5 bg-white border rounded-xl flex items-center gap-2 cursor-pointer"><input type="radio" name="q-${q.id}" value="C" onchange="answers['${q.id}']='C'"> C) ${q.option_c}</label>
+                                <label class="p-2.5 bg-white border rounded-xl flex items-center gap-2 cursor-pointer"><input type="radio" name="q-${q.id}" value="D" onchange="answers['${q.id}']='D'"> D) ${q.option_d}</label>
+                            </div>
                         </div>
-                    </div>
-                `).join('');
-            }
-        };
+                    `).join('');
+                }
+            });
+        }
 
         async function submitExam() {
             if (examTimer) clearInterval(examTimer);
             let correct = 0;
             activeQuestions.forEach(q => { if (answers[q.id] === q.correct_option) correct++; });
+            const wrong = activeQuestions.length - correct;
             const score = activeQuestions.length > 0 ? (correct / activeQuestions.length) * 100 : 0;
             
-            await db.from('exam_results').upsert([{ student_id: currentStudent.id, exam_id: activeExamId, student_name: currentStudent.full_name, score: score, total_questions: activeQuestions.length, correct_answers: correct }], { onConflict: 'student_id,exam_id' });
-            alert("🎉 Qabxii: " + score.toFixed(1) + "%");
+            await db.from('exam_results').upsert([{ 
+                student_id: currentStudent.id, 
+                exam_id: activeExamId, 
+                student_name: currentStudent.full_name, 
+                score: score, 
+                total_questions: activeQuestions.length, 
+                correct_answers: correct,
+                wrong_answers: wrong
+            }], { onConflict: 'student_id,exam_id' });
+
+            alert("🎉 Qabxii: " + score.toFixed(1) + "%\nSirrii: " + correct + " | Dogoggora: " + wrong);
             window.location.reload();
         }
 
@@ -503,8 +525,9 @@
             const title = document.getElementById('new-exam-title').value.trim();
             const category = document.getElementById('new-exam-category').value;
             const duration = document.getElementById('new-exam-duration').value;
+            const attempts = document.getElementById('new-exam-attempts').value;
             if (!title || !duration) return alert("Guuti!");
-            await db.from('exam_tests').insert([{ title, category, duration_minutes: parseInt(duration) }]);
+            await db.from('exam_tests').insert([{ title, category, duration_minutes: parseInt(duration), max_attempts: parseInt(attempts) }]);
             alert("🎉 Qormaanni Uumameera!"); loadAdminData();
         }
         async function loadExamsForSelect() {
@@ -514,7 +537,7 @@
         }
         async function loadAdminExamsList() {
             const { data } = await db.from('exam_tests').select('*').order('created_at', { ascending: false });
-            document.getElementById('exams-admin-list').innerHTML = data ? data.map(e => `<div class="flex justify-between p-3 border rounded-2xl bg-slate-50 text-xs"><span>${e.title}</span><button onclick="deleteExam('${e.id}')" class="text-rose-600 font-bold">Haqi</button></div>`).join('') : '';
+            document.getElementById('exams-admin-list').innerHTML = data ? data.map(e => `<div class="flex justify-between p-3 border rounded-2xl bg-slate-50 text-xs"><span>${e.title} (${e.duration_minutes} Mins)</span><button onclick="deleteExam('${e.id}')" class="text-rose-600 font-bold">Haqi</button></div>`).join('') : '';
             document.getElementById('stat-exams').textContent = data ? data.length : 0;
         }
         async function deleteExam(id) { await db.from('exam_tests').delete().eq('id', id); loadAdminData(); }
@@ -546,13 +569,29 @@
             await db.from('exam_notices').insert([{ title, message: msg }]); alert("🎉 Maxxanfameera!");
         }
         async function loadAdminResults() {
-            const { data } = await db.from('exam_results').select('*, exam_tests(title)').order('score', { ascending: false });
-            document.getElementById('results-table').innerHTML = data ? data.map(r => `<div class="flex justify-between p-3 border rounded-2xl bg-slate-50 text-xs"><span>${r.student_name} (${r.exam_tests?.title})</span><span class="font-bold text-[#2e7d32]">${r.score.toFixed(1)}%</span></div>`).join('') : '';
+            const { data } = await db.from('exam_results').select('*, exam_tests(title), exam_students(email)').order('score', { ascending: false });
+            document.getElementById('results-table').innerHTML = data ? data.map((r, i) => `
+                <div class="p-3 border rounded-2xl bg-slate-50 text-xs space-y-1">
+                    <div class="flex justify-between font-bold">
+                        <span>#${i+1} ${r.student_name} (${r.exam_tests?.title || 'Exam'})</span>
+                        <span class="text-[#2e7d32]">${r.score.toFixed(1)}%</span>
+                    </div>
+                    <p class="text-[10px] text-slate-500">Email: ${r.exam_students?.email || 'N/A'} | Sirrii: ${r.correct_answers} | Dhabe: ${r.wrong_answers}</p>
+                </div>
+            `).join('') : '';
             document.getElementById('stat-results').textContent = data ? data.length : 0;
         }
         async function loadAdminStudents() {
             const { data } = await db.from('exam_students').select('*');
-            document.getElementById('students-table').innerHTML = data ? data.map(s => `<div class="flex justify-between p-3 border rounded-2xl bg-slate-50 text-xs"><span>${s.full_name} (${s.student_code})</span></div>`).join('') : '';
+            document.getElementById('students-table').innerHTML = data ? data.map(s => `
+                <div class="flex items-center gap-3 p-3 border rounded-2xl bg-slate-50 text-xs">
+                    <img src="${s.avatar_url || 'https://ui-avatars.com/api/?name=User'}" class="w-10 h-10 rounded-xl object-cover">
+                    <div>
+                        <p class="font-bold text-slate-900">${s.full_name} <span class="text-indigo-600 font-mono">(${s.student_code})</span></p>
+                        <p class="text-[10px] text-slate-400">${s.email} | Code: ${s.activation_code}</p>
+                    </div>
+                </div>
+            `).join('') : '';
             document.getElementById('stat-students').textContent = data ? data.length : 0;
         }
         async function loadFeedbacks() {
