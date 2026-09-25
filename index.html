@@ -3,102 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sirna Qormaata Barattootaa</title>
+    <title>Akkaadaami Oromiyaa - Student App</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .bottom-nav { border-top-left-radius: 28px; border-top-right-radius: 28px; }
+        .card-btn { border-radius: 24px; transition: all 0.2s ease; }
+        .card-btn:active { transform: scale(0.95); }
+    </style>
 </head>
-<body class="bg-[#0f172a] text-slate-800 font-sans min-h-screen flex flex-col justify-between">
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen">
 
-    <!-- 1. STUDENT LOGIN / REGISTER CONTAINER -->
-    <div id="auth-box" class="min-h-screen flex items-center justify-center px-4 py-8">
-        <div class="max-w-md w-full bg-white rounded-3xl p-8 shadow-2xl border border-slate-100">
-            <div class="text-center mb-6">
-                <div class="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-3 text-white text-2xl shadow-lg shadow-indigo-200">
-                    <i class="fa-solid fa-file-pen"></i>
-                </div>
-                <h2 class="text-2xl font-bold text-slate-900">Sirna Qormaataa</h2>
-                <p class="text-slate-500 text-sm mt-1">Seensa Barataa (Student Login)</p>
+    <!-- 1. SPLASH / START SCREEN (Screen 1 in image) -->
+    <div id="splash-screen" class="fixed inset-0 bg-[#0047AB] z-[100] flex flex-col items-center justify-between p-8 text-white">
+        <div class="my-auto text-center flex flex-col items-center">
+            <div class="w-32 h-32 bg-white rounded-full flex items-center justify-center mb-6 shadow-2xl">
+                <i class="fa-solid fa-graduation-cap text-[#0047AB] text-5xl"></i>
             </div>
+            <h1 class="text-3xl font-black mb-2">Akkaadaami Oromiyaa</h1>
+            <p class="text-indigo-100 text-sm font-medium">Barnoota • Qormaata • Qabxii</p>
+            <div class="mt-8 bg-white/10 px-6 py-3 rounded-full border border-white/20 backdrop-blur-md">
+                <p class="text-xs font-semibold italic">"Barnootni ijoo milkaa'inaa ti!"</p>
+            </div>
+        </div>
+        <button onclick="openAuth()" class="w-full max-w-xs bg-white text-[#0047AB] font-bold py-4 rounded-full shadow-2xl flex items-center justify-center gap-3 cursor-pointer">
+            Jalqabi <i class="fa-solid fa-arrow-right"></i>
+        </button>
+    </div>
 
-            <!-- Login with ID -->
-            <div id="login-section" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Student ID Kee Galchi</label>
-                    <input type="text" id="input-student-id" placeholder="fkn: STU-1234" class="w-full px-4 py-3 uppercase font-mono font-bold border-2 border-slate-200 rounded-xl focus:border-indigo-600 outline-none">
-                </div>
-                <button type="button" onclick="loginWithID()" class="w-full bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-bold py-3 rounded-xl shadow-lg shadow-indigo-100 transition cursor-pointer">Seeni (Login)</button>
-                <div class="text-center pt-2">
-                    <button type="button" onclick="toggleAuth(true)" class="text-xs text-indigo-600 font-bold hover:underline cursor-pointer">ID Hin Qabduu? Har'a Galmaa'i</button>
-                </div>
-            </div>
+    <!-- 2. LOGIN / REGISTER SCREEN (Screen 2 in image) -->
+    <div id="auth-screen" class="hidden min-h-screen bg-white flex flex-col items-center p-6">
+        <div class="w-20 h-20 bg-[#0047AB] text-white rounded-3xl flex items-center justify-center mt-6 mb-4 shadow-xl shadow-indigo-100">
+            <i class="fa-solid fa-graduation-cap text-3xl"></i>
+        </div>
+        <h2 class="text-2xl font-black text-slate-900 mb-1">Baga nagaan dhuftan!</h2>
+        <p class="text-slate-400 text-xs text-center mb-6">Akkaadaami Oromiyaa keessatti barnoota fi qormaata ni argattu.</p>
 
-            <!-- Register New Student -->
-            <div id="register-section" class="hidden space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Maqaa Guutuu</label>
-                    <input type="text" id="reg-name" placeholder="Maqaa kee" class="w-full px-4 py-3 border rounded-xl outline-none text-sm">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Lakk. Bilbilaa Addunyaa (International)</label>
-                    <div class="flex gap-2">
-                        <input type="text" id="reg-code" placeholder="+251" value="+251" class="w-24 px-3 py-3 border rounded-xl outline-none font-bold text-sm text-center bg-slate-50">
-                        <input type="tel" id="reg-phone" placeholder="912345678" class="flex-1 px-4 py-3 border rounded-xl outline-none text-sm">
-                    </div>
-                    <p class="text-[10px] text-slate-400 mt-1">Koodii biyya keetii (fkn: +251, +1, +44, +966...) galchi.</p>
-                </div>
-                <button type="button" onclick="registerStudent()" class="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-3 rounded-xl shadow-lg shadow-emerald-100 transition cursor-pointer">Galmaa'i & ID Fudhadhu</button>
-                <div class="text-center pt-2">
-                    <button type="button" onclick="toggleAuth(false)" class="text-xs text-slate-500 font-bold hover:underline cursor-pointer">Duraanuu Galmoofteetta? Seeni</button>
+        <!-- Social Buttons -->
+        <div class="w-full max-w-sm space-y-3 mb-4">
+            <button class="w-full py-3.5 border-2 border-slate-100 rounded-2xl flex items-center justify-center gap-3 font-bold text-sm hover:bg-slate-50">
+                <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5"> Login with Google
+            </button>
+            <button class="w-full py-3.5 bg-[#2fa3d8] text-white rounded-2xl flex items-center justify-center gap-3 font-bold text-sm shadow-md">
+                <i class="fa-brands fa-telegram text-xl"></i> Login with Telegram
+            </button>
+        </div>
+
+        <div class="text-xs font-bold text-slate-300 uppercase tracking-widest my-2">Yookiin</div>
+
+        <!-- ID Login Form -->
+        <div id="login-box" class="w-full max-w-sm space-y-3">
+            <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Student ID Kee Galchi</label>
+                <input type="text" id="input-student-id" placeholder="fkn: STU-1234" class="w-full px-4 py-3.5 bg-slate-50 border-2 border-slate-100 rounded-2xl uppercase font-mono font-bold outline-none focus:border-[#0047AB]">
+            </div>
+            <button onclick="loginWithID()" class="w-full bg-[#0047AB] text-white font-bold py-4 rounded-2xl shadow-xl shadow-indigo-100 cursor-pointer">Seeni (Login)</button>
+            <div class="text-center pt-2">
+                <button onclick="toggleAuthMode(true)" class="text-xs text-[#0047AB] font-bold hover:underline">ID Hin Qabduu? Har'a Galmaa'i</button>
+            </div>
+        </div>
+
+        <!-- Register Form -->
+        <div id="register-box" class="hidden w-full max-w-sm space-y-3">
+            <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Maqaa Guutuu</label>
+                <input type="text" id="reg-name" placeholder="Maqaa kee galchi" class="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl outline-none text-sm">
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Lakk. Bilbilaa Addunyaa</label>
+                <div class="flex gap-2">
+                    <input type="text" id="reg-code" value="+251" class="w-20 px-2 py-3 bg-slate-100 border border-slate-100 rounded-2xl text-center font-bold text-sm">
+                    <input type="tel" id="reg-phone" placeholder="912345678" class="flex-1 px-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl outline-none text-sm">
                 </div>
             </div>
-            
-            <div class="text-center mt-6 border-t pt-4">
-                <a href="/admin" class="text-xs text-slate-400 hover:text-slate-600 font-semibold"><i class="fa-solid fa-lock mr-1"></i> Seensa Admin</a>
+            <button onclick="registerStudent()" class="w-full bg-emerald-600 text-white font-bold py-4 rounded-2xl shadow-xl shadow-emerald-100 cursor-pointer">Galmaa'i & ID Fudhadhu</button>
+            <div class="text-center pt-2">
+                <button onclick="toggleAuthMode(false)" class="text-xs text-slate-500 font-bold hover:underline">Duraanuu Galmoofteetta? Seeni</button>
             </div>
+        </div>
+
+        <div class="mt-auto pb-4">
+            <a href="/admin" class="text-xs text-slate-400 font-semibold flex items-center gap-1"><i class="fa-solid fa-lock text-[10px]"></i> Seensa Admin Panel</a>
         </div>
     </div>
 
-    <!-- 2. STUDENT DASHBOARD -->
-    <div id="student-dashboard" class="hidden min-h-screen bg-slate-50 flex flex-col">
-        <header class="bg-slate-900 text-white h-16 flex items-center justify-between px-6">
-            <div class="flex items-center gap-3">
-                <i class="fa-solid fa-graduation-cap text-indigo-400 text-xl"></i>
-                <div>
-                    <h3 id="dash-student-name" class="font-bold text-sm">...</h3>
-                    <p id="dash-student-id" class="text-[10px] text-indigo-300 font-mono">...</p>
+    <!-- 3. STUDENT DASHBOARD (Screen 10 in image) -->
+    <div id="student-main" class="hidden min-h-screen pb-28">
+        <!-- Header -->
+        <header class="bg-[#0047AB] text-white px-6 pt-10 pb-20 rounded-b-[40px] shadow-2xl relative">
+            <div class="flex justify-between items-center mb-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-md">
+                        <i class="fa-solid fa-user-graduate text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 id="student-name-display" class="font-bold text-base leading-tight">...</h3>
+                        <p id="student-id-display" class="text-xs text-indigo-200 font-mono">...</p>
+                    </div>
                 </div>
+                <button onclick="logoutStudent()" class="w-10 h-10 bg-white/10 rounded-2xl flex items-center justify-center text-rose-200">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
             </div>
-            <button type="button" onclick="logoutStudent()" class="text-rose-400 hover:text-rose-300 text-sm font-bold cursor-pointer"><i class="fa-solid fa-right-from-bracket"></i> Ba'i</button>
+            <div class="bg-white/10 p-4 rounded-2xl border border-white/15 backdrop-blur-md">
+                <p class="text-xs text-indigo-100 font-medium">"Barnootni karea milkaa'inaa ti!"</p>
+            </div>
         </header>
 
-        <main class="max-w-4xl w-full mx-auto p-6 space-y-6 flex-1">
-            <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-4">
-                <h3 class="font-bold text-slate-900 text-lg flex items-center gap-2"><i class="fa-solid fa-clipboard-list text-indigo-600"></i> Qormaata Jiran</h3>
+        <!-- Grid Cards Menu (Matching Dashboard in image) -->
+        <main class="px-6 -mt-10 space-y-6">
+            <div class="grid grid-cols-2 gap-4">
+                <div onclick="switchTab('exams')" class="card-btn bg-indigo-600 text-white p-5 shadow-xl shadow-indigo-100 flex flex-col items-center text-center cursor-pointer">
+                    <i class="fa-solid fa-file-pen text-2xl mb-2"></i>
+                    <span class="font-bold text-sm">Qormaata Seeni</span>
+                </div>
+                <div onclick="switchTab('results')" class="card-btn bg-emerald-500 text-white p-5 shadow-xl shadow-emerald-100 flex flex-col items-center text-center cursor-pointer">
+                    <i class="fa-solid fa-chart-line text-2xl mb-2"></i>
+                    <span class="font-bold text-sm">Qabxii Koo</span>
+                </div>
+                <div onclick="switchTab('notice')" class="card-btn bg-amber-500 text-white p-5 shadow-xl shadow-amber-100 flex flex-col items-center text-center cursor-pointer">
+                    <i class="fa-solid fa-bullhorn text-2xl mb-2"></i>
+                    <span class="font-bold text-sm">Beeksisaa</span>
+                </div>
+                <div onclick="switchTab('feedback')" class="card-btn bg-rose-500 text-white p-5 shadow-xl shadow-rose-100 flex flex-col items-center text-center cursor-pointer">
+                    <i class="fa-solid fa-comment-dots text-2xl mb-2"></i>
+                    <span class="font-bold text-sm">Yaadaa Kenni</span>
+                </div>
+            </div>
+
+            <!-- Tab: Exams List -->
+            <div id="tab-exams" class="space-y-4">
+                <h4 class="font-bold text-slate-900 text-base flex items-center gap-2 px-1"><i class="fa-solid fa-clipboard-list text-[#0047AB]"></i> Qormaata Jiran</h4>
                 <div id="exams-list" class="space-y-3"></div>
             </div>
 
-            <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-4">
-                <h3 class="font-bold text-slate-900 text-lg flex items-center gap-2"><i class="fa-solid fa-chart-simple text-emerald-600"></i> Seenaa Qabxii Koo</h3>
-                <div id="my-results-list" class="space-y-2"></div>
+            <!-- Tab: Results List -->
+            <div id="tab-results" class="hidden space-y-4">
+                <h4 class="font-bold text-slate-900 text-base flex items-center gap-2 px-1"><i class="fa-solid fa-trophy text-emerald-600"></i> Seenaa Qabxii Koo</h4>
+                <div id="results-list" class="space-y-3"></div>
+            </div>
+
+            <!-- Tab: Announcements / Beeksisaa -->
+            <div id="tab-notice" class="hidden space-y-4">
+                <h4 class="font-bold text-slate-900 text-base flex items-center gap-2 px-1"><i class="fa-solid fa-bullhorn text-amber-500"></i> Beeksisaa</h4>
+                <div id="notices-list" class="space-y-3"></div>
+            </div>
+
+            <!-- Tab: Feedback -->
+            <div id="tab-feedback" class="hidden space-y-4">
+                <h4 class="font-bold text-slate-900 text-base flex items-center gap-2 px-1"><i class="fa-solid fa-comment-dots text-rose-500"></i> Yaadaa Adminii'f Ergi</h4>
+                <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm space-y-3">
+                    <textarea id="feedback-msg" rows="4" placeholder="Yaada ykn gaaffii kee asitti barreesse..." class="w-full p-3 bg-slate-50 border border-slate-100 rounded-2xl text-xs outline-none"></textarea>
+                    <button onclick="sendFeedback()" class="w-full bg-rose-500 text-white font-bold py-3 rounded-2xl text-xs cursor-pointer shadow-md">Ergi (Send)</button>
+                </div>
             </div>
         </main>
+
+        <!-- Bottom Navigation Bar (Matching Image) -->
+        <nav class="fixed bottom-0 left-0 right-0 bg-white h-20 flex items-center justify-around px-4 bottom-nav shadow-[0_-4px_20px_rgba(0,0,0,0.06)] border-t z-40">
+            <button onclick="switchTab('exams')" class="flex flex-col items-center text-[#0047AB]"><i class="fa-solid fa-house text-xl"></i><span class="text-[10px] font-bold mt-1">Home</span></button>
+            <button onclick="switchTab('exams')" class="flex flex-col items-center text-slate-400"><i class="fa-solid fa-file-invoice text-xl"></i><span class="text-[10px] font-bold mt-1">Qormaata</span></button>
+            <button onclick="switchTab('results')" class="flex flex-col items-center text-slate-400"><i class="fa-solid fa-chart-pie text-xl"></i><span class="text-[10px] font-bold mt-1">Qabxii</span></button>
+            <button onclick="logoutStudent()" class="flex flex-col items-center text-rose-400"><i class="fa-solid fa-power-off text-xl"></i><span class="text-[10px] font-bold mt-1">Ba'i</span></button>
+        </nav>
     </div>
 
-    <!-- 3. ACTIVE EXAM SCREEN -->
-    <div id="exam-screen" class="hidden min-h-screen bg-slate-100 flex items-center justify-center p-4">
-        <div class="max-w-3xl w-full bg-white rounded-3xl p-6 sm:p-8 shadow-xl border space-y-6">
-            <div class="flex justify-between items-center border-b pb-4">
-                <h2 id="exam-title-display" class="font-bold text-lg text-slate-900">...</h2>
-                <div class="bg-rose-50 border border-rose-200 text-rose-600 px-4 py-2 rounded-xl font-bold font-mono text-sm">
+    <!-- 4. ACTIVE EXAM TAKING MODAL -->
+    <div id="exam-screen" class="hidden fixed inset-0 bg-slate-900/90 z-[120] flex items-center justify-center p-4">
+        <div class="bg-white max-w-2xl w-full rounded-3xl p-6 shadow-2xl flex flex-col max-h-[90vh]">
+            <div class="flex justify-between items-center border-b pb-4 mb-4">
+                <h3 id="exam-active-title" class="font-bold text-slate-900 text-base">...</h3>
+                <div class="bg-rose-50 border border-rose-200 text-rose-600 px-3 py-1.5 rounded-xl font-mono font-bold text-xs">
                     <i class="fa-solid fa-clock mr-1"></i> <span id="timer-display">00:00</span>
                 </div>
             </div>
+            
+            <div id="questions-active-list" class="flex-1 overflow-y-auto space-y-4 pr-1"></div>
 
-            <div id="questions-container" class="space-y-6 max-h-[60vh] overflow-y-auto pr-2"></div>
-
-            <div class="flex justify-end border-t pt-4">
-                <button type="button" onclick="submitExam()" class="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold px-8 py-3 rounded-xl transition shadow-lg shadow-emerald-100 cursor-pointer">Qormaata Xumuri</button>
+            <div class="border-t pt-4 mt-4 flex justify-end">
+                <button onclick="submitExam()" class="bg-emerald-600 text-white font-bold px-8 py-3 rounded-xl shadow-lg shadow-emerald-100 cursor-pointer">Qormaata Xumuri</button>
             </div>
         </div>
     </div>
@@ -114,46 +198,51 @@
         let answers = {};
         let examTimer = null;
 
-        function toggleAuth(showReg) {
-            document.getElementById('login-section').classList.toggle('hidden', showReg);
-            document.getElementById('register-section').classList.toggle('hidden', !showReg);
+        function openAuth() {
+            document.getElementById('splash-screen').classList.add('hidden');
+            document.getElementById('auth-screen').classList.remove('hidden');
+        }
+
+        function toggleAuthMode(showReg) {
+            document.getElementById('login-box').classList.toggle('hidden', showReg);
+            document.getElementById('register-box').classList.toggle('hidden', !showReg);
         }
 
         async function registerStudent() {
             const name = document.getElementById('reg-name').value.trim();
-            const countryCode = document.getElementById('reg-code').value.trim();
-            const phoneNum = document.getElementById('reg-phone').value.trim();
-            
-            if (!name || !phoneNum) return alert("Maaloo maqaa fi lakk. bilbilaa guuti!");
+            const code = document.getElementById('reg-code').value.trim();
+            const phone = document.getElementById('reg-phone').value.trim();
 
-            const fullPhone = countryCode + " " + phoneNum.replace(/^0+/, '');
+            if (!name || !phone) return alert("Maaloo maqaa fi lakk. bilbilaa guuti!");
+
             const newId = "STU-" + Math.floor(1000 + Math.random() * 9000);
+            const fullPhone = code + " " + phone.replace(/^0+/, '');
 
-            const { error } = await db.from('exam_students').insert([{ 
-                id: newId, 
-                full_name: name, 
-                phone: fullPhone, 
-                is_allowed: true 
+            const { error } = await db.from('exam_students').insert([{
+                id: newId,
+                full_name: name,
+                phone: fullPhone,
+                is_allowed: true
             }]);
 
-            if (error) return alert("Error Database: " + error.message);
+            if (error) return alert("Error: " + error.message);
 
-            alert("🎉 Galmeen milkaa'eera!\n\nSTUDENT ID KEE: " + newId + "\n(ID kana bakka gaariitti qabadhu!)");
+            alert("🎉 Galmeen milkaa'eera!\n\nSTUDENT ID: " + newId);
             document.getElementById('input-student-id').value = newId;
-            toggleAuth(false);
+            toggleAuthMode(false);
         }
 
         async function loginWithID() {
             const id = document.getElementById('input-student-id').value.trim().toUpperCase();
-            if (!id) return alert("Maaloo Student ID kee galchi!");
+            if (!id) return alert("Student ID galchi!");
 
-            const { data: student, error } = await db.from('exam_students').select('*').eq('id', id).single();
-            if (error || !student) return alert("Student ID kun hin argamne! Maaloo dura galmaa'aa.");
-            if (!student.is_allowed) return alert("Dhiifama, Admin-ni seensa kee dhowweera (Blocked)!");
+            const { data, error } = await db.from('exam_students').select('*').eq('id', id).single();
+            if (error || !data) return alert("Student ID kun hin argamne!");
+            if (!data.is_allowed) return alert("Seensi kee dhowwameera (Blocked)!");
 
-            currentStudent = student;
-            localStorage.setItem('student_id', student.id);
-            openDashboard();
+            currentStudent = data;
+            localStorage.setItem('student_id', id);
+            setupDashboard();
         }
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -164,76 +253,99 @@
             }
         });
 
-        function openDashboard() {
-            document.getElementById('auth-box').classList.add('hidden');
-            document.getElementById('student-dashboard').classList.remove('hidden');
-            document.getElementById('dash-student-name').textContent = currentStudent.full_name;
-            document.getElementById('dash-student-id').textContent = "ID: " + currentStudent.id;
+        function setupDashboard() {
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('splash-screen').classList.add('hidden');
+            document.getElementById('student-main').classList.remove('hidden');
+            document.getElementById('student-name-display').textContent = currentStudent.full_name;
+            document.getElementById('student-id-display').textContent = "ID: " + currentStudent.id;
             loadExams();
-            loadMyResults();
+            loadResults();
+            loadNotices();
         }
 
-        function logoutStudent() {
-            localStorage.removeItem('student_id');
-            window.location.reload();
+        function switchTab(tab) {
+            document.getElementById('tab-exams').classList.toggle('hidden', tab !== 'exams');
+            document.getElementById('tab-results').classList.toggle('hidden', tab !== 'results');
+            document.getElementById('tab-notice').classList.toggle('hidden', tab !== 'notice');
+            document.getElementById('tab-feedback').classList.toggle('hidden', tab !== 'feedback');
         }
 
         async function loadExams() {
             const list = document.getElementById('exams-list');
             const { data: exams } = await db.from('exam_tests').select('*').eq('is_active', true);
-            const now = new Date();
 
             if (exams && exams.length > 0) {
-                // Filter exams by active start and end date
-                const activeExams = exams.filter(e => {
-                    if (e.start_time && new Date(e.start_time) > now) return false;
-                    if (e.end_time && new Date(e.end_time) < now) return false;
-                    return true;
-                });
-
-                if (activeExams.length > 0) {
-                    list.innerHTML = activeExams.map(e => `
-                        <div class="flex items-center justify-between p-4 border rounded-2xl hover:border-indigo-200 bg-slate-50 transition">
-                            <div>
-                                <h4 class="font-bold text-slate-900">${e.title}</h4>
-                                <p class="text-xs text-slate-500 mt-1"><i class="fa-solid fa-clock"></i> ${e.duration_minutes} Mins</p>
-                            </div>
-                            <button onclick="startExam('${e.id}', '${encodeURIComponent(e.title)}', ${e.duration_minutes})" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2 rounded-xl text-sm transition cursor-pointer">Qormaata Fudhadhu</button>
-                        </div>
-                    `).join('');
-                } else {
-                    list.innerHTML = `<p class="text-slate-400 text-sm">Qormaanni yeroo ammaa banaa ta'e hin jiru.</p>`;
-                }
-            } else {
-                list.innerHTML = `<p class="text-slate-400 text-sm">Qormaanni yeroo ammaa banaa ta'e hin jiru.</p>`;
-            }
-        }
-
-        async function loadMyResults() {
-            const list = document.getElementById('my-results-list');
-            const { data: res } = await db.from('exam_results').select('*, exam_tests(title)').eq('student_id', currentStudent.id).order('completed_at', { ascending: false });
-            if (res && res.length > 0) {
-                list.innerHTML = res.map(r => `
-                    <div class="flex justify-between items-center p-3 border rounded-xl text-sm bg-slate-50">
+                list.innerHTML = exams.map(e => `
+                    <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm flex items-center justify-between">
                         <div>
-                            <p class="font-bold text-slate-900">${r.exam_tests?.title || 'Qormaata'}</p>
-                            <span class="text-[11px] text-slate-400">${new Date(r.completed_at).toLocaleDateString()}</span>
+                            <h5 class="font-bold text-slate-900 text-sm">${e.title}</h5>
+                            <p class="text-xs text-slate-400 mt-1"><i class="fa-solid fa-clock"></i> ${e.duration_minutes} Mins</p>
                         </div>
-                        <span class="font-bold text-base ${r.score >= 50 ? 'text-emerald-600' : 'text-rose-600'}">${r.score.toFixed(1)}% (${r.correct_answers}/${r.total_questions})</span>
+                        <button onclick="startExam('${e.id}', '${encodeURIComponent(e.title)}', ${e.duration_minutes})" class="bg-[#0047AB] text-white px-4 py-2.5 rounded-2xl text-xs font-bold shadow-md cursor-pointer">Jalqabi</button>
                     </div>
                 `).join('');
             } else {
-                list.innerHTML = `<p class="text-slate-400 text-sm">Qabxiin kanaan duraa hin jiru.</p>`;
+                list.innerHTML = `<p class="text-slate-400 text-xs text-center py-6">Qormaanni banaa ta'e hin jiru.</p>`;
             }
+        }
+
+        async function loadResults() {
+            const list = document.getElementById('results-list');
+            const { data: res } = await db.from('exam_results').select('*, exam_tests(title)').eq('student_id', currentStudent.id);
+
+            if (res && res.length > 0) {
+                list.innerHTML = res.map(r => `
+                    <div class="bg-white p-4 rounded-2xl border border-slate-100 flex justify-between items-center text-sm">
+                        <div>
+                            <p class="font-bold text-slate-900">${r.exam_tests?.title || 'Qormaata'}</p>
+                            <span class="text-[10px] text-slate-400">${new Date(r.completed_at).toLocaleDateString()}</span>
+                        </div>
+                        <span class="font-black text-emerald-600 text-base">${r.score.toFixed(1)}%</span>
+                    </div>
+                `).join('');
+            } else {
+                list.innerHTML = `<p class="text-slate-400 text-xs text-center py-6">Qabxiin kanaan duraa hin jiru.</p>`;
+            }
+        }
+
+        async function loadNotices() {
+            const list = document.getElementById('notices-list');
+            const { data } = await db.from('exam_notices').select('*').order('created_at', { ascending: false });
+
+            if (data && data.length > 0) {
+                list.innerHTML = data.map(n => `
+                    <div class="bg-white p-4 rounded-2xl border border-slate-100 space-y-1 text-xs">
+                        <p class="font-bold text-slate-900">${n.title}</p>
+                        <p class="text-slate-600">${n.message}</p>
+                        <span class="text-[10px] text-slate-400 block">${new Date(n.created_at).toLocaleDateString()}</span>
+                    </div>
+                `).join('');
+            } else {
+                list.innerHTML = `<p class="text-slate-400 text-xs text-center py-6">Beeksisni hin jiru.</p>`;
+            }
+        }
+
+        async function sendFeedback() {
+            const msg = document.getElementById('feedback-msg').value.trim();
+            if (!msg) return alert("Yaada kee barreesse!");
+
+            await db.from('exam_feedbacks').insert([{
+                student_name: currentStudent.full_name,
+                student_id: currentStudent.id,
+                message: msg
+            }]);
+
+            alert("🎉 Yaadni kee Admin-f ergameera!");
+            document.getElementById('feedback-msg').value = '';
         }
 
         window.startExam = async function(examId, titleEncoded, duration) {
             activeExamId = examId;
             answers = {};
             const title = decodeURIComponent(titleEncoded);
-            document.getElementById('student-dashboard').classList.add('hidden');
+            document.getElementById('exam-active-title').textContent = title;
             document.getElementById('exam-screen').classList.remove('hidden');
-            document.getElementById('exam-title-display').textContent = title;
 
             let sec = duration * 60;
             if (examTimer) clearInterval(examTimer);
@@ -243,31 +355,29 @@
                 document.getElementById('timer-display').textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
                 if (sec <= 0) {
                     clearInterval(examTimer);
-                    alert("Yeroon dhumateera!");
                     submitExam();
                 }
                 sec--;
             }, 1000);
 
-            // Fetch questions properly
-            const { data: qList, error } = await db.from('exam_questions').select('*').eq('exam_id', examId);
+            const { data: qList } = await db.from('exam_questions').select('*').eq('exam_id', examId);
             activeQuestions = qList || [];
             
-            const cont = document.getElementById('questions-container');
+            const cont = document.getElementById('questions-active-list');
             if (activeQuestions.length > 0) {
                 cont.innerHTML = activeQuestions.map((q, i) => `
-                    <div class="p-5 border rounded-2xl bg-slate-50 space-y-3">
+                    <div class="p-4 border rounded-2xl bg-slate-50 space-y-2 text-xs">
                         <p class="font-bold text-slate-900">${i+1}. ${q.question_text}</p>
-                        <div class="grid grid-cols-1 gap-2 text-sm">
-                            <label class="p-3 bg-white border rounded-xl flex items-center gap-3 cursor-pointer"><input type="radio" name="q-${q.id}" value="A" onchange="answers['${q.id}']='A'"> <span>A) ${q.option_a}</span></label>
-                            <label class="p-3 bg-white border rounded-xl flex items-center gap-3 cursor-pointer"><input type="radio" name="q-${q.id}" value="B" onchange="answers['${q.id}']='B'"> <span>B) ${q.option_b}</span></label>
-                            <label class="p-3 bg-white border rounded-xl flex items-center gap-3 cursor-pointer"><input type="radio" name="q-${q.id}" value="C" onchange="answers['${q.id}']='C'"> <span>C) ${q.option_c}</span></label>
-                            <label class="p-3 bg-white border rounded-xl flex items-center gap-3 cursor-pointer"><input type="radio" name="q-${q.id}" value="D" onchange="answers['${q.id}']='D'"> <span>D) ${q.option_d}</span></label>
+                        <div class="space-y-1.5 pt-1">
+                            <label class="p-2.5 bg-white border rounded-xl flex items-center gap-2 cursor-pointer"><input type="radio" name="q-${q.id}" value="A" onchange="answers['${q.id}']='A'"> A) ${q.option_a}</label>
+                            <label class="p-2.5 bg-white border rounded-xl flex items-center gap-2 cursor-pointer"><input type="radio" name="q-${q.id}" value="B" onchange="answers['${q.id}']='B'"> B) ${q.option_b}</label>
+                            <label class="p-2.5 bg-white border rounded-xl flex items-center gap-2 cursor-pointer"><input type="radio" name="q-${q.id}" value="C" onchange="answers['${q.id}']='C'"> C) ${q.option_c}</label>
+                            <label class="p-2.5 bg-white border rounded-xl flex items-center gap-2 cursor-pointer"><input type="radio" name="q-${q.id}" value="D" onchange="answers['${q.id}']='D'"> D) ${q.option_d}</label>
                         </div>
                     </div>
                 `).join('');
             } else {
-                cont.innerHTML = '<p class="text-rose-500 font-bold p-4">Gaaffiin qormaata kanaa hin argamne! Admin-ni gaaffii akka galchu eegi.</p>';
+                cont.innerHTML = '<p class="text-slate-400 text-xs text-center py-4">Gaaffiin hin argamne.</p>';
             }
         };
 
@@ -289,7 +399,12 @@
                 correct_answers: correct
             }], { onConflict: 'student_id,exam_id' });
 
-            alert("🎉 QORMAATA XUMURTEETTA!\n\nQabxii Kee: " + score.toFixed(1) + "%\nDeebii Sirrii: " + correct + " / " + activeQuestions.length);
+            alert("🎉 Qormaata Xumurtaan!\nQabxii: " + score.toFixed(1) + "%");
+            window.location.reload();
+        }
+
+        function logoutStudent() {
+            localStorage.removeItem('student_id');
             window.location.reload();
         }
     </script>
