@@ -3,53 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Akkaadaami Oromiyaa - Student App</title>
+    <title>App Kiyya - Student Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        .bottom-nav { border-top-left-radius: 28px; border-top-right-radius: 28px; }
-        .card-btn { border-radius: 24px; transition: all 0.2s ease; }
-        .card-btn:active { transform: scale(0.95); }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen">
 
     <!-- 1. SPLASH / START SCREEN -->
-    <div id="splash-screen" class="fixed inset-0 bg-[#0047AB] z-[100] flex flex-col items-center justify-between p-8 text-white">
+    <div id="splash-screen" class="fixed inset-0 primary-gradient z-[100] flex flex-col items-center justify-between p-8 text-white">
         <div class="my-auto text-center flex flex-col items-center">
             <div class="w-32 h-32 bg-white rounded-full flex items-center justify-center mb-6 shadow-2xl">
-                <i class="fa-solid fa-graduation-cap text-[#0047AB] text-5xl"></i>
+                <i class="fa-solid fa-graduation-cap text-[#1565C0] text-5xl"></i>
             </div>
-            <h1 class="text-3xl font-black mb-2">Akkaadaami Oromiyaa</h1>
+            <h1 class="text-3xl font-black mb-2">App Kiyya</h1>
             <p class="text-indigo-100 text-sm font-medium">Barnoota • Qormaata • Qabxii</p>
             <div class="mt-8 bg-white/10 px-6 py-3 rounded-full border border-white/20 backdrop-blur-md">
                 <p class="text-xs font-semibold italic">"Barnootni ijoo milkaa'inaa ti!"</p>
             </div>
         </div>
-        <button onclick="openAuth()" class="w-full max-w-xs bg-white text-[#0047AB] font-bold py-4 rounded-full shadow-2xl flex items-center justify-center gap-3 cursor-pointer">
+        <button onclick="openAuth()" class="w-full max-w-xs bg-white text-[#1565C0] font-bold py-4 rounded-full shadow-2xl flex items-center justify-center gap-3 cursor-pointer">
             Jalqabi <i class="fa-solid fa-arrow-right"></i>
         </button>
     </div>
 
-    <!-- 2. LOGIN SCREEN (GOOGLE & TELEGRAM FOR BEAUTY) -->
+    <!-- 2. LOGIN SCREEN (GOOGLE & TELEGRAM) -->
     <div id="auth-screen" class="hidden min-h-screen bg-white flex flex-col items-center justify-between p-6">
         <div class="my-auto w-full max-w-sm flex flex-col items-center text-center">
-            <div class="w-24 h-24 bg-[#0047AB] text-white rounded-3xl flex items-center justify-center mb-6 shadow-xl shadow-indigo-100">
+            <div class="w-24 h-24 bg-[#1565C0] text-white rounded-3xl flex items-center justify-center mb-6 shadow-xl shadow-blue-100">
                 <i class="fa-solid fa-graduation-cap text-4xl"></i>
             </div>
             <h2 class="text-2xl font-black text-slate-900 mb-2">Baga nagaan dhuftan!</h2>
-            <p class="text-slate-400 text-xs mb-8 px-4">Akkaadaami Oromiyaa keessatti galmaa'uuf Google ykn Telegram fayyadamaa.</p>
+            <p class="text-slate-400 text-xs mb-8 px-4">App Kiyya keessatti galmaa'uuf Google ykn Telegram fayyadamaa.</p>
 
             <div class="w-full space-y-3">
-                <!-- GOOGLE LOGIN (FUNCTIONAL) -->
                 <button id="btn-google-login" onclick="loginWithGoogle()" class="w-full py-4 px-6 border-2 border-slate-200 rounded-2xl flex items-center justify-center gap-3 font-bold text-slate-700 shadow-sm hover:bg-slate-50 active:scale-95 transition cursor-pointer bg-white">
                     <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-6 h-6"> 
                     <span>Login with Google</span>
                 </button>
-
-                <!-- TELEGRAM LOGIN (FOR BEAUTY / DESIGN MATCH) -->
-                <button onclick="alert('OAuth Telegram qindeessuun gara fuulduraatti ni dabalama! Ammaaf Google fayyadamaa.')" class="w-full py-4 px-6 bg-[#2fa3d8] text-white rounded-2xl flex items-center justify-center gap-3 font-bold text-sm shadow-md active:scale-95 transition cursor-pointer">
+                <button onclick="alert('Telegram Login gabaabduun ni hojjeta.')" class="w-full py-4 px-6 bg-[#2fa3d8] text-white rounded-2xl flex items-center justify-center gap-3 font-bold text-sm shadow-md active:scale-95 transition cursor-pointer">
                     <i class="fa-brands fa-telegram text-xl"></i>
                     <span>Login with Telegram</span>
                 </button>
@@ -63,8 +56,7 @@
 
     <!-- 3. STUDENT DASHBOARD -->
     <div id="student-main" class="hidden min-h-screen pb-28">
-        <!-- Header -->
-        <header class="bg-[#0047AB] text-white px-6 pt-10 pb-20 rounded-b-[40px] shadow-2xl relative">
+        <header class="primary-gradient text-white px-6 pt-10 pb-20 rounded-b-[40px] shadow-2xl relative">
             <div class="flex justify-between items-center mb-6">
                 <div class="flex items-center gap-3">
                     <img id="student-avatar" src="https://ui-avatars.com/api/?name=Student" class="w-12 h-12 rounded-2xl border-2 border-white/20">
@@ -82,65 +74,63 @@
             </div>
         </header>
 
-        <!-- Grid Cards Menu -->
         <main class="px-6 -mt-10 space-y-6">
             <div class="grid grid-cols-2 gap-4">
-                <div onclick="switchTab('exams')" class="card-btn bg-indigo-600 text-white p-5 shadow-xl shadow-indigo-100 flex flex-col items-center text-center cursor-pointer">
+                <div onclick="switchTab('exams')" class="card-btn bg-[#7b1fa2] text-white p-5 shadow-xl flex flex-col items-center text-center cursor-pointer">
                     <i class="fa-solid fa-file-pen text-2xl mb-2"></i>
                     <span class="font-bold text-sm">Qormaata Seeni</span>
                 </div>
-                <div onclick="switchTab('results')" class="card-btn bg-emerald-500 text-white p-5 shadow-xl shadow-emerald-100 flex flex-col items-center text-center cursor-pointer">
+                <div onclick="switchTab('results')" class="card-btn bg-[#2e7d32] text-white p-5 shadow-xl flex flex-col items-center text-center cursor-pointer">
                     <i class="fa-solid fa-chart-line text-2xl mb-2"></i>
                     <span class="font-bold text-sm">Qabxii Koo</span>
                 </div>
-                <div onclick="switchTab('notice')" class="card-btn bg-amber-500 text-white p-5 shadow-xl shadow-amber-100 flex flex-col items-center text-center cursor-pointer">
+                <div onclick="switchTab('notice')" class="card-btn bg-[#ef6c00] text-white p-5 shadow-xl flex flex-col items-center text-center cursor-pointer">
                     <i class="fa-solid fa-bullhorn text-2xl mb-2"></i>
                     <span class="font-bold text-sm">Beeksisaa</span>
                 </div>
-                <div onclick="switchTab('feedback')" class="card-btn bg-rose-500 text-white p-5 shadow-xl shadow-rose-100 flex flex-col items-center text-center cursor-pointer">
+                <div onclick="switchTab('feedback')" class="card-btn bg-[#c2185b] text-white p-5 shadow-xl flex flex-col items-center text-center cursor-pointer">
                     <i class="fa-solid fa-comment-dots text-2xl mb-2"></i>
                     <span class="font-bold text-sm">Yaadaa Kenni</span>
                 </div>
             </div>
 
-            <!-- Tab: Exams List -->
+            <!-- Tab: Exams -->
             <div id="tab-exams" class="space-y-4">
-                <h4 class="font-bold text-slate-900 text-base flex items-center gap-2 px-1"><i class="fa-solid fa-clipboard-list text-[#0047AB]"></i> Qormaata Jiran</h4>
+                <h4 class="font-bold text-slate-900 text-base flex items-center gap-2 px-1"><i class="fa-solid fa-clipboard-list text-[#1565C0]"></i> Qormaata Jiran</h4>
                 <div id="exams-list" class="space-y-3"></div>
             </div>
 
-            <!-- Tab: Results List -->
+            <!-- Tab: Results -->
             <div id="tab-results" class="hidden space-y-4">
-                <h4 class="font-bold text-slate-900 text-base flex items-center gap-2 px-1"><i class="fa-solid fa-trophy text-emerald-600"></i> Seenaa Qabxii Koo</h4>
+                <h4 class="font-bold text-slate-900 text-base flex items-center gap-2 px-1"><i class="fa-solid fa-trophy text-[#2e7d32]"></i> Seenaa Qabxii Koo</h4>
                 <div id="results-list" class="space-y-3"></div>
             </div>
 
             <!-- Tab: Notices -->
             <div id="tab-notice" class="hidden space-y-4">
-                <h4 class="font-bold text-slate-900 text-base flex items-center gap-2 px-1"><i class="fa-solid fa-bullhorn text-amber-500"></i> Beeksisaa</h4>
+                <h4 class="font-bold text-slate-900 text-base flex items-center gap-2 px-1"><i class="fa-solid fa-bullhorn text-[#ef6c00]"></i> Beeksisaa</h4>
                 <div id="notices-list" class="space-y-3"></div>
             </div>
 
             <!-- Tab: Feedback -->
             <div id="tab-feedback" class="hidden space-y-4">
-                <h4 class="font-bold text-slate-900 text-base flex items-center gap-2 px-1"><i class="fa-solid fa-comment-dots text-rose-500"></i> Yaadaa Adminii'f Ergi</h4>
+                <h4 class="font-bold text-slate-900 text-base flex items-center gap-2 px-1"><i class="fa-solid fa-comment-dots text-[#c2185b]"></i> Yaadaa Adminii'f Ergi</h4>
                 <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm space-y-3">
                     <textarea id="feedback-msg" rows="4" placeholder="Yaada ykn gaaffii kee asitti barreesse..." class="w-full p-3 bg-slate-50 border border-slate-100 rounded-2xl text-xs outline-none"></textarea>
-                    <button onclick="sendFeedback()" class="w-full bg-rose-500 text-white font-bold py-3 rounded-2xl text-xs cursor-pointer shadow-md">Ergi (Send)</button>
+                    <button onclick="sendFeedback()" class="w-full bg-[#c2185b] text-white font-bold py-3 rounded-2xl text-xs cursor-pointer shadow-md">Ergi (Send)</button>
                 </div>
             </div>
         </main>
 
-        <!-- Bottom Nav -->
-        <nav class="fixed bottom-0 left-0 right-0 bg-white h-20 flex items-center justify-around px-4 bottom-nav shadow-[0_-4px_20px_rgba(0,0,0,0.06)] border-t z-40">
-            <button onclick="switchTab('exams')" class="flex flex-col items-center text-[#0047AB]"><i class="fa-solid fa-house text-xl"></i><span class="text-[10px] font-bold mt-1">Home</span></button>
+        <nav class="fixed bottom-0 left-0 right-0 bg-white h-20 flex items-center justify-around px-4 bottom-nav shadow-lg border-t z-40">
+            <button onclick="switchTab('exams')" class="flex flex-col items-center text-[#1565C0]"><i class="fa-solid fa-house text-xl"></i><span class="text-[10px] font-bold mt-1">Home</span></button>
             <button onclick="switchTab('exams')" class="flex flex-col items-center text-slate-400"><i class="fa-solid fa-file-invoice text-xl"></i><span class="text-[10px] font-bold mt-1">Qormaata</span></button>
             <button onclick="switchTab('results')" class="flex flex-col items-center text-slate-400"><i class="fa-solid fa-chart-pie text-xl"></i><span class="text-[10px] font-bold mt-1">Qabxii</span></button>
             <button onclick="logoutStudent()" class="flex flex-col items-center text-rose-400"><i class="fa-solid fa-power-off text-xl"></i><span class="text-[10px] font-bold mt-1">Ba'i</span></button>
         </nav>
     </div>
 
-    <!-- ACTIVE EXAM TAKING MODAL -->
+    <!-- EXAM TAKING MODAL -->
     <div id="exam-screen" class="hidden fixed inset-0 bg-slate-900/90 z-[120] flex items-center justify-center p-4">
         <div class="bg-white max-w-2xl w-full rounded-3xl p-6 shadow-2xl flex flex-col max-h-[90vh]">
             <div class="flex justify-between items-center border-b pb-4 mb-4">
@@ -153,7 +143,7 @@
             <div id="questions-active-list" class="flex-1 overflow-y-auto space-y-4 pr-1"></div>
 
             <div class="border-t pt-4 mt-4 flex justify-end">
-                <button onclick="submitExam()" class="bg-emerald-600 text-white font-bold px-8 py-3 rounded-xl shadow-lg cursor-pointer">Qormaata Xumuri</button>
+                <button onclick="submitExam()" class="bg-[#2e7d32] text-white font-bold px-8 py-3 rounded-xl shadow-lg cursor-pointer">Qormaata Xumuri</button>
             </div>
         </div>
     </div>
@@ -176,7 +166,7 @@
 
         async function loginWithGoogle() {
             const btn = document.getElementById('btn-google-login');
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-indigo-600 text-xl"></i> <span>Seenaa jira...</span>`;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-[#1565C0] text-xl"></i> <span>Seenaa jira...</span>`;
             
             const { error } = await db.auth.signInWithOAuth({
                 provider: 'google',
@@ -196,7 +186,6 @@
                 const studentEmail = user.email;
                 const studentAvatar = user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(studentName)}`;
 
-                // Ensure Record in DB
                 const { data: existing } = await db.from('exam_students').select('*').eq('id', user.id).single();
                 if (!existing) {
                     await db.from('exam_students').insert([{
@@ -240,9 +229,9 @@
                     <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm flex items-center justify-between">
                         <div>
                             <h5 class="font-bold text-slate-900 text-sm">${e.title}</h5>
-                            <p class="text-xs text-slate-400 mt-1"><i class="fa-solid fa-clock"></i> ${e.duration_minutes} Daqiiqaa</p>
+                            <p class="text-xs text-slate-400 mt-1"><i class="fa-solid fa-clock"></i> ${e.duration_minutes} Mins</p>
                         </div>
-                        <button onclick="startExam('${e.id}', '${encodeURIComponent(e.title)}', ${e.duration_minutes})" class="bg-[#0047AB] text-white px-4 py-2.5 rounded-2xl text-xs font-bold shadow-md cursor-pointer">Jalqabi</button>
+                        <button onclick="startExam('${e.id}', '${encodeURIComponent(e.title)}', ${e.duration_minutes})" class="bg-[#1565C0] text-white px-4 py-2.5 rounded-2xl text-xs font-bold shadow-md cursor-pointer">Jalqabi</button>
                     </div>
                 `).join('');
             } else {
@@ -261,7 +250,7 @@
                             <p class="font-bold text-slate-900">${r.exam_tests?.title || 'Qormaata'}</p>
                             <span class="text-[10px] text-slate-400">${new Date(r.completed_at).toLocaleDateString()}</span>
                         </div>
-                        <span class="font-black text-emerald-600 text-base">${r.score.toFixed(1)}%</span>
+                        <span class="font-black text-[#2e7d32] text-base">${r.score.toFixed(1)}%</span>
                     </div>
                 `).join('');
             } else {
