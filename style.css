@@ -1,0 +1,31 @@
+:root {
+    --primary-blue: #1565C0;
+    --success-green: #2e7d32;
+    --exam-purple: #7b1fa2;
+    --announcement-orange: #ef6c00;
+    --feedback-pink: #c2185b;
+    --bg-light: #f4f8fb;
+}
+
+body {
+    background-color: var(--bg-light);
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+.bottom-nav {
+    border-top-left-radius: 28px;
+    border-top-right-radius: 28px;
+}
+
+.card-btn {
+    border-radius: 22px;
+    transition: all 0.2s ease;
+}
+
+.card-btn:active {
+    transform: scale(0.96);
+}
+
+.primary-gradient {
+    background: linear-gradient(135deg, #1565C0 0%, #0d47a1 100%);
+}
