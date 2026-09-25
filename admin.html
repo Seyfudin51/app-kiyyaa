@@ -3,121 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Akkaadaami Oromiyaa - Admin Panel</title>
+    <title>App Kiyya - Admin Panel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans min-h-screen">
 
-    <!-- ADMIN PIN LOGIN -->
-    <div id="admin-auth" class="min-h-screen flex items-center justify-center p-6 bg-[#0047AB]">
+    <!-- ADMIN GOOGLE LOGIN -->
+    <div id="admin-auth" class="min-h-screen flex items-center justify-center p-6 primary-gradient">
         <div class="bg-white p-8 rounded-3xl max-w-sm w-full text-center shadow-2xl space-y-4">
             <div class="w-16 h-16 bg-slate-900 text-white rounded-2xl flex items-center justify-center mx-auto text-2xl">
                 <i class="fa-solid fa-shield-halved"></i>
             </div>
             <h2 class="text-xl font-black text-slate-900">Admin Seensa</h2>
-            <input type="password" id="admin-pin" placeholder="PIN Galchi" class="w-full py-4 text-center text-lg font-bold bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-[#0047AB]">
-            <button onclick="checkAdmin()" class="w-full bg-slate-900 text-white font-bold py-4 rounded-2xl cursor-pointer shadow-lg">Bani Dashboard</button>
+            <p class="text-slate-400 text-xs">Admin 2 qofatu (seyfudin33 ykn suufiyaanjeeylaanofficial1) seenuu danda'a.</p>
+
+            <button onclick="loginAdminWithGoogle()" class="w-full py-4 border-2 border-slate-200 rounded-2xl flex items-center justify-center gap-3 font-bold text-slate-700 shadow-sm hover:bg-slate-50 cursor-pointer bg-white">
+                <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5"> Login Admin with Google
+            </button>
         </div>
     </div>
 
-    <!-- MAIN ADMIN DASHBOARD (Screen 3 in image) -->
+    <!-- MAIN ADMIN DASHBOARD -->
     <div id="admin-main" class="hidden min-h-screen pb-24">
-        <!-- Header -->
-        <header class="bg-[#0047AB] text-white px-6 pt-10 pb-16 rounded-b-[40px] shadow-2xl">
+        <header class="primary-gradient text-white px-6 pt-10 pb-16 rounded-b-[40px] shadow-2xl">
             <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center font-bold text-amber-300">
-                        <i class="fa-solid fa-crown text-xl"></i>
-                    </div>
+                    <img id="admin-avatar" src="https://ui-avatars.com/api/?name=Admin" class="w-12 h-12 rounded-2xl border-2 border-white/20">
                     <div>
-                        <h2 class="font-black text-lg leading-tight">Admin Portal</h2>
-                        <p class="text-xs text-indigo-200">Mata duree Admin</p>
+                        <h2 id="admin-name" class="font-black text-lg leading-tight">Admin Portal</h2>
+                        <p id="admin-email" class="text-xs text-indigo-200">...</p>
                     </div>
                 </div>
-                <a href="/" class="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-2xl text-xs font-bold transition">Gara Barataatti</a>
+                <button onclick="logoutAdmin()" class="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-2xl text-xs font-bold transition cursor-pointer">Ba'i</button>
             </div>
         </header>
 
-        <!-- Stats Counter (Matching Screen 3) -->
-        <div class="px-6 -mt-8">
-            <div class="grid grid-cols-3 gap-3">
-                <div class="bg-white p-4 rounded-2xl shadow-sm text-center">
-                    <p class="text-[10px] font-bold text-slate-400 uppercase">Qormaata</p>
-                    <p id="stat-exams" class="text-xl font-black text-[#0047AB]">...</p>
-                </div>
-                <div class="bg-white p-4 rounded-2xl shadow-sm text-center">
-                    <p class="text-[10px] font-bold text-slate-400 uppercase">Barattoota</p>
-                    <p id="stat-students" class="text-xl font-black text-emerald-500">...</p>
-                </div>
-                <div class="bg-white p-4 rounded-2xl shadow-sm text-center">
-                    <p class="text-[10px] font-bold text-slate-400 uppercase">Qabxii</p>
-                    <p id="stat-results" class="text-xl font-black text-amber-500">...</p>
-                </div>
-            </div>
-        </div>
-
         <main class="max-w-6xl w-full mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-8 mt-2">
             
-            <!-- LEFT COLUMN: CREATE EXAM & BULK PARSER (1 to 100+) -->
+            <!-- LEFT COLUMN -->
             <div class="space-y-6">
                 <!-- Create Exam -->
                 <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-3">
-                    <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2"><i class="fa-solid fa-folder-plus text-[#0047AB]"></i> Qormaata Haaraa Uumi</h3>
+                    <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2"><i class="fa-solid fa-folder-plus text-[#1565C0]"></i> Qormaata Haaraa Uumi</h3>
                     <input type="text" id="new-exam-title" placeholder="Mata-duree Qormaataa" class="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl text-xs outline-none">
-                    <input type="number" id="new-exam-duration" placeholder="Yeroo (Daqiiqaa - fkn: 30)" class="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl text-xs outline-none">
-                    <button onclick="createExam()" class="w-full bg-[#0047AB] text-white font-bold py-3 rounded-xl text-xs shadow-md cursor-pointer">Uumi (Create)</button>
+                    <input type="number" id="new-exam-duration" placeholder="Yeroo (Daqiiqaa)" class="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl text-xs outline-none">
+                    <button onclick="createExam()" class="w-full bg-[#1565C0] text-white font-bold py-3 rounded-xl text-xs shadow-md cursor-pointer">Uumi (Create)</button>
                 </div>
 
-                <!-- Bulk Questions Parser (1 to 100+) -->
+                <!-- Bulk Questions -->
                 <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-3">
-                    <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2"><i class="fa-solid fa-paste text-emerald-600"></i> Gaaffilee Hedduu Galchi (1 - 100+)</h3>
+                    <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2"><i class="fa-solid fa-paste text-[#2e7d32]"></i> Gaaffilee Hedduu Galchi</h3>
                     <select id="bulk-exam-select" class="w-full px-3 py-3 bg-slate-50 border border-slate-100 rounded-xl text-xs font-bold outline-none"></select>
-                    <textarea id="bulk-text" rows="10" placeholder="Fakkeenya:
-1. AI jechuun maali?
-A) Artificial Intelligence
-B) Apple Internet
-C) Android Info
-D) Auto Image
-Deebii: A
-
-2. Gaaffii 2ffaa..." class="w-full p-3 bg-slate-50 border border-slate-100 rounded-xl text-xs font-mono outline-none"></textarea>
-                    <button onclick="parseAndSaveBulkQuestions()" class="w-full bg-emerald-600 text-white font-bold py-3 rounded-xl text-xs shadow-md cursor-pointer">Parse & Save Hundaa</button>
+                    <textarea id="bulk-text" rows="8" placeholder="1. Gaaffii...&#10;A) ...&#10;B) ...&#10;C) ...&#10;D) ...&#10;Deebii: A" class="w-full p-3 bg-slate-50 border border-slate-100 rounded-xl text-xs font-mono outline-none"></textarea>
+                    <button onclick="parseAndSaveBulkQuestions()" class="w-full bg-[#2e7d32] text-white font-bold py-3 rounded-xl text-xs shadow-md cursor-pointer">Parse & Save</button>
                 </div>
 
-                <!-- Post Announcement -->
+                <!-- Post Notice -->
                 <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-3">
-                    <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2"><i class="fa-solid fa-bullhorn text-amber-500"></i> Beeksisaa Maxxansi</h3>
+                    <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2"><i class="fa-solid fa-bullhorn text-[#ef6c00]"></i> Beeksisaa Maxxansi</h3>
                     <input type="text" id="notice-title" placeholder="Mata-duree Beeksisaa" class="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl text-xs outline-none">
-                    <textarea id="notice-msg" rows="3" placeholder="Ergaa beeksisaa..." class="w-full p-3 bg-slate-50 border border-slate-100 rounded-xl text-xs outline-none"></textarea>
-                    <button onclick="postNotice()" class="w-full bg-amber-500 text-white font-bold py-3 rounded-xl text-xs shadow-md cursor-pointer">Maxxansi</button>
+                    <textarea id="notice-msg" rows="3" placeholder="Ergaa..." class="w-full p-3 bg-slate-50 border border-slate-100 rounded-xl text-xs outline-none"></textarea>
+                    <button onclick="postNotice()" class="w-full bg-[#ef6c00] text-white font-bold py-3 rounded-xl text-xs shadow-md cursor-pointer">Maxxansi</button>
                 </div>
             </div>
 
-            <!-- RIGHT COLUMN: MANAGING LISTS -->
+            <!-- RIGHT COLUMN -->
             <div class="lg:col-span-2 space-y-6">
-                <!-- Manage Exams -->
                 <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-4">
-                    <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2"><i class="fa-solid fa-list-check text-[#0047AB]"></i> Qormaata Jiran & Gaaffilee Ilaaluu</h3>
+                    <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2"><i class="fa-solid fa-list-check text-[#1565C0]"></i> Qormaata Jiran</h3>
                     <div id="exams-admin-list" class="space-y-3 max-h-60 overflow-y-auto"></div>
                 </div>
 
-                <!-- Leaderboard & Results -->
                 <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-4">
-                    <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2"><i class="fa-solid fa-trophy text-amber-500"></i> Qabxii & Sadarkaa Barattootaa</h3>
+                    <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2"><i class="fa-solid fa-trophy text-[#2e7d32]"></i> Qabxii & Sadarkaa</h3>
                     <div id="results-table" class="space-y-2 max-h-60 overflow-y-auto"></div>
                 </div>
 
-                <!-- Manage Students -->
                 <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-4">
-                    <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2"><i class="fa-solid fa-users text-indigo-600"></i> Barattoota Bulchuu</h3>
+                    <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2"><i class="fa-solid fa-users text-[#1565C0]"></i> Barattoota To'achuu</h3>
                     <div id="students-table" class="space-y-2 max-h-60 overflow-y-auto"></div>
                 </div>
 
-                <!-- Feedbacks List (Kuusaa Yaadaa) -->
                 <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-4">
-                    <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2"><i class="fa-solid fa-comment-dots text-rose-500"></i> Kuusaa Yaadaa Barattootaa</h3>
+                    <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2"><i class="fa-solid fa-comment-dots text-[#c2185b]"></i> Kuusaa Yaadaa</h3>
                     <div id="feedbacks-table" class="space-y-2 max-h-60 overflow-y-auto"></div>
                 </div>
             </div>
@@ -125,11 +96,11 @@ Deebii: A
         </main>
     </div>
 
-    <!-- MODAL TO VIEW QUESTIONS -->
+    <!-- MODAL -->
     <div id="questions-modal" class="hidden fixed inset-0 bg-slate-900/80 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-2xl w-full p-6 max-h-[80vh] flex flex-col shadow-2xl">
             <div class="flex justify-between items-center border-b pb-3 mb-4">
-                <h3 id="modal-exam-title" class="font-bold text-slate-900 text-sm">Gaaffilee Qormaataa</h3>
+                <h3 id="modal-exam-title" class="font-bold text-slate-900 text-sm">Gaaffilee</h3>
                 <button onclick="closeModal()" class="text-rose-500 font-bold text-base cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div id="modal-questions-list" class="flex-1 overflow-y-auto space-y-3 pr-2"></div>
@@ -141,15 +112,36 @@ Deebii: A
         const SUPABASE_ANON_KEY = "sb_publishable_WKWwxJeXUi0bbgN4NsD3nQ_w1Xwdjhs";
         const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        function checkAdmin() {
-            if (document.getElementById('admin-pin').value.trim() === "974585") {
-                document.getElementById('admin-auth').classList.add('hidden');
-                document.getElementById('admin-main').classList.remove('hidden');
-                loadAllData();
-            } else {
-                alert("PIN Dogoggora! (PIN: 974585)");
-            }
+        // Admin Emails lachuun qofa hayyamaman
+        const ADMIN_EMAILS = [
+            "seyfudin33@gmail.com",
+            "suufiyaanjeeylaanofficial1@gmail.com"
+        ];
+
+        async function loginAdminWithGoogle() {
+            await db.auth.signInWithOAuth({
+                provider: 'google',
+                options: { redirectTo: window.location.href }
+            });
         }
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            const { data: { user } } = await db.auth.getUser();
+            if (user) {
+                const userEmail = user.email.toLowerCase();
+                if (ADMIN_EMAILS.includes(userEmail)) {
+                    document.getElementById('admin-auth').classList.add('hidden');
+                    document.getElementById('admin-main').classList.remove('hidden');
+                    document.getElementById('admin-name').textContent = user.user_metadata?.full_name || "Admin";
+                    document.getElementById('admin-email').textContent = user.email;
+                    if(user.user_metadata?.avatar_url) document.getElementById('admin-avatar').src = user.user_metadata.avatar_url;
+                    loadAllData();
+                } else {
+                    alert("Dhiifama! Google Account kun Admin miti.");
+                    await db.auth.signOut();
+                }
+            }
+        });
 
         function loadAllData() {
             loadExamsForSelect();
@@ -178,10 +170,8 @@ Deebii: A
             const { data } = await db.from('exam_tests').select('*');
             if (data && data.length > 0) {
                 sel.innerHTML = data.map(e => `<option value="${e.id}">${e.title}</option>`).join('');
-                document.getElementById('stat-exams').textContent = data.length;
             } else {
-                sel.innerHTML = '<option value="">Qormaata haaraa uumi</option>';
-                document.getElementById('stat-exams').textContent = "0";
+                sel.innerHTML = '<option value="">Qormaata uumi</option>';
             }
         }
 
@@ -193,10 +183,10 @@ Deebii: A
                     <div class="flex items-center justify-between p-3 border border-slate-100 rounded-2xl bg-slate-50 text-xs">
                         <div>
                             <p class="font-bold text-slate-900">${e.title}</p>
-                            <span class="text-[10px] text-slate-400"><i class="fa-solid fa-clock"></i> ${e.duration_minutes} Mins</span>
+                            <span class="text-[10px] text-slate-400">${e.duration_minutes} Mins</span>
                         </div>
                         <div class="flex gap-2">
-                            <button onclick="viewQuestions('${e.id}', '${encodeURIComponent(e.title)}')" class="bg-indigo-50 text-indigo-600 px-3 py-1.5 rounded-xl font-bold">Ilaali</button>
+                            <button onclick="viewQuestions('${e.id}', '${encodeURIComponent(e.title)}')" class="bg-indigo-50 text-[#1565C0] px-3 py-1.5 rounded-xl font-bold">Ilaali</button>
                             <button onclick="deleteExam('${e.id}')" class="bg-rose-50 text-rose-600 px-3 py-1.5 rounded-xl font-bold">Haqi</button>
                         </div>
                     </div>
@@ -229,7 +219,7 @@ Deebii: A
                             <button onclick="deleteQuestion('${q.id}', '${examId}', '${titleEnc}')" class="text-rose-500"><i class="fa-solid fa-trash"></i></button>
                         </div>
                         <p class="text-slate-500">A) ${q.option_a} | B) ${q.option_b} | C) ${q.option_c} | D) ${q.option_d}</p>
-                        <p class="font-bold text-emerald-600">Deebii: ${q.correct_option}</p>
+                        <p class="font-bold text-[#2e7d32]">Deebii: ${q.correct_option}</p>
                     </div>
                 `).join('');
             } else {
@@ -306,7 +296,6 @@ Deebii: A
             const cont = document.getElementById('results-table');
             const { data } = await db.from('exam_results').select('*, exam_tests(title)').order('score', { ascending: false });
             if (data && data.length > 0) {
-                document.getElementById('stat-results').textContent = data.length;
                 cont.innerHTML = data.map((r, i) => `
                     <div class="flex items-center justify-between p-3 border border-slate-100 rounded-2xl bg-slate-50 text-xs">
                         <div class="flex items-center gap-2">
@@ -316,11 +305,10 @@ Deebii: A
                                 <span class="text-[10px] text-slate-400">${r.exam_tests?.title || 'Exam'}</span>
                             </div>
                         </div>
-                        <span class="font-black text-emerald-600 text-xs">${r.score.toFixed(1)}%</span>
+                        <span class="font-black text-[#2e7d32] text-xs">${r.score.toFixed(1)}%</span>
                     </div>
                 `).join('');
             } else {
-                document.getElementById('stat-results').textContent = "0";
                 cont.innerHTML = `<p class="text-slate-400 text-xs text-center py-4">Qabxiin hin jiru.</p>`;
             }
         }
@@ -329,20 +317,18 @@ Deebii: A
             const cont = document.getElementById('students-table');
             const { data } = await db.from('exam_students').select('*').order('created_at', { ascending: false });
             if (data && data.length > 0) {
-                document.getElementById('stat-students').textContent = data.length;
                 cont.innerHTML = data.map(s => `
                     <div class="flex items-center justify-between p-3 border border-slate-100 rounded-2xl bg-slate-50 text-xs">
                         <div>
-                            <p class="font-bold text-slate-900">${s.full_name} <span class="text-indigo-600">(${s.id})</span></p>
+                            <p class="font-bold text-slate-900">${s.full_name}</p>
                             <span class="text-[10px] text-slate-400">${s.phone}</span>
                         </div>
-                        <button onclick="toggleStudent('${s.id}', ${!s.is_allowed})" class="px-3 py-1 rounded-xl font-bold ${s.is_allowed ? 'bg-rose-50 text-rose-600' : 'bg-emerald-50 text-emerald-600'}">
+                        <button onclick="toggleStudent('${s.id}', ${!s.is_allowed})" class="px-3 py-1 rounded-xl font-bold ${s.is_allowed ? 'bg-rose-50 text-rose-600' : 'bg-emerald-50 text-[#2e7d32]'}">
                             ${s.is_allowed ? 'Dhowwi' : 'Hayyami'}
                         </button>
                     </div>
                 `).join('');
             } else {
-                document.getElementById('stat-students').textContent = "0";
                 cont.innerHTML = `<p class="text-slate-400 text-xs text-center py-4">Barataan hin galmoofne.</p>`;
             }
         }
@@ -365,6 +351,11 @@ Deebii: A
         async function toggleStudent(id, status) {
             await db.from('exam_students').update({ is_allowed: status }).eq('id', id);
             loadAdminStudents();
+        }
+
+        async function logoutAdmin() {
+            await db.auth.signOut();
+            window.location.reload();
         }
     </script>
 </body>
