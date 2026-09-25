@@ -11,10 +11,10 @@
 </head>
 <body class="bg-[#f4f8fb] text-slate-800 font-sans min-h-screen">
 
-    <!-- 1. START / SPLASH SCREEN (Screen 1 in Reference) -->
+    <!-- 1. SPLASH / START SCREEN -->
     <div id="splash-screen" class="fixed inset-0 bg-gradient-to-br from-[#1565C0] to-[#0d47a1] z-[100] flex flex-col items-center justify-between p-8 text-white">
         <div class="my-auto text-center flex flex-col items-center">
-            <div class="w-36 h-32 bg-white/10 rounded-3xl p-4 flex items-center justify-center mb-6 backdrop-blur-md border border-white/20 shadow-2xl">
+            <div class="w-32 h-32 bg-white/10 rounded-3xl p-4 flex items-center justify-center mb-6 backdrop-blur-md border border-white/20 shadow-2xl">
                 <div class="w-24 h-24 bg-white rounded-2xl flex items-center justify-center shadow-inner">
                     <i class="fa-solid fa-graduation-cap text-[#1565C0] text-5xl"></i>
                 </div>
@@ -30,10 +30,9 @@
         </button>
     </div>
 
-    <!-- 2. LOGIN SCREEN (Screen 2 in Reference - Clean Layout) -->
+    <!-- 2. LOGIN SCREEN -->
     <div id="auth-screen" class="hidden min-h-screen bg-white flex flex-col items-center justify-between p-6">
         <div class="w-full max-w-sm flex justify-end pt-2">
-            <!-- Language Selector -->
             <select id="lang-select" onchange="changeLanguage(this.value)" class="bg-slate-100 text-xs font-bold text-slate-700 px-3 py-2 rounded-xl outline-none border border-slate-200">
                 <option value="om">Afaan Oromoo</option>
                 <option value="am">አማርኛ</option>
@@ -47,20 +46,13 @@
             </div>
             <div>
                 <h2 id="login-welcome" class="text-2xl font-black text-slate-900">Baga nagaan dhuftan!</h2>
-                <p id="login-desc" class="text-slate-400 text-xs mt-1 px-4">App Kiyya keessatti galmaa'uuf Google ykn Telegram fayyadamaa.</p>
+                <p id="login-desc" class="text-slate-400 text-xs mt-1 px-4">App Kiyya keessatti galmaa'uuf Google Account keetiin seeni.</p>
             </div>
 
             <div class="w-full space-y-3 pt-2">
-                <!-- GOOGLE LOGIN -->
                 <button id="btn-google-login" onclick="loginWithGoogle()" class="w-full py-4 px-6 border-2 border-slate-200 rounded-2xl flex items-center justify-center gap-3 font-bold text-slate-700 shadow-sm hover:bg-slate-50 active:scale-95 transition cursor-pointer bg-white">
                     <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-6 h-6"> 
                     <span id="txt-google-login">Login with Google</span>
-                </button>
-
-                <!-- TELEGRAM LOGIN -->
-                <button onclick="alert('Telegram Login demo qofa. Google-n seenii!')" class="w-full py-4 px-6 bg-[#2fa3d8] text-white rounded-2xl flex items-center justify-center gap-3 font-bold text-sm shadow-md active:scale-95 transition cursor-pointer">
-                    <i class="fa-brands fa-telegram text-xl"></i>
-                    <span>Login with Telegram</span>
                 </button>
             </div>
         </div>
@@ -72,10 +64,10 @@
         </div>
     </div>
 
-    <!-- 3. MAIN STUDENT DASHBOARD (Screens 10, 11, 15, 16 in Reference) -->
+    <!-- 3. MAIN STUDENT DASHBOARD -->
     <div id="student-main" class="hidden min-h-screen pb-28">
         
-        <!-- Header Banner (Proper Height & Styling) -->
+        <!-- Header Banner -->
         <header class="header-banner text-white px-6 pt-8 pb-10">
             <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center gap-3">
@@ -99,7 +91,6 @@
                 </div>
             </div>
 
-            <!-- Banner Motto -->
             <div class="bg-white/10 p-3 rounded-2xl border border-white/15 backdrop-blur-md flex items-center justify-between">
                 <p id="motto-display" class="text-xs text-indigo-100 font-medium italic">"Barnootni karea milkaa'inaa ti!"</p>
                 <div id="admin-banner-link" class="hidden">
@@ -108,33 +99,31 @@
             </div>
         </header>
 
-        <!-- Main Content (PROPER MARGINS - NO OVERLAP) -->
-        <main class="px-6 mt-6 space-y-6">
-            
-            <!-- Grid Action Buttons (Exact Match to Reference Screen 3/10) -->
+        <!-- VIEW 1: HOME DASHBOARD (All Action Cards) -->
+        <div id="view-home" class="app-view-container px-6 mt-6 space-y-6">
             <div class="grid grid-cols-2 gap-4">
-                <div onclick="switchTab('exams')" class="card-grid-item bg-[#7b1fa2] text-white p-5 shadow-lg shadow-purple-100 flex flex-col items-center text-center">
+                <div onclick="switchStudentView('exams')" class="card-grid-item bg-[#7b1fa2] text-white p-5 shadow-lg shadow-purple-100 flex flex-col items-center text-center">
                     <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center mb-2">
                         <i class="fa-solid fa-file-pen text-xl"></i>
                     </div>
                     <span id="btn-exams-title" class="font-bold text-sm">Qormaata Seeni</span>
                 </div>
 
-                <div onclick="switchTab('results')" class="card-grid-item bg-[#2e7d32] text-white p-5 shadow-lg shadow-green-100 flex flex-col items-center text-center">
+                <div onclick="switchStudentView('results')" class="card-grid-item bg-[#2e7d32] text-white p-5 shadow-lg shadow-green-100 flex flex-col items-center text-center">
                     <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center mb-2">
                         <i class="fa-solid fa-chart-line text-xl"></i>
                     </div>
                     <span id="btn-results-title" class="font-bold text-sm">Qabxii Koo</span>
                 </div>
 
-                <div onclick="switchTab('notice')" class="card-grid-item bg-[#ef6c00] text-white p-5 shadow-lg shadow-orange-100 flex flex-col items-center text-center">
+                <div onclick="switchStudentView('notice')" class="card-grid-item bg-[#ef6c00] text-white p-5 shadow-lg shadow-orange-100 flex flex-col items-center text-center">
                     <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center mb-2">
                         <i class="fa-solid fa-bullhorn text-xl"></i>
                     </div>
                     <span id="btn-notice-title" class="font-bold text-sm">Beeksisaa</span>
                 </div>
 
-                <div onclick="switchTab('feedback')" class="card-grid-item bg-[#c2185b] text-white p-5 shadow-lg shadow-pink-100 flex flex-col items-center text-center">
+                <div onclick="switchStudentView('feedback')" class="card-grid-item bg-[#c2185b] text-white p-5 shadow-lg shadow-pink-100 flex flex-col items-center text-center">
                     <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center mb-2">
                         <i class="fa-solid fa-comment-dots text-xl"></i>
                     </div>
@@ -142,7 +131,18 @@
                 </div>
             </div>
 
-            <!-- Category Pills (Match Screen 5 in Reference) -->
+            <!-- Recent Exams Section -->
+            <div class="space-y-3">
+                <h4 id="lbl-recent-exams" class="font-black text-slate-800 text-sm flex items-center justify-between">
+                    <span><i class="fa-solid fa-fire text-[#1565C0] mr-1"></i> Qormaata Dhiyeenyaa</span>
+                    <button onclick="switchStudentView('exams')" class="text-xs text-[#1565C0] font-bold">Hunda Ilaali</button>
+                </h4>
+                <div id="recent-exams-list" class="space-y-3"></div>
+            </div>
+        </div>
+
+        <!-- VIEW 2: EXAMS VIEW ONLY -->
+        <div id="view-exams" class="app-view-container hidden px-6 mt-6 space-y-4">
             <div class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
                 <button onclick="filterCategory('All')" class="pill-filter active" id="pill-all">Hundaa</button>
                 <button onclick="filterCategory('Grade 9-10')" class="pill-filter inactive">Kutaa 9-10</button>
@@ -150,47 +150,86 @@
                 <button onclick="filterCategory('Practice')" class="pill-filter inactive">Shaakalaa</button>
             </div>
 
-            <!-- Search Bar -->
-            <div class="bg-white p-2 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3 px-4">
+            <div class="bg-white p-2.5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3 px-4">
                 <i class="fa-solid fa-magnifying-glass text-slate-400 text-sm"></i>
-                <input type="text" id="search-input" onkeyup="searchExams(this.value)" placeholder="Qormaata barbaadi..." class="w-full text-xs font-semibold bg-transparent outline-none py-1.5">
+                <input type="text" onkeyup="searchExams(this.value)" placeholder="Qormaata barbaadi..." class="w-full text-xs font-semibold bg-transparent outline-none">
             </div>
 
-            <!-- TAB 1: EXAMS LIST -->
-            <div id="tab-exams" class="space-y-3">
+            <div class="space-y-3">
                 <h4 id="lbl-active-exams" class="font-black text-slate-800 text-sm flex items-center gap-2"><i class="fa-solid fa-clipboard-list text-[#1565C0]"></i> Qormaata Jiran</h4>
                 <div id="exams-list" class="space-y-3"></div>
             </div>
+        </div>
 
-            <!-- TAB 2: RESULTS LIST -->
-            <div id="tab-results" class="hidden space-y-3">
-                <h4 id="lbl-my-results" class="font-black text-slate-800 text-sm flex items-center gap-2"><i class="fa-solid fa-trophy text-[#2e7d32]"></i> Seenaa Qabxii Koo</h4>
-                <div id="results-list" class="space-y-3"></div>
-            </div>
-
-            <!-- TAB 3: NOTICES -->
-            <div id="tab-notice" class="hidden space-y-3">
-                <h4 id="lbl-notices" class="font-black text-slate-800 text-sm flex items-center gap-2"><i class="fa-solid fa-bullhorn text-[#ef6c00]"></i> Beeksisaa</h4>
-                <div id="notices-list" class="space-y-3"></div>
-            </div>
-
-            <!-- TAB 4: FEEDBACK -->
-            <div id="tab-feedback" class="hidden space-y-3">
-                <h4 id="lbl-feedback" class="font-black text-slate-800 text-sm flex items-center gap-2"><i class="fa-solid fa-comment-dots text-[#c2185b]"></i> Yaadaa Adminii'f Ergi</h4>
-                <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-3">
-                    <textarea id="feedback-msg" rows="4" placeholder="Yaada ykn gaaffii kee asitti barreesse..." class="w-full p-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs outline-none focus:border-[#c2185b]"></textarea>
-                    <button onclick="sendFeedback()" class="w-full bg-[#c2185b] text-white font-bold py-3.5 rounded-2xl text-xs cursor-pointer shadow-md active:scale-95 transition">Ergi (Send)</button>
+        <!-- VIEW 3: RESULTS & RANKING VIEW ONLY -->
+        <div id="view-results" class="app-view-container hidden px-6 mt-6 space-y-4">
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-white p-4 rounded-3xl border border-slate-200 shadow-sm text-center">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase">Average Score</p>
+                    <p id="student-avg-score" class="text-xl font-black text-[#2e7d32]">0%</p>
+                </div>
+                <div class="bg-white p-4 rounded-3xl border border-slate-200 shadow-sm text-center">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase">Sadarkaa (Rank)</p>
+                    <p id="student-rank" class="text-xl font-black text-[#1565C0]">#1</p>
                 </div>
             </div>
 
-        </main>
+            <div class="space-y-3">
+                <h4 id="lbl-my-results" class="font-black text-slate-800 text-sm flex items-center gap-2"><i class="fa-solid fa-trophy text-[#2e7d32]"></i> Seenaa Qabxii Koo</h4>
+                <div id="results-list" class="space-y-3"></div>
+            </div>
+        </div>
 
-        <!-- Bottom Navigation Bar (Screens 3-20 in Reference) -->
+        <!-- VIEW 4: NOTICES VIEW ONLY -->
+        <div id="view-notice" class="app-view-container hidden px-6 mt-6 space-y-4">
+            <h4 id="lbl-notices" class="font-black text-slate-800 text-sm flex items-center gap-2"><i class="fa-solid fa-bullhorn text-[#ef6c00]"></i> Beeksisaa</h4>
+            <div id="notices-list" class="space-y-3"></div>
+        </div>
+
+        <!-- VIEW 5: FEEDBACK VIEW ONLY -->
+        <div id="view-feedback" class="app-view-container hidden px-6 mt-6 space-y-4">
+            <h4 id="lbl-feedback" class="font-black text-slate-800 text-sm flex items-center gap-2"><i class="fa-solid fa-comment-dots text-[#c2185b]"></i> Yaadaa Adminii'f Ergi</h4>
+            <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-3">
+                <textarea id="feedback-msg" rows="4" placeholder="Yaada ykn gaaffii kee asitti barreesse..." class="w-full p-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs outline-none focus:border-[#c2185b]"></textarea>
+                <button onclick="sendFeedback()" class="w-full bg-[#c2185b] text-white font-bold py-3.5 rounded-2xl text-xs cursor-pointer shadow-md active:scale-95 transition">Ergi (Send)</button>
+            </div>
+        </div>
+
+        <!-- VIEW 6: PROFILE VIEW ONLY -->
+        <div id="view-profile" class="app-view-container hidden px-6 mt-6 space-y-4">
+            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4 text-center">
+                <img id="profile-card-avatar" src="https://ui-avatars.com/api/?name=User" class="w-20 h-20 rounded-full border-4 border-[#1565C0] mx-auto object-cover shadow-md">
+                
+                <div>
+                    <h3 id="profile-card-name" class="font-black text-lg text-slate-900">...</h3>
+                    <p id="profile-card-email" class="text-xs text-slate-400">...</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 text-left bg-slate-50 p-4 rounded-2xl border border-slate-100 font-mono text-xs">
+                    <div>
+                        <span class="text-[10px] text-slate-400 block font-sans font-bold">STUDENT ID</span>
+                        <span id="profile-student-id" class="font-black text-[#1565C0]">...</span>
+                    </div>
+                    <div>
+                        <span class="text-[10px] text-slate-400 block font-sans font-bold">ACTIVATION CODE</span>
+                        <span id="profile-act-code" class="font-black text-emerald-600">...</span>
+                    </div>
+                </div>
+
+                <div class="space-y-2 text-left pt-2">
+                    <label class="text-xs font-bold text-slate-700">Maqaa Gulaali</label>
+                    <input type="text" id="edit-profile-name" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold outline-none">
+                    <button onclick="saveProfileName()" class="w-full bg-[#1565C0] text-white font-bold py-3 rounded-xl text-xs shadow-md">Maqaa Ol-kaayi</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation Bar -->
         <nav class="fixed bottom-0 left-0 right-0 bg-white h-20 flex items-center justify-around px-4 bottom-nav border-t z-40">
-            <button onclick="switchTab('exams')" class="nav-tab active flex flex-col items-center"><i class="fa-solid fa-house text-xl"></i><span class="text-[10px] mt-1">Home</span></button>
-            <button onclick="switchTab('exams')" class="nav-tab text-slate-400 flex flex-col items-center"><i class="fa-solid fa-file-invoice text-xl"></i><span class="text-[10px] mt-1">Qormaata</span></button>
-            <button onclick="switchTab('results')" class="nav-tab text-slate-400 flex flex-col items-center"><i class="fa-solid fa-chart-pie text-xl"></i><span class="text-[10px] mt-1">Qabxii</span></button>
-            <button onclick="logoutStudent()" class="text-rose-400 flex flex-col items-center"><i class="fa-solid fa-power-off text-xl"></i><span class="text-[10px] mt-1">Ba'i</span></button>
+            <button onclick="switchStudentView('home')" id="nav-home" class="flex flex-col items-center text-[#1565C0] font-bold"><i class="fa-solid fa-house text-xl"></i><span class="text-[10px] mt-1">Home</span></button>
+            <button onclick="switchStudentView('exams')" id="nav-exams" class="flex flex-col items-center text-slate-400"><i class="fa-solid fa-file-invoice text-xl"></i><span class="text-[10px] mt-1">Qormaata</span></button>
+            <button onclick="switchStudentView('results')" id="nav-results" class="flex flex-col items-center text-slate-400"><i class="fa-solid fa-chart-pie text-xl"></i><span class="text-[10px] mt-1">Qabxii</span></button>
+            <button onclick="switchStudentView('profile')" id="nav-profile" class="flex flex-col items-center text-slate-400"><i class="fa-solid fa-user text-xl"></i><span class="text-[10px] mt-1">Profile</span></button>
         </nav>
     </div>
 
@@ -267,8 +306,32 @@
             document.getElementById('btn-results-title').textContent = d.results;
             document.getElementById('btn-notice-title').textContent = d.notice;
             document.getElementById('btn-feedback-title').textContent = d.feedback;
-            document.getElementById('lbl-active-exams').innerHTML = `<i class="fa-solid fa-clipboard-list text-[#1565C0]"></i> ${d.activeExams}`;
-            document.getElementById('lbl-my-results').innerHTML = `<i class="fa-solid fa-trophy text-[#2e7d32]"></i> ${d.myResults}`;
+        }
+
+        function switchStudentView(view) {
+            const views = ['home', 'exams', 'results', 'notice', 'feedback', 'profile'];
+            views.forEach(v => {
+                const el = document.getElementById('view-' + v);
+                if (el) el.classList.add('hidden');
+            });
+
+            const activeView = document.getElementById('view-' + view);
+            if (activeView) activeView.classList.remove('hidden');
+
+            // Reset bottom nav icons
+            ['home', 'exams', 'results', 'profile'].forEach(n => {
+                const navBtn = document.getElementById('nav-' + n);
+                if (navBtn) {
+                    navBtn.classList.remove('text-[#1565C0]', 'font-bold');
+                    navBtn.classList.add('text-slate-400');
+                }
+            });
+
+            const currentNav = document.getElementById('nav-' + (view === 'notice' || view === 'feedback' ? 'exams' : view));
+            if (currentNav) {
+                currentNav.classList.remove('text-slate-400');
+                currentNav.classList.add('text-[#1565C0]', 'font-bold');
+            }
         }
 
         function openAuthScreen() {
@@ -304,17 +367,29 @@
                     document.getElementById('admin-banner-link').classList.remove('hidden');
                 }
 
-                const { data: existing } = await db.from('exam_students').select('*').eq('id', user.id).single();
+                let { data: existing } = await db.from('exam_students').select('*').eq('id', user.id).single();
                 if (!existing) {
-                    await db.from('exam_students').insert([{
+                    const stuId = "STU-" + Math.floor(1000 + Math.random() * 9000);
+                    const actCode = "ACT-" + Math.floor(100000 + Math.random() * 900000);
+                    const { data: created } = await db.from('exam_students').insert([{
                         id: user.id,
                         full_name: studentName,
                         email: userEmail,
-                        is_allowed: true
-                    }]);
+                        is_allowed: true,
+                        student_code: stuId,
+                        activation_code: actCode
+                    }]).select().single();
+                    existing = created;
                 }
 
-                currentStudent = { id: user.id, full_name: studentName, email: userEmail, avatar: studentAvatar };
+                currentStudent = { 
+                    id: user.id, 
+                    full_name: existing?.full_name || studentName, 
+                    email: userEmail, 
+                    avatar: studentAvatar,
+                    stuCode: existing?.student_code || ("STU-" + user.id.substring(0,4)),
+                    actCode: existing?.activation_code || "ACT-974585"
+                };
                 setupDashboard();
             }
         });
@@ -323,30 +398,45 @@
             document.getElementById('auth-screen').classList.add('hidden');
             document.getElementById('splash-screen').classList.add('hidden');
             document.getElementById('student-main').classList.remove('hidden');
+            
             document.getElementById('student-name-display').textContent = currentStudent.full_name;
             document.getElementById('student-email-display').textContent = currentStudent.email;
             document.getElementById('student-avatar').src = currentStudent.avatar;
+            
+            document.getElementById('profile-card-name').textContent = currentStudent.full_name;
+            document.getElementById('profile-card-email').textContent = currentStudent.email;
+            document.getElementById('profile-card-avatar').src = currentStudent.avatar;
+            document.getElementById('profile-student-id').textContent = currentStudent.stuCode;
+            document.getElementById('profile-act-code').textContent = currentStudent.actCode;
+            document.getElementById('edit-profile-name').value = currentStudent.full_name;
+
             loadExams();
             loadResults();
             loadNotices();
         }
 
-        function switchTab(tab) {
-            document.getElementById('tab-exams').classList.toggle('hidden', tab !== 'exams');
-            document.getElementById('tab-results').classList.toggle('hidden', tab !== 'results');
-            document.getElementById('tab-notice').classList.toggle('hidden', tab !== 'notice');
-            document.getElementById('tab-feedback').classList.toggle('hidden', tab !== 'feedback');
+        async function saveProfileName() {
+            const newName = document.getElementById('edit-profile-name').value.trim();
+            if (!newName) return alert("Maqaa guutuu galchi!");
+
+            await db.from('exam_students').update({ full_name: newName }).eq('id', currentStudent.id);
+            currentStudent.full_name = newName;
+            document.getElementById('student-name-display').textContent = newName;
+            document.getElementById('profile-card-name').textContent = newName;
+            alert("🎉 Maqaan kee sirriitti ol-kaa'ameera!");
         }
 
         async function loadExams() {
-            const list = document.getElementById('exams-list');
             const { data: exams } = await db.from('exam_tests').select('*').eq('is_active', true);
             allExams = exams || [];
-            renderExams(allExams);
+            renderExams(allExams, 'exams-list');
+            renderExams(allExams.slice(0, 3), 'recent-exams-list');
         }
 
-        function renderExams(exams) {
-            const list = document.getElementById('exams-list');
+        function renderExams(exams, containerId) {
+            const list = document.getElementById(containerId);
+            if (!list) return;
+
             if (exams && exams.length > 0) {
                 list.innerHTML = exams.map(e => `
                     <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center justify-between">
@@ -371,13 +461,13 @@
             event.target.classList.add('active');
             event.target.classList.remove('inactive');
 
-            if (cat === 'All') renderExams(allExams);
-            else renderExams(allExams.filter(e => e.category === cat));
+            if (cat === 'All') renderExams(allExams, 'exams-list');
+            else renderExams(allExams.filter(e => e.category === cat), 'exams-list');
         }
 
         function searchExams(query) {
             const q = query.toLowerCase();
-            renderExams(allExams.filter(e => e.title.toLowerCase().includes(q)));
+            renderExams(allExams.filter(e => e.title.toLowerCase().includes(q)), 'exams-list');
         }
 
         async function loadResults() {
@@ -385,6 +475,11 @@
             const { data: res } = await db.from('exam_results').select('*, exam_tests(title)').eq('student_id', currentStudent.id);
 
             if (res && res.length > 0) {
+                let total = 0;
+                res.forEach(r => total += r.score);
+                const avg = total / res.length;
+                document.getElementById('student-avg-score').textContent = avg.toFixed(1) + "%";
+
                 list.innerHTML = res.map(r => `
                     <div class="bg-white p-4 rounded-2xl border border-slate-200 flex justify-between items-center text-sm shadow-sm">
                         <div>
