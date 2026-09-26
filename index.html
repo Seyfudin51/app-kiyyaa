@@ -9,18 +9,20 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root { --primary-blue: #1565C0; }
-        body { background-color: #f4f8fb; font-family: system-ui, sans-serif; }
+        body { background-color: #f4f8fb; font-family: system-ui, -apple-system, sans-serif; }
         .header-banner { background: linear-gradient(135deg, #1565C0 0%, #0d47a1 100%); border-bottom-left-radius: 36px; border-bottom-right-radius: 36px; box-shadow: 0 10px 25px rgba(21,101,192,0.3); }
         .card-grid-item { border-radius: 24px; transition: transform 0.15s ease; cursor: pointer; }
         .card-grid-item:active { transform: scale(0.95); }
         .bottom-nav { border-top-left-radius: 28px; border-top-right-radius: 28px; box-shadow: 0 -6px 25px rgba(0,0,0,0.08); }
         .app-view-container { animation: fadeIn 0.2s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="text-slate-800 min-h-screen">
 
-    <!-- 1. SPLASH / START SCREEN -->
+    <!-- 1. SPLASH SCREEN -->
     <div id="splash-screen" class="fixed inset-0 bg-gradient-to-br from-[#1565C0] to-[#0d47a1] z-[100] flex flex-col items-center justify-between p-8 text-white">
         <div class="my-auto text-center flex flex-col items-center">
             <div class="w-32 h-32 bg-white/10 rounded-3xl p-4 flex items-center justify-center mb-6 backdrop-blur-md border border-white/20 shadow-2xl">
@@ -65,7 +67,7 @@
         <header class="header-banner text-white px-6 pt-8 pb-10">
             <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center gap-3">
-                    <img id="student-avatar" src="" class="w-12 h-12 rounded-2xl border-2 border-white/20 object-cover">
+                    <img id="student-avatar" src="" class="w-12 h-12 rounded-2xl border-2 border-white/20 object-cover bg-white">
                     <div>
                         <h3 id="student-name-display" class="font-black text-base leading-tight">...</h3>
                         <p id="student-email-display" class="text-[11px] text-indigo-200 font-mono">...</p>
@@ -101,39 +103,54 @@
             <div id="results-list" class="space-y-3"></div>
         </div>
 
-        <div id="view-student-notice" class="app-view-container hidden px-6 mt-6 space-y-4"><div id="notices-list" class="space-y-3"></div></div>
+        <div id="view-student-notice" class="app-view-container hidden px-6 mt-6 space-y-4">
+            <h4 class="font-black text-slate-800 text-sm flex items-center gap-2"><i class="fa-solid fa-bullhorn text-[#ef6c00]"></i> Beeksisaa</h4>
+            <div id="notices-list" class="space-y-3"></div>
+        </div>
         
         <div id="view-student-feedback" class="app-view-container hidden px-6 mt-6 space-y-4">
+            <h4 class="font-black text-slate-800 text-sm flex items-center gap-2"><i class="fa-solid fa-comment-dots text-[#c2185b]"></i> Yaadaa Adminii'f Ergi</h4>
             <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-3">
-                <textarea id="feedback-msg" rows="4" placeholder="Yaada ykn gaaffii kee..." class="w-full p-3 bg-slate-50 border rounded-2xl text-xs outline-none"></textarea>
+                <textarea id="feedback-msg" rows="4" placeholder="Yaada ykn gaaffii kee asitti barreesse..." class="w-full p-3 bg-slate-50 border rounded-2xl text-xs outline-none"></textarea>
                 <button onclick="sendFeedback()" class="w-full bg-[#c2185b] text-white font-bold py-3.5 rounded-2xl text-xs shadow-md">Ergi</button>
             </div>
         </div>
 
+        <!-- Student Profile with Gallery Upload -->
         <div id="view-student-profile" class="app-view-container hidden px-6 mt-6 space-y-4">
             <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4 text-center">
-                <img id="profile-card-avatar" src="" class="w-20 h-20 rounded-full border-4 border-[#1565C0] mx-auto object-cover">
-                <div class="space-y-1">
-                    <label class="text-[10px] font-bold text-slate-400">Maqaa Gulaali</label>
-                    <input type="text" id="edit-profile-name" class="w-full p-2.5 bg-slate-50 border rounded-xl text-center text-sm font-black outline-none">
+                <div class="relative w-24 h-24 mx-auto">
+                    <img id="profile-card-avatar" src="" class="w-24 h-24 rounded-full border-4 border-[#1565C0] object-cover bg-slate-100 shadow-md">
+                    <label for="gallery-input" class="absolute bottom-0 right-0 bg-[#1565C0] text-white p-2 rounded-full cursor-pointer shadow-lg hover:bg-blue-800 transition">
+                        <i class="fa-solid fa-camera text-xs"></i>
+                    </label>
+                    <input type="file" id="gallery-input" accept="image/*" class="hidden" onchange="handleGalleryUpload(event)">
                 </div>
+                
+                <p class="text-[11px] text-slate-400 font-medium">Suuraa kee jijjiiruuf mallattoo kaameeraa tuqi</p>
+
                 <div class="space-y-1 text-left">
-                    <label class="text-[10px] font-bold text-slate-400">Suuraa Profile URL</label>
-                    <input type="text" id="edit-profile-avatar" placeholder="https://..." class="w-full p-2.5 bg-slate-50 border rounded-xl text-xs outline-none">
+                    <label class="text-[10px] font-bold text-slate-500">Maqaa Keessaa</label>
+                    <input type="text" id="edit-profile-name" class="w-full p-3 bg-slate-50 border rounded-xl text-sm font-black outline-none focus:border-[#1565C0]">
                 </div>
-                <button onclick="updateProfile()" class="w-full bg-[#1565C0] text-white font-bold py-3 rounded-xl text-xs shadow-md">Profile Ol-kaayi</button>
-                <div class="grid grid-cols-2 gap-2 text-left bg-slate-50 p-4 rounded-2xl font-mono text-xs">
-                    <div><span class="text-[10px] text-slate-400 block font-sans">STUDENT ID</span><span id="profile-student-id" class="font-black text-[#1565C0]">...</span></div>
-                    <div><span class="text-[10px] text-slate-400 block font-sans">ACTIVATION CODE</span><span id="profile-act-code" class="font-black text-emerald-600">...</span></div>
+
+                <button onclick="saveStudentProfile()" class="w-full bg-[#1565C0] text-white font-bold py-3 rounded-xl text-xs shadow-md active:scale-95 transition">Maqaa Ol-kaayi</button>
+
+                <div class="grid grid-cols-2 gap-2 text-left bg-slate-50 p-4 rounded-2xl font-mono text-xs mt-3">
+                    <div><span class="text-[10px] text-slate-400 block font-sans font-bold">STUDENT ID</span><span id="profile-student-id" class="font-black text-[#1565C0]">...</span></div>
+                    <div><span class="text-[10px] text-slate-400 block font-sans font-bold">CODE</span><span id="profile-act-code" class="font-black text-emerald-600">...</span></div>
                 </div>
             </div>
         </div>
 
-        <nav class="fixed bottom-0 left-0 right-0 bg-white h-20 flex items-center justify-around px-4 bottom-nav border-t z-40">
-            <button onclick="switchStudentView('home')" id="snav-home" class="flex flex-col items-center text-[#1565C0] font-bold"><i class="fa-solid fa-house text-xl"></i><span class="text-[10px] mt-1">Home</span></button>
-            <button onclick="switchStudentView('exams')" id="snav-exams" class="flex flex-col items-center text-slate-400"><i class="fa-solid fa-file-invoice text-xl"></i><span class="text-[10px] mt-1">Qormaata</span></button>
-            <button onclick="switchStudentView('results')" id="snav-results" class="flex flex-col items-center text-slate-400"><i class="fa-solid fa-chart-pie text-xl"></i><span class="text-[10px] mt-1">Qabxii</span></button>
-            <button onclick="switchStudentView('profile')" id="snav-profile" class="flex flex-col items-center text-slate-400"><i class="fa-solid fa-user text-xl"></i><span class="text-[10px] mt-1">Profile</span></button>
+        <!-- Student 6-Item Bottom Navigation Bar -->
+        <nav class="fixed bottom-0 left-0 right-0 bg-white h-20 flex items-center justify-around px-2 bottom-nav border-t z-40 overflow-x-auto no-scrollbar">
+            <button onclick="switchStudentView('home')" id="snav-home" class="flex flex-col items-center text-[#1565C0] font-bold min-w-[50px]"><i class="fa-solid fa-house text-lg"></i><span class="text-[9px] mt-1">Home</span></button>
+            <button onclick="switchStudentView('exams')" id="snav-exams" class="flex flex-col items-center text-slate-400 min-w-[50px]"><i class="fa-solid fa-file-invoice text-lg"></i><span class="text-[9px] mt-1">Qormaata</span></button>
+            <button onclick="switchStudentView('results')" id="snav-results" class="flex flex-col items-center text-slate-400 min-w-[50px]"><i class="fa-solid fa-chart-pie text-lg"></i><span class="text-[9px] mt-1">Qabxii</span></button>
+            <button onclick="switchStudentView('notice')" id="snav-notice" class="flex flex-col items-center text-slate-400 min-w-[50px]"><i class="fa-solid fa-bullhorn text-lg"></i><span class="text-[9px] mt-1">Beeksisaa</span></button>
+            <button onclick="switchStudentView('feedback')" id="snav-feedback" class="flex flex-col items-center text-slate-400 min-w-[50px]"><i class="fa-solid fa-comment-dots text-lg"></i><span class="text-[9px] mt-1">Yaadaa</span></button>
+            <button onclick="switchStudentView('profile')" id="snav-profile" class="flex flex-col items-center text-slate-400 min-w-[50px]"><i class="fa-solid fa-user text-lg"></i><span class="text-[9px] mt-1">Profile</span></button>
         </nav>
     </div>
 
@@ -142,7 +159,7 @@
         <header class="header-banner text-white px-6 pt-8 pb-10">
             <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center gap-3">
-                    <img id="admin-avatar" src="" class="w-12 h-12 rounded-2xl border-2 border-white/20 object-cover">
+                    <img id="admin-avatar" src="" class="w-12 h-12 rounded-2xl border-2 border-white/20 object-cover bg-white">
                     <div>
                         <h2 id="admin-name" class="font-black text-base">Admin Portal</h2>
                         <p id="admin-email" class="text-[11px] text-indigo-200 font-mono">...</p>
@@ -162,9 +179,9 @@
             <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <div onclick="switchAdminView('exams')" class="card-grid-item bg-[#1565C0] text-white p-5 shadow-lg flex flex-col items-center text-center"><i class="fa-solid fa-file-pen text-2xl mb-2"></i><span class="font-bold text-sm">Qormaata</span></div>
                 <div onclick="switchAdminView('results')" class="card-grid-item bg-[#2e7d32] text-white p-5 shadow-lg flex flex-col items-center text-center"><i class="fa-solid fa-chart-line text-2xl mb-2"></i><span class="font-bold text-sm">Qabxii</span></div>
+                <div onclick="switchAdminView('students')" class="card-grid-item bg-[#7b1fa2] text-white p-5 shadow-lg flex flex-col items-center text-center"><i class="fa-solid fa-users text-2xl mb-2"></i><span class="font-bold text-sm">Barattoota</span></div>
                 <div onclick="switchAdminView('notices')" class="card-grid-item bg-[#ef6c00] text-white p-5 shadow-lg flex flex-col items-center text-center"><i class="fa-solid fa-bullhorn text-2xl mb-2"></i><span class="font-bold text-sm">Beeksisaa</span></div>
-                <div onclick="switchAdminView('feedbacks')" class="card-grid-item bg-[#c2185b] text-white p-5 shadow-lg flex flex-col items-center text-center"><i class="fa-solid fa-comment-dots text-2xl mb-2"></i><span class="font-bold text-sm">Kuusaa Yaadaa</span></div>
-                <div onclick="switchAdminView('students')" class="card-grid-item bg-[#7b1fa2] text-white p-5 shadow-lg flex flex-col items-center text-center col-span-2 md:col-span-1"><i class="fa-solid fa-users text-2xl mb-2"></i><span class="font-bold text-sm">Barattoota</span></div>
+                <div onclick="switchAdminView('feedbacks')" class="card-grid-item bg-[#c2185b] text-white p-5 shadow-lg flex flex-col items-center text-center col-span-2 md:col-span-2"><i class="fa-solid fa-comment-dots text-2xl mb-2"></i><span class="font-bold text-sm">Kuusaa Yaadaa</span></div>
             </div>
         </div>
 
@@ -194,6 +211,10 @@
             <div class="bg-white p-6 rounded-3xl border shadow-sm space-y-4"><h3 class="font-bold text-sm">Qabxii Barattootaa Guutuu</h3><div id="results-table" class="space-y-2"></div></div>
         </div>
 
+        <div id="view-admin-students" class="app-view-container hidden px-6 mt-6 max-w-5xl mx-auto space-y-6">
+            <div class="bg-white p-6 rounded-3xl border shadow-sm space-y-4"><h3 class="font-bold text-sm">Barattoota To'achuu (Profiles & Gallery Avatars)</h3><div id="students-table" class="space-y-2"></div></div>
+        </div>
+
         <div id="view-admin-notices" class="app-view-container hidden px-6 mt-6 max-w-5xl mx-auto space-y-6">
             <div class="bg-white p-6 rounded-3xl border shadow-sm space-y-3">
                 <h3 class="font-bold text-sm">Beeksisaa Maxxansi</h3>
@@ -204,18 +225,17 @@
         </div>
 
         <div id="view-admin-feedbacks" class="app-view-container hidden px-6 mt-6 max-w-5xl mx-auto space-y-6">
-            <div class="bg-white p-6 rounded-3xl border shadow-sm space-y-4"><h3 class="font-bold text-sm">Kuusaa Yaadaa</h3><div id="feedbacks-table" class="space-y-2"></div></div>
+            <div class="bg-white p-6 rounded-3xl border shadow-sm space-y-4"><h3 class="font-bold text-sm">Kuusaa Yaadaa Barattootaa</h3><div id="feedbacks-table" class="space-y-2"></div></div>
         </div>
 
-        <div id="view-admin-students" class="app-view-container hidden px-6 mt-6 max-w-5xl mx-auto space-y-6">
-            <div class="bg-white p-6 rounded-3xl border shadow-sm space-y-4"><h3 class="font-bold text-sm">Barattoota To'achuu</h3><div id="students-table" class="space-y-2"></div></div>
-        </div>
-
-        <nav class="fixed bottom-0 left-0 right-0 bg-white h-20 flex items-center justify-around px-4 bottom-nav border-t z-40">
-            <button onclick="switchAdminView('home')" id="anav-home" class="flex flex-col items-center text-[#1565C0] font-bold"><i class="fa-solid fa-house text-xl"></i><span class="text-[10px] mt-1">Home</span></button>
-            <button onclick="switchAdminView('exams')" id="anav-exams" class="flex flex-col items-center text-slate-400"><i class="fa-solid fa-file-invoice text-xl"></i><span class="text-[10px] mt-1">Qormaata</span></button>
-            <button onclick="switchAdminView('results')" id="anav-results" class="flex flex-col items-center text-slate-400"><i class="fa-solid fa-chart-pie text-xl"></i><span class="text-[10px] mt-1">Qabxii</span></button>
-            <button onclick="switchAdminView('students')" id="anav-students" class="flex flex-col items-center text-slate-400"><i class="fa-solid fa-users text-xl"></i><span class="text-[10px] mt-1">Barattoota</span></button>
+        <!-- Admin 6-Item Bottom Navigation Bar -->
+        <nav class="fixed bottom-0 left-0 right-0 bg-white h-20 flex items-center justify-around px-2 bottom-nav border-t z-40 overflow-x-auto no-scrollbar">
+            <button onclick="switchAdminView('home')" id="anav-home" class="flex flex-col items-center text-[#1565C0] font-bold min-w-[50px]"><i class="fa-solid fa-house text-lg"></i><span class="text-[9px] mt-1">Home</span></button>
+            <button onclick="switchAdminView('exams')" id="anav-exams" class="flex flex-col items-center text-slate-400 min-w-[50px]"><i class="fa-solid fa-file-invoice text-lg"></i><span class="text-[9px] mt-1">Qormaata</span></button>
+            <button onclick="switchAdminView('results')" id="anav-results" class="flex flex-col items-center text-slate-400 min-w-[50px]"><i class="fa-solid fa-chart-pie text-lg"></i><span class="text-[9px] mt-1">Qabxii</span></button>
+            <button onclick="switchAdminView('students')" id="anav-students" class="flex flex-col items-center text-slate-400 min-w-[50px]"><i class="fa-solid fa-users text-lg"></i><span class="text-[9px] mt-1">Barattoota</span></button>
+            <button onclick="switchAdminView('notices')" id="anav-notices" class="flex flex-col items-center text-slate-400 min-w-[50px]"><i class="fa-solid fa-bullhorn text-lg"></i><span class="text-[9px] mt-1">Beeksisaa</span></button>
+            <button onclick="switchAdminView('feedbacks')" id="anav-feedbacks" class="flex flex-col items-center text-slate-400 min-w-[50px]"><i class="fa-solid fa-comment-dots text-lg"></i><span class="text-[9px] mt-1">Yaadaa</span></button>
         </nav>
     </div>
 
@@ -232,17 +252,6 @@
             <div class="border-t pt-4 mt-4 flex justify-end">
                 <button onclick="submitExam()" class="bg-[#2e7d32] text-white font-bold px-8 py-3.5 rounded-2xl shadow-lg cursor-pointer">Qormaata Xumuri</button>
             </div>
-        </div>
-    </div>
-
-    <!-- MODAL FOR EXAM QUESTIONS -->
-    <div id="questions-modal" class="hidden fixed inset-0 bg-slate-900/80 z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 max-h-[80vh] flex flex-col shadow-2xl">
-            <div class="flex justify-between items-center border-b pb-3 mb-4">
-                <h3 id="modal-exam-title" class="font-bold text-slate-900 text-sm">Gaaffilee</h3>
-                <button onclick="closeModal()" class="text-rose-500 font-bold text-base cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div id="modal-questions-list" class="flex-1 overflow-y-auto space-y-3 pr-2"></div>
         </div>
     </div>
 
@@ -285,7 +294,7 @@
             if (user) {
                 const userEmail = user.email.toLowerCase();
                 const userName = user.user_metadata?.full_name || user.email.split('@')[0];
-                const userAvatar = user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}`;
+                const defaultAvatar = user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}`;
 
                 if (ADMIN_EMAILS.includes(userEmail)) {
                     document.getElementById('splash-screen').classList.add('hidden');
@@ -293,7 +302,7 @@
                     document.getElementById('admin-main').classList.remove('hidden');
                     document.getElementById('admin-name').textContent = userName;
                     document.getElementById('admin-email').textContent = userEmail;
-                    document.getElementById('admin-avatar').src = userAvatar;
+                    document.getElementById('admin-avatar').src = defaultAvatar;
                     loadAdminData();
                 } else {
                     let { data: existing } = await db.from('exam_students').select('*').eq('id', user.id).single();
@@ -304,7 +313,7 @@
                             id: user.id,
                             full_name: userName,
                             email: userEmail,
-                            avatar_url: userAvatar,
+                            avatar_url: defaultAvatar,
                             is_allowed: true,
                             student_code: stuId,
                             activation_code: actCode
@@ -316,7 +325,7 @@
                         id: user.id, 
                         full_name: existing?.full_name || userName, 
                         email: userEmail, 
-                        avatar: existing?.avatar_url || userAvatar,
+                        avatar: existing?.avatar_url || defaultAvatar,
                         stuCode: existing?.student_code || ("STU-" + user.id.substring(0,4)),
                         actCode: existing?.activation_code || "ACT-974585"
                     };
@@ -333,11 +342,11 @@
             const active = document.getElementById('view-student-' + view);
             if (active) active.classList.remove('hidden');
 
-            ['home', 'exams', 'results', 'profile'].forEach(n => {
+            ['home', 'exams', 'results', 'notice', 'feedback', 'profile'].forEach(n => {
                 const nav = document.getElementById('snav-' + n);
                 if (nav) nav.classList.remove('text-[#1565C0]', 'font-bold'), nav.classList.add('text-slate-400');
             });
-            const curr = document.getElementById('snav-' + (['notice','feedback'].includes(view) ? 'exams' : view));
+            const curr = document.getElementById('snav-' + view);
             if (curr) curr.classList.remove('text-slate-400'), curr.classList.add('text-[#1565C0]', 'font-bold');
         }
 
@@ -349,11 +358,11 @@
             const active = document.getElementById('view-admin-' + view);
             if (active) active.classList.remove('hidden');
 
-            ['home', 'exams', 'results', 'students'].forEach(n => {
+            ['home', 'exams', 'results', 'students', 'notices', 'feedbacks'].forEach(n => {
                 const nav = document.getElementById('anav-' + n);
                 if (nav) nav.classList.remove('text-[#1565C0]', 'font-bold'), nav.classList.add('text-slate-400');
             });
-            const curr = document.getElementById('anav-' + (['notices','feedbacks'].includes(view) ? 'home' : view));
+            const curr = document.getElementById('anav-' + view);
             if (curr) curr.classList.remove('text-slate-400'), curr.classList.add('text-[#1565C0]', 'font-bold');
         }
 
@@ -370,21 +379,38 @@
             document.getElementById('profile-student-id').textContent = currentStudent.stuCode;
             document.getElementById('profile-act-code').textContent = currentStudent.actCode;
             document.getElementById('edit-profile-name').value = currentStudent.full_name;
-            document.getElementById('edit-profile-avatar').value = currentStudent.avatar;
 
             loadStudentExams();
             loadStudentResults();
             loadStudentNotices();
         }
 
-        async function updateProfile() {
+        function handleGalleryUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const base64Img = e.target.result;
+                document.getElementById('profile-card-avatar').src = base64Img;
+                document.getElementById('student-avatar').src = base64Img;
+                currentStudent.avatar = base64Img;
+
+                await db.from('exam_students').update({ avatar_url: base64Img }).eq('id', currentStudent.id);
+                alert("🎉 Suuraan galarii irraa filatame sirriitti ol-kaa'ameera!");
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function saveStudentProfile() {
             const newName = document.getElementById('edit-profile-name').value.trim();
-            const newAvatar = document.getElementById('edit-profile-avatar').value.trim();
             if (!newName) return alert("Maqaa guuti!");
 
-            await db.from('exam_students').update({ full_name: newName, avatar_url: newAvatar || currentStudent.avatar }).eq('id', currentStudent.id);
-            alert("🎉 Profile kee jijjiirameera!");
-            window.location.reload();
+            await db.from('exam_students').update({ full_name: newName }).eq('id', currentStudent.id);
+            currentStudent.full_name = newName;
+            document.getElementById('student-name-display').textContent = newName;
+            document.getElementById('profile-card-name').textContent = newName;
+            alert("🎉 Maqaan kee sirriitti jijjiirameera!");
         }
 
         async function loadStudentExams() {
@@ -413,7 +439,6 @@
         }
 
         async function checkAndStartExam(examId, titleEncoded, duration) {
-            // Check if already taken
             const { data: taken } = await db.from('exam_results').select('*').eq('student_id', currentStudent.id).eq('exam_id', examId).single();
             if (taken) {
                 alert("⚠️ Qormaata kana kanaan dura xumurteetta! Irra deebi'ee qoramuu hin dandeessu.");
@@ -569,14 +594,17 @@
             await db.from('exam_notices').insert([{ title, message: msg }]); alert("🎉 Maxxanfameera!");
         }
         async function loadAdminResults() {
-            const { data } = await db.from('exam_results').select('*, exam_tests(title), exam_students(email)').order('score', { ascending: false });
+            const { data } = await db.from('exam_results').select('*, exam_tests(title), exam_students(email, avatar_url)').order('score', { ascending: false });
             document.getElementById('results-table').innerHTML = data ? data.map((r, i) => `
-                <div class="p-3 border rounded-2xl bg-slate-50 text-xs space-y-1">
-                    <div class="flex justify-between font-bold">
-                        <span>#${i+1} ${r.student_name} (${r.exam_tests?.title || 'Exam'})</span>
-                        <span class="text-[#2e7d32]">${r.score.toFixed(1)}%</span>
+                <div class="flex items-center gap-3 p-3 border rounded-2xl bg-slate-50 text-xs shadow-sm">
+                    <img src="${r.exam_students?.avatar_url || 'https://ui-avatars.com/api/?name=User'}" class="w-10 h-10 rounded-xl object-cover bg-white">
+                    <div class="flex-1">
+                        <div class="flex justify-between font-bold">
+                            <span>#${i+1} ${r.student_name} (${r.exam_tests?.title || 'Exam'})</span>
+                            <span class="text-[#2e7d32] font-black text-sm">${r.score.toFixed(1)}%</span>
+                        </div>
+                        <p class="text-[10px] text-slate-500">Email: ${r.exam_students?.email || 'N/A'} | Sirrii: ${r.correct_answers} | Dhabe: ${r.wrong_answers}</p>
                     </div>
-                    <p class="text-[10px] text-slate-500">Email: ${r.exam_students?.email || 'N/A'} | Sirrii: ${r.correct_answers} | Dhabe: ${r.wrong_answers}</p>
                 </div>
             `).join('') : '';
             document.getElementById('stat-results').textContent = data ? data.length : 0;
@@ -584,11 +612,11 @@
         async function loadAdminStudents() {
             const { data } = await db.from('exam_students').select('*');
             document.getElementById('students-table').innerHTML = data ? data.map(s => `
-                <div class="flex items-center gap-3 p-3 border rounded-2xl bg-slate-50 text-xs">
-                    <img src="${s.avatar_url || 'https://ui-avatars.com/api/?name=User'}" class="w-10 h-10 rounded-xl object-cover">
+                <div class="flex items-center gap-3 p-3 border rounded-2xl bg-slate-50 text-xs shadow-sm">
+                    <img src="${s.avatar_url || 'https://ui-avatars.com/api/?name=User'}" class="w-12 h-12 rounded-2xl object-cover bg-white border">
                     <div>
-                        <p class="font-bold text-slate-900">${s.full_name} <span class="text-indigo-600 font-mono">(${s.student_code})</span></p>
-                        <p class="text-[10px] text-slate-400">${s.email} | Code: ${s.activation_code}</p>
+                        <p class="font-bold text-slate-900">${s.full_name} <span class="text-indigo-600 font-mono">(${s.student_code || 'ID'})</span></p>
+                        <p class="text-[10px] text-slate-400 font-mono">${s.email} | Code: ${s.activation_code || 'N/A'}</p>
                     </div>
                 </div>
             `).join('') : '';
