@@ -116,7 +116,6 @@
             </div>
         </div>
 
-        <!-- Student Profile with Gallery Upload -->
         <div id="view-student-profile" class="app-view-container hidden px-6 mt-6 space-y-4">
             <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4 text-center">
                 <div class="relative w-24 h-24 mx-auto">
@@ -126,16 +125,12 @@
                     </label>
                     <input type="file" id="gallery-input" accept="image/*" class="hidden" onchange="handleGalleryUpload(event)">
                 </div>
-                
                 <p class="text-[11px] text-slate-400 font-medium">Suuraa kee jijjiiruuf mallattoo kaameeraa tuqi</p>
-
                 <div class="space-y-1 text-left">
                     <label class="text-[10px] font-bold text-slate-500">Maqaa Keessaa</label>
                     <input type="text" id="edit-profile-name" class="w-full p-3 bg-slate-50 border rounded-xl text-sm font-black outline-none focus:border-[#1565C0]">
                 </div>
-
                 <button onclick="saveStudentProfile()" class="w-full bg-[#1565C0] text-white font-bold py-3 rounded-xl text-xs shadow-md active:scale-95 transition">Maqaa Ol-kaayi</button>
-
                 <div class="grid grid-cols-2 gap-2 text-left bg-slate-50 p-4 rounded-2xl font-mono text-xs mt-3">
                     <div><span class="text-[10px] text-slate-400 block font-sans font-bold">STUDENT ID</span><span id="profile-student-id" class="font-black text-[#1565C0]">...</span></div>
                     <div><span class="text-[10px] text-slate-400 block font-sans font-bold">CODE</span><span id="profile-act-code" class="font-black text-emerald-600">...</span></div>
@@ -143,7 +138,7 @@
             </div>
         </div>
 
-        <!-- Student 6-Item Bottom Navigation Bar -->
+        <!-- Student Bottom Navigation -->
         <nav class="fixed bottom-0 left-0 right-0 bg-white h-20 flex items-center justify-around px-2 bottom-nav border-t z-40 overflow-x-auto no-scrollbar">
             <button onclick="switchStudentView('home')" id="snav-home" class="flex flex-col items-center text-[#1565C0] font-bold min-w-[50px]"><i class="fa-solid fa-house text-lg"></i><span class="text-[9px] mt-1">Home</span></button>
             <button onclick="switchStudentView('exams')" id="snav-exams" class="flex flex-col items-center text-slate-400 min-w-[50px]"><i class="fa-solid fa-file-invoice text-lg"></i><span class="text-[9px] mt-1">Qormaata</span></button>
@@ -188,7 +183,7 @@
         <div id="view-admin-exams" class="app-view-container hidden px-6 mt-6 max-w-5xl mx-auto space-y-6">
             <div class="bg-white p-6 rounded-3xl border shadow-sm space-y-3">
                 <h3 class="font-bold text-sm">Qormaata Haaraa Uumi</h3>
-                <input type="text" id="new-exam-title" placeholder="Mata-duree" class="w-full px-4 py-3 bg-slate-50 border rounded-xl text-xs outline-none">
+                <input type="text" id="new-exam-title" placeholder="Mata-duree Qormaataa" class="w-full px-4 py-3 bg-slate-50 border rounded-xl text-xs outline-none">
                 <select id="new-exam-category" class="w-full px-3 py-3 bg-slate-50 border rounded-xl text-xs outline-none">
                     <option value="General">Kutaa Filadhu</option><option value="Grade 9-10">Kutaa 9-10</option><option value="Grade 11-12">Kutaa 11-12</option>
                 </select>
@@ -212,7 +207,7 @@
         </div>
 
         <div id="view-admin-students" class="app-view-container hidden px-6 mt-6 max-w-5xl mx-auto space-y-6">
-            <div class="bg-white p-6 rounded-3xl border shadow-sm space-y-4"><h3 class="font-bold text-sm">Barattoota To'achuu (Profiles & Gallery Avatars)</h3><div id="students-table" class="space-y-2"></div></div>
+            <div class="bg-white p-6 rounded-3xl border shadow-sm space-y-4"><h3 class="font-bold text-sm">Barattoota To'achuu</h3><div id="students-table" class="space-y-2"></div></div>
         </div>
 
         <div id="view-admin-notices" class="app-view-container hidden px-6 mt-6 max-w-5xl mx-auto space-y-6">
@@ -228,7 +223,7 @@
             <div class="bg-white p-6 rounded-3xl border shadow-sm space-y-4"><h3 class="font-bold text-sm">Kuusaa Yaadaa Barattootaa</h3><div id="feedbacks-table" class="space-y-2"></div></div>
         </div>
 
-        <!-- Admin 6-Item Bottom Navigation Bar -->
+        <!-- Admin Bottom Navigation -->
         <nav class="fixed bottom-0 left-0 right-0 bg-white h-20 flex items-center justify-around px-2 bottom-nav border-t z-40 overflow-x-auto no-scrollbar">
             <button onclick="switchAdminView('home')" id="anav-home" class="flex flex-col items-center text-[#1565C0] font-bold min-w-[50px]"><i class="fa-solid fa-house text-lg"></i><span class="text-[9px] mt-1">Home</span></button>
             <button onclick="switchAdminView('exams')" id="anav-exams" class="flex flex-col items-center text-slate-400 min-w-[50px]"><i class="fa-solid fa-file-invoice text-lg"></i><span class="text-[9px] mt-1">Qormaata</span></button>
@@ -255,17 +250,6 @@
         </div>
     </div>
 
-    <!-- MODAL FOR EXAM QUESTIONS -->
-    <div id="questions-modal" class="hidden fixed inset-0 bg-slate-900/80 z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 max-h-[80vh] flex flex-col shadow-2xl">
-            <div class="flex justify-between items-center border-b pb-3 mb-4">
-                <h3 id="modal-exam-title" class="font-bold text-slate-900 text-sm">Gaaffilee</h3>
-                <button onclick="closeModal()" class="text-rose-500 font-bold text-base cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div id="modal-questions-list" class="flex-1 overflow-y-auto space-y-3 pr-2"></div>
-        </div>
-    </div>
-
     <script>
         const SUPABASE_URL = "https://zxljzdhuilhzcdbgrxol.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_WKWwxJeXUi0bbgN4NsD3nQ_w1Xwdjhs";
@@ -278,6 +262,7 @@
 
         let currentStudent = null;
         let allExams = [];
+        let completedExamIds = [];
         let activeExamId = null;
         let activeQuestions = [];
         let answers = {};
@@ -292,14 +277,11 @@
             const btn = document.getElementById('btn-google-login');
             btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-[#1565C0] text-xl"></i> <span>Seenaa jira...</span>`;
             
-            // prompt: 'select_account' forces Google to show the Account Chooser screen!
             const { error } = await db.auth.signInWithOAuth({
                 provider: 'google',
                 options: { 
                     redirectTo: window.location.origin + '/index.html',
-                    queryParams: {
-                        prompt: 'select_account'
-                    }
+                    queryParams: { prompt: 'select_account' }
                 }
             });
 
@@ -431,7 +413,12 @@
         }
 
         async function loadStudentExams() {
-            const { data: exams } = await db.from('exam_tests').select('*').eq('is_active', true);
+            // Load student's completed exams
+            const { data: res } = await db.from('exam_results').select('exam_id').eq('student_id', currentStudent.id);
+            completedExamIds = (res || []).map(r => r.exam_id);
+
+            // Fetch ALL exams
+            const { data: exams, error } = await db.from('exam_tests').select('*').order('created_at', { ascending: false });
             allExams = exams || [];
             renderExams(allExams, 'exams-list');
         }
@@ -440,28 +427,24 @@
             const list = document.getElementById(containerId);
             if (!list) return;
             if (exams && exams.length > 0) {
-                list.innerHTML = exams.map(e => `
+                list.innerHTML = exams.map(e => {
+                    const isDone = completedExamIds.includes(e.id);
+                    return `
                     <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center justify-between">
                         <div>
                             <span class="text-[10px] font-bold text-purple-600 bg-purple-50 px-2.5 py-1 rounded-full border mb-1 inline-block">${e.category || 'General'}</span>
                             <h5 class="font-black text-slate-900 text-sm">${e.title}</h5>
                             <p class="text-xs text-slate-400 mt-1"><i class="fa-solid fa-clock"></i> ${e.duration_minutes} Mins</p>
                         </div>
-                        <button onclick="checkAndStartExam('${e.id}', '${encodeURIComponent(e.title)}', ${e.duration_minutes})" class="bg-[#1565C0] text-white px-5 py-2.5 rounded-2xl text-xs font-extrabold shadow-md cursor-pointer">Jalqabi</button>
+                        ${isDone ? 
+                            `<span class="bg-emerald-50 text-[#2e7d32] border border-emerald-200 px-4 py-2 rounded-2xl text-xs font-black"><i class="fa-solid fa-circle-check"></i> Xumurame</span>` : 
+                            `<button onclick="startExam('${e.id}', '${encodeURIComponent(e.title)}', ${e.duration_minutes})" class="bg-[#1565C0] text-white px-5 py-2.5 rounded-2xl text-xs font-extrabold shadow-md active:scale-95 transition cursor-pointer">Jalqabi</button>`
+                        }
                     </div>
-                `).join('');
+                `;}).join('');
             } else {
-                list.innerHTML = `<p class="text-slate-400 text-xs text-center py-6">Qormaanni hin jiru.</p>`;
+                list.innerHTML = `<p class="text-slate-400 text-xs text-center py-6">Qormaanni uumame hin jiru.</p>`;
             }
-        }
-
-        async function checkAndStartExam(examId, titleEncoded, duration) {
-            const { data: taken } = await db.from('exam_results').select('*').eq('student_id', currentStudent.id).eq('exam_id', examId).single();
-            if (taken) {
-                alert("⚠️ Qormaata kana kanaan dura xumurteetta! Irra deebi'ee qoramuu hin dandeessu.");
-                return;
-            }
-            startExam(examId, titleEncoded, duration);
         }
 
         async function loadStudentResults() {
@@ -472,7 +455,7 @@
                 document.getElementById('student-avg-score').textContent = (total / res.length).toFixed(1) + "%";
                 list.innerHTML = res.map(r => `
                     <div class="bg-white p-4 rounded-2xl border flex justify-between items-center text-sm shadow-sm">
-                        <div><p class="font-black text-slate-900">${r.exam_tests?.title || 'Exam'}</p><span class="text-[10px] text-slate-400">Argate: ${r.correct_answers} | Dhabe: ${r.wrong_answers}</span></div>
+                        <div><p class="font-black text-slate-900">${r.exam_tests?.title || 'Exam'}</p><span class="text-[10px] text-slate-400">Sirrii: ${r.correct_answers} | Dhabe: ${r.wrong_answers}</span></div>
                         <span class="font-black text-[#2e7d32] text-base bg-green-50 px-3 py-1 rounded-xl border">${r.score.toFixed(1)}%</span>
                     </div>
                 `).join('');
@@ -534,6 +517,8 @@
                             </div>
                         </div>
                     `).join('');
+                } else {
+                    cont.innerHTML = `<p class="text-slate-400 text-xs text-center py-4">Gaaffiin qormaata kanaaf hin galmoofne.</p>`;
                 }
             });
         }
@@ -568,9 +553,22 @@
             const category = document.getElementById('new-exam-category').value;
             const duration = document.getElementById('new-exam-duration').value;
             const attempts = document.getElementById('new-exam-attempts').value;
-            if (!title || !duration) return alert("Guuti!");
-            await db.from('exam_tests').insert([{ title, category, duration_minutes: parseInt(duration), max_attempts: parseInt(attempts) }]);
-            alert("🎉 Qormaanni Uumameera!"); loadAdminData();
+            if (!title || !duration) return alert("Mata-duree fi yeroo guuti!");
+
+            const { error } = await db.from('exam_tests').insert([{ 
+                title, 
+                category, 
+                duration_minutes: parseInt(duration), 
+                max_attempts: parseInt(attempts || 1),
+                is_active: true 
+            }]);
+
+            if (error) return alert("Error creating exam: " + error.message);
+
+            alert("🎉 Qormaanni Uumameera! Barattoonni amma qoramuu danda'u."); 
+            document.getElementById('new-exam-title').value = '';
+            document.getElementById('new-exam-duration').value = '';
+            loadAdminData();
         }
         async function loadExamsForSelect() {
             const sel = document.getElementById('bulk-exam-select');
@@ -582,7 +580,12 @@
             document.getElementById('exams-admin-list').innerHTML = data ? data.map(e => `<div class="flex justify-between p-3 border rounded-2xl bg-slate-50 text-xs"><span>${e.title} (${e.duration_minutes} Mins)</span><button onclick="deleteExam('${e.id}')" class="text-rose-600 font-bold">Haqi</button></div>`).join('') : '';
             document.getElementById('stat-exams').textContent = data ? data.length : 0;
         }
-        async function deleteExam(id) { await db.from('exam_tests').delete().eq('id', id); loadAdminData(); }
+        async function deleteExam(id) { 
+            if(confirm("Qormaata kana haquu feetaa?")) {
+                await db.from('exam_tests').delete().eq('id', id); 
+                loadAdminData(); 
+            }
+        }
         async function parseAndSaveBulkQuestions() {
             const examId = document.getElementById('bulk-exam-select').value;
             const rawText = document.getElementById('bulk-text').value.trim();
@@ -603,12 +606,17 @@
             }
             if (currentQ) questions.push(currentQ);
             await db.from('exam_questions').insert(questions);
-            alert("🎉 Gaaffileen galmeeffamaniiru!"); loadAdminData();
+            alert(`🎉 Gaaffileen ${questions.length} galmeeffamaniiru!`); 
+            document.getElementById('bulk-text').value = '';
+            loadAdminData();
         }
         async function postNotice() {
             const title = document.getElementById('notice-title').value.trim(), msg = document.getElementById('notice-msg').value.trim();
             if (!title || !msg) return alert("Guuti!");
-            await db.from('exam_notices').insert([{ title, message: msg }]); alert("🎉 Maxxanfameera!");
+            await db.from('exam_notices').insert([{ title, message: msg }]); 
+            alert("🎉 Maxxanfameera!");
+            document.getElementById('notice-title').value = '';
+            document.getElementById('notice-msg').value = '';
         }
         async function loadAdminResults() {
             const { data } = await db.from('exam_results').select('*, exam_tests(title), exam_students(email, avatar_url)').order('score', { ascending: false });
@@ -644,7 +652,6 @@
             document.getElementById('feedbacks-table').innerHTML = data ? data.map(f => `<div class="p-3 border rounded-2xl bg-slate-50 text-xs"><b>${f.student_name}:</b> ${f.message}</div>`).join('') : '';
         }
 
-        // FULL LOGOUT WITH SESSION CLEAR
         async function logoutUser() { 
             await db.auth.signOut(); 
             window.location.href = window.location.origin + '/index.html'; 
