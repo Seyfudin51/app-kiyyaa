@@ -255,6 +255,17 @@
         </div>
     </div>
 
+    <!-- MODAL FOR EXAM QUESTIONS -->
+    <div id="questions-modal" class="hidden fixed inset-0 bg-slate-900/80 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 max-h-[80vh] flex flex-col shadow-2xl">
+            <div class="flex justify-between items-center border-b pb-3 mb-4">
+                <h3 id="modal-exam-title" class="font-bold text-slate-900 text-sm">Gaaffilee</h3>
+                <button onclick="closeModal()" class="text-rose-500 font-bold text-base cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="modal-questions-list" class="flex-1 overflow-y-auto space-y-3 pr-2"></div>
+        </div>
+    </div>
+
     <script>
         const SUPABASE_URL = "https://zxljzdhuilhzcdbgrxol.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_WKWwxJeXUi0bbgN4NsD3nQ_w1Xwdjhs";
@@ -281,9 +292,15 @@
             const btn = document.getElementById('btn-google-login');
             btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-[#1565C0] text-xl"></i> <span>Seenaa jira...</span>`;
             
+            // prompt: 'select_account' forces Google to show the Account Chooser screen!
             const { error } = await db.auth.signInWithOAuth({
                 provider: 'google',
-                options: { redirectTo: window.location.origin + '/index.html' }
+                options: { 
+                    redirectTo: window.location.origin + '/index.html',
+                    queryParams: {
+                        prompt: 'select_account'
+                    }
+                }
             });
 
             if (error) alert("Google Login Error: " + error.message);
@@ -626,7 +643,12 @@
             const { data } = await db.from('exam_feedbacks').select('*');
             document.getElementById('feedbacks-table').innerHTML = data ? data.map(f => `<div class="p-3 border rounded-2xl bg-slate-50 text-xs"><b>${f.student_name}:</b> ${f.message}</div>`).join('') : '';
         }
-        async function logoutUser() { await db.auth.signOut(); window.location.reload(); }
+
+        // FULL LOGOUT WITH SESSION CLEAR
+        async function logoutUser() { 
+            await db.auth.signOut(); 
+            window.location.href = window.location.origin + '/index.html'; 
+        }
     </script>
 </body>
 </html>
